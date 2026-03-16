@@ -1,0 +1,176 @@
+package com.example.codecompass.ui;
+
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.codecompass.R;
+import com.example.codecompass.model.ChatMessage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHolder> {
+
+    private static final int VIEW_TYPE_USER = 0;
+    private static final int VIEW_TYPE_AI   = 1;
+
+    private final List<ChatMessage> messages = new ArrayList<>();
+    private RecyclerView recyclerView;
+
+    @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        this.recyclerView = recyclerView;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return messages.get(position).isUser() ? VIEW_TYPE_USER : VIEW_TYPE_AI;
+    }
+
+    @NonNull
+    @Override
+    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_chat_message, parent, false);
+        return new MessageViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
+        holder.bind(messages.get(position));
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull MessageViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.stopDotAnimation();
+    }
+
+    @Override
+    public int getItemCount() {
+        return messages.size();
+    }
+
+    public void addMessage(ChatMessage message) {
+        messages.add(message);
+        int position = messages.size() - 1;
+        notifyItemInserted(position);
+        if (recyclerView != null) recyclerView.scrollToPosition(position);
+    }
+
+    /** Update bubble in-place — clears typing state and sets streamed content. */
+    public void updateMessageAt(int index, String content) {
+        if (index < 0 || index >= messages.size()) return;
+        ChatMessage msg = messages.get(index);
+        msg.setContent(content);
+        msg.setTyping(false);
+        notifyItemChanged(index);
+        if (recyclerView != null) recyclerView.scrollToPosition(index);
+    }
+
+    public boolean isTypingAt(int index) {
+        return index >= 0 && index < messages.size() && messages.get(index).isTyping();
+    }
+
+    public void removeMessageAt(int index) {
+        if (index < 0 || index >= messages.size()) return;
+        messages.remove(index);
+        notifyItemRemoved(index);
+    }
+
+    // ── ViewHolder ────────────────────────────────────────────────────────────
+
+    static class MessageViewHolder extends RecyclerView.ViewHolder {
+
+        private final TextView tvMessage;
+        private final TextView tvAvatar;
+        private final View layoutTypingDots;
+        private final View dot1, dot2, dot3;
+        private final List<ObjectAnimator> dotAnimators = new ArrayList<>();
+
+        MessageViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvMessage       = itemView.findViewById(R.id.tvMessage);
+            tvAvatar        = itemView.findViewById(R.id.tvAvatar);
+            layoutTypingDots = itemView.findViewById(R.id.layoutTypingDots);
+            dot1            = itemView.findViewById(R.id.dot1);
+            dot2            = itemView.findViewById(R.id.dot2);
+            dot3            = itemView.findViewById(R.id.dot3);
+        }
+
+        void bind(ChatMessage message) {
+            if (message.isTyping()) {
+                // Typing indicator — CC avatar + bouncing dots
+                tvAvatar.setVisibility(View.VISIBLE);
+                layoutTypingDots.setVisibility(View.VISIBLE);
+                tvMessage.setVisibility(View.GONE);
+                ((LinearLayout) itemView).setGravity(Gravity.START | Gravity.BOTTOM);
+                startDotAnimation();
+                return;
+            }
+
+            // Normal message — stop any leftover animation
+            stopDotAnimation();
+            layoutTypingDots.setVisibility(View.GONE);
+            tvMessage.setVisibility(View.VISIBLE);
+            tvMessage.setText(message.getContent());
+
+            LinearLayout.LayoutParams params =
+                    (LinearLayout.LayoutParams) tvMessage.getLayoutParams();
+
+            if (message.isUser()) {
+                tvAvatar.setVisibility(View.GONE);
+                tvMessage.setBackgroundResource(R.drawable.bg_chat_bubble_user);
+                tvMessage.setTextColor(
+                        itemView.getContext().getColor(R.color.colorChatUserText));
+                params.gravity = Gravity.END;
+                ((LinearLayout) itemView).setGravity(Gravity.END | Gravity.BOTTOM);
+            } else {
+                tvAvatar.setVisibility(View.VISIBLE);
+                tvMessage.setBackgroundResource(R.drawable.bg_chat_bubble);
+                tvMessage.setTextColor(
+                        itemView.getContext().getColor(R.color.colorChatAiTextDark));
+                params.gravity = Gravity.START;
+                ((LinearLayout) itemView).setGravity(Gravity.START | Gravity.BOTTOM);
+            }
+            tvMessage.setLayoutParams(params);
+        }
+
+        void startDotAnimation() {
+            stopDotAnimation();
+            float bounce = itemView.getResources().getDisplayMetrics().density * -5f;
+            View[] dots   = {dot1, dot2, dot3};
+            int[]  delays = {0, 150, 300};
+            for (int i = 0; i < 3; i++) {
+                ObjectAnimator anim = ObjectAnimator.ofFloat(
+                        dots[i], View.TRANSLATION_Y, 0f, bounce);
+                anim.setDuration(450);
+                anim.setStartDelay(delays[i]);
+                anim.setRepeatCount(ValueAnimator.INFINITE);
+                anim.setRepeatMode(ValueAnimator.REVERSE);
+                anim.setInterpolator(new AccelerateDecelerateInterpolator());
+                anim.start();
+                dotAnimators.add(anim);
+            }
+        }
+
+        void stopDotAnimation() {
+            for (ObjectAnimator a : dotAnimators) a.cancel();
+            dotAnimators.clear();
+            dot1.setTranslationY(0f);
+            dot2.setTranslationY(0f);
+            dot3.setTranslationY(0f);
+        }
+    }
+}

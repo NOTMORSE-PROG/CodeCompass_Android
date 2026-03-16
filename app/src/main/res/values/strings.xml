@@ -1,0 +1,122 @@
+<resources>
+    <string name="app_name">CodeCompass</string>
+    <string name="app_tagline">Navigate Your Tech Career</string>
+
+    <!-- Auth common -->
+    <string name="label_email">Email</string>
+    <string name="label_password">Password</string>
+    <string name="label_first_name">First Name</string>
+    <string name="label_last_name">Last Name</string>
+    <string name="label_confirm_password">Confirm Password</string>
+
+    <!-- Login -->
+    <string name="btn_login">Log In</string>
+    <string name="link_no_account">Don\'t have an account? <b>Register</b></string>
+    <string name="logging_in">Logging in…</string>
+    <string name="or_sign_in_with">or sign in with</string>
+    <string name="btn_google_sign_in">Sign in with Google</string>
+    <string name="btn_google_sign_up">Sign up with Google</string>
+    <string name="error_google_sign_in">Google sign-in failed. Try again.</string>
+
+    <!-- Register -->
+    <string name="btn_register">Create Account</string>
+    <string name="link_have_account">Already have an account? <b>Log In</b></string>
+    <string name="registering">Creating account…</string>
+
+    <!-- Validation errors -->
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_email">Please enter a valid email address</string>
+    <string name="error_password_short">Password must be at least 8 characters</string>
+    <string name="error_passwords_no_match">Passwords do not match</string>
+    <string name="error_name_short">Must be at least 2 characters</string>
+    <string name="error_network">Network error. Check your connection.</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Let\'s Get to Know You</string>
+    <string name="onboarding_subtitle">Chat with our AI to personalise your roadmap</string>
+    <string name="hint_message">Type your message…</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_build_roadmap">Build My Roadmap →</string>
+    <string name="onboarding_guide">Onboarding Guide</string>
+    <string name="connecting">Connecting to CodeCompass…</string>
+    <string name="onboarding_completing">Building your roadmap…</string>
+    <string name="error_chat_not_ready">Chat not ready yet, please wait…</string>
+    <string name="error_connection_lost">Connection lost. Reconnecting…</string>
+    <string name="error_server_starting">Server is starting up, please wait…</string>
+    <string name="error_server_timeout">Could not reach server. Tap to retry.</string>
+    <string name="step_chat_done">Chat completed</string>
+    <string name="step_analyzing">Analyzing your answers…</string>
+    <string name="step_building">Building your personalized roadmap…</string>
+    <string name="almost_there">Almost there!</string>
+    <string name="roadmap_generating">Hang tight, we\'re building your roadmap…</string>
+
+    <!-- Dashboard -->
+    <string name="register_subtitle">Create your account</string>
+    <string name="welcome_placeholder">Welcome back!</string>
+    <string name="welcome_back">Welcome back, %s!</string>
+    <string name="ai_status_online">● Online</string>
+    <string name="xp_label">XP points earned</string>
+    <string name="xp_default">0 XP</string>
+    <string name="roadmap_pct_default">0% completed</string>
+    <string name="step_done_icon" translatable="false">✓</string>
+    <string name="dashboard_subtitle">Ready to level up your skills today?</string>
+    <string name="card_roadmap_title">My Roadmap</string>
+    <string name="card_roadmap_empty">No roadmap yet — complete onboarding first!</string>
+    <string name="card_ai_title">AI Career Assistant</string>
+    <string name="card_ai_subtitle">Ask anything about your career path</string>
+    <string name="card_ai_status">Online — Ready to help!</string>
+    <string name="card_progress_title">Your Progress</string>
+    <string name="xp_points">%,d XP</string>
+    <string name="day_streak">%d-day streak</string>
+    <string name="roadmap_completion">%d%% completed</string>
+    <string name="next_steps">Next Steps</string>
+    <string name="view_full_roadmap">View full roadmap →</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="action_roadmap">View Roadmap</string>
+    <string name="action_ai_chat">Chat with AI</string>
+    <string name="action_jobs">Browse Jobs</string>
+    <string name="action_achievements">Achievements</string>
+    <string name="btn_logout">Logout</string>
+    <string name="coming_soon">Coming soon!</string>
+    <string name="node_type_hours_xp">%s • %dh • %d XP</string>
+    <string name="start_arrow">Start →</string>
+    <string name="cc_avatar">CC</string>
+    <string name="server_warmup">Server is waking up… this may take 60 s</string>
+    <string name="retry">Retry</string>
+    <string name="achievements_hint">View your achievements →</string>
+    <string name="action_roadmap_sub">Plan your path</string>
+    <string name="action_ai_chat_sub">Get answers instantly</string>
+    <string name="action_jobs_sub">Explore openings</string>
+    <string name="action_achievements_sub">Track your badges</string>
+    <string name="roadmap_continue">Continue →</string>
+    <string name="stat_label_streak">Day Streak</string>
+    <string name="stat_label_xp">Total XP</string>
+    <string name="stat_label_roadmap">Roadmap</string>
+    <string name="warmup_banner_msg">Server is starting up, this may take a moment…</string>
+
+    <!-- Profile -->
+    <string name="profile_title">My Profile</string>
+    <string name="profile_sign_out">Sign Out</string>
+    <string name="profile_sign_out_sub">Sign out of your account</string>
+    <string name="profile_stat_xp">Total XP</string>
+    <string name="profile_stat_streak">Day Streak</string>
+    <string name="profile_stat_badges">Badges</string>
+    <string name="profile_account_settings">Account Settings</string>
+    <string name="profile_roadmap_label">MY ROADMAP</string>
+    <string name="profile_role_student">Student</string>
+    <string name="profile_role_mentor">Mentor</string>
+    <string name="profile_role_admin">Admin</string>
+    <string name="profile_change_password">Change Password</string>
+    <string name="profile_change_password_sub">Update your account password</string>
+    <string name="profile_connect_google">Connect Google Account</string>
+    <string name="profile_connect_google_sub">Sign in faster with Google</string>
+    <string name="profile_google_connected">Google account connected</string>
+    <string name="profile_google_only">You signed up with Google. Password login is not available.</string>
+    <string name="profile_pwd_dialog_title">Change Password</string>
+    <string name="profile_pwd_current">Current Password</string>
+    <string name="profile_pwd_new">New Password</string>
+    <string name="profile_pwd_confirm">Confirm New Password</string>
+    <string name="profile_pwd_update">Update</string>
+    <string name="profile_pwd_success">Password changed successfully</string>
+    <string name="profile_pwd_mismatch">New passwords do not match</string>
+</resources>

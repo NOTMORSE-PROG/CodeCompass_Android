@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Compass rose / CodeCompass logo for splash screen -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Outer compass circle -->
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M54,10 A44,44 0 1,1 53.999,10 Z
+                          M54,16 A38,38 0 1,0 54.001,16 Z" />
+
+    <!-- North arrow (pointing up) — black filled -->
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M54,20 L59,50 L54,47 L49,50 Z" />
+
+    <!-- South arrow (pointing down) — darker fill -->
+    <path
+        android:fillColor="#3D3D3D"
+        android:pathData="M54,88 L59,58 L54,61 L49,58 Z" />
+
+    <!-- East arrow -->
+    <path
+        android:fillColor="#3D3D3D"
+        android:pathData="M88,54 L58,49 L61,54 L58,59 Z" />
+
+    <!-- West arrow -->
+    <path
+        android:fillColor="#0A0A0A"
+        android:pathData="M20,54 L50,49 L47,54 L50,59 Z" />
+
+    <!-- Center dot -->
+    <path
+        android:fillColor="#FFC300"
+        android:pathData="M54,50 A4,4 0 1,1 53.999,50 Z" />
+</vector>

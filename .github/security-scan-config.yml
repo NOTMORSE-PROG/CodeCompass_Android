@@ -1,0 +1,41 @@
+# Security scan configuration for CodeCompass Android
+# Edit this file to add/remove patterns — no workflow changes needed.
+
+sensitive_keywords:
+  - password
+  - api_key
+  - apikey
+  - secret
+  - private_key
+  - auth_token
+  - access_token
+
+# Minimum character length for a string to be considered a suspicious API key
+suspicious_key_min_length: 32
+
+# Minimum character length for base64 blob detection
+suspicious_base64_min_length: 40
+
+# Source directories to scan (relative to repo root)
+scan_dirs:
+  - app/src/main
+
+# Directories to exclude from scans
+exclude_dirs:
+  - test
+  - androidTest
+
+# File extensions to include in source scans
+source_extensions:
+  - "*.kt"
+  - "*.java"
+
+# Resource files to include in resource scans
+resource_extensions:
+  - "*.xml"
+
+# URLs/patterns that should trigger a warning (not a failure) when hardcoded as defaults
+hardcoded_url_patterns:
+  - "getProperty.*http"
+  - "getProperty.*wss://"
+  - "getProperty.*onrender\\.com"
