@@ -34,6 +34,13 @@ source_extensions:
 resource_extensions:
   - "*.xml"
 
+# Lines matching these patterns are excluded from the sensitive-identifier scan.
+# Use this to suppress known false positives (e.g. SharedPreferences key name constants).
+exclude_line_patterns:
+  # SharedPreferences key name constants — the value is a storage key, not a secret.
+  # Pattern: variable name starts with KEY_ (e.g. KEY_ACCESS_TOKEN = "access_token")
+  - "KEY_[A-Z_]+\\s*=\\s*['\"]"
+
 # URLs/patterns that should trigger a warning (not a failure) when hardcoded as defaults
 hardcoded_url_patterns:
   - "getProperty.*http"

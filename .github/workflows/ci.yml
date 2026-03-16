@@ -105,11 +105,18 @@ jobs:
           EXCLUDES=$(yq '.exclude_dirs[]' "$CONFIG" | sed 's/^/--exclude-dir=/' | tr '\n' ' ')
           SCAN_DIRS=$(yq '.scan_dirs[]' "$CONFIG" | tr '\n' ' ')
 
+          # Build a single alternation pattern of lines to exclude (false positives).
+          FP_PATTERN=$(yq '.exclude_line_patterns[]' "$CONFIG" | paste -sd'|')
+
+          # Pattern matches: keyword = "value" or keyword = 'value'
           PATTERN="(${KEYWORDS})[[:space:]]*[=:][[:space:]]*['\"][^'\"]*['\"]"
 
           echo "--- Scanning source files for sensitive identifiers ---"
           FAILED=0
-          if grep -rn $SRC_INCLUDES $EXCLUDES -iE "$PATTERN" $SCAN_DIRS; then
+          MATCHES=$(grep -rn $SRC_INCLUDES $EXCLUDES -iE "$PATTERN" $SCAN_DIRS \
+                    | grep -vE "$FP_PATTERN" || true)
+          if [ -n "$MATCHES" ]; then
+            echo "$MATCHES"
             echo "FAIL: Potential hardcoded sensitive value found in source."
             FAILED=1
           fi
