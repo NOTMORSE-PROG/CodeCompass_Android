@@ -12,10 +12,15 @@ jobs:
   lint:
     name: Android Lint
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # required to commit the generated lint baseline
 
     steps:
       - name: Checkout source
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: true
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
