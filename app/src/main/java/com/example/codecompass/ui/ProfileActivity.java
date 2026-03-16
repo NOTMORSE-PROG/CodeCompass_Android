@@ -29,6 +29,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -268,7 +270,7 @@ public class ProfileActivity extends AppCompatActivity {
                                            Response<GamificationProfile> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             GamificationProfile profile = response.body();
-                            tvProfileXp.setText(String.format("%,d", profile.getXpTotal()));
+                            tvProfileXp.setText(String.format(Locale.getDefault(), "%,d", profile.getXpTotal()));
                             tvProfileStreak.setText(String.valueOf(profile.getStreakCount()));
                             tvProfileBadges.setText(String.valueOf(profile.getBadgesEarnedCount()));
                         } else if (response.code() == 401) {
@@ -357,7 +359,7 @@ public class ProfileActivity extends AppCompatActivity {
             tvProfileRoadmapTitle.setText(title);
         }
         int pct = roadmap.getCompletionPercentage();
-        tvProfileRoadmapPct.setText(pct + "%");
+        tvProfileRoadmapPct.setText(String.format(Locale.getDefault(), "%d%%", pct));
 
         ObjectAnimator anim = ObjectAnimator.ofInt(progressProfileRoadmap, "progress", 0, pct);
         anim.setDuration(900);

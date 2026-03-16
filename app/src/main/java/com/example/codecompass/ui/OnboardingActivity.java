@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -140,6 +141,16 @@ public class OnboardingActivity extends AppCompatActivity {
         btnSend.setEnabled(false); // enabled once WebSocket opens
         btnSend.setOnClickListener(v -> sendMessage());
         btnBuildRoadmap.setOnClickListener(v -> completeOnboarding());
+
+        // Block back navigation while roadmap is being built
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (isCompleting) return;
+                setEnabled(false);
+                getOnBackPressedDispatcher().onBackPressed();
+            }
+        });
 
         // Step 1: Create REST session → then connect WebSocket
         createSession();
@@ -569,12 +580,6 @@ public class OnboardingActivity extends AppCompatActivity {
     }
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
-
-    @Override
-    public void onBackPressed() {
-        if (isCompleting) return; // block back during roadmap build
-        super.onBackPressed();
-    }
 
     @Override
     protected void onDestroy() {

@@ -31,6 +31,7 @@ import com.google.gson.JsonObject;
 
 import java.net.SocketTimeoutException;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -238,7 +239,7 @@ public class DashboardActivity extends AppCompatActivity {
                             }
 
                             // Stat cards
-                            tvStatXp.setText(String.format("%,d", xp));
+                            tvStatXp.setText(String.format(Locale.getDefault(), "%,d", xp));
                             tvStatStreak.setText(String.valueOf(streak));
                         } else if (response.code() == 401) {
                             handle401();
@@ -352,7 +353,7 @@ public class DashboardActivity extends AppCompatActivity {
         ringAnim.setInterpolator(new DecelerateInterpolator());
         ringAnim.start();
 
-        tvRoadmapPct.setText(pct + "%");
+        tvRoadmapPct.setText(String.format(Locale.getDefault(), "%d%%", pct));
 
         List<RoadmapNode> nodes = roadmap.getNodes();
         if (nodes != null) {
@@ -377,7 +378,8 @@ public class DashboardActivity extends AppCompatActivity {
 
         tvTitle.setText(node.getTitle());
         String status = "in_progress".equals(node.getStatus()) ? "In Progress" : "Available";
-        tvMeta.setText(status + " · " + node.getEstimatedHours() + "h · +" + node.getXpReward() + " XP");
+        tvMeta.setText(String.format(Locale.getDefault(), "%s · %dh · +%d XP",
+                status, node.getEstimatedHours(), node.getXpReward()));
 
         containerNextSteps.addView(row);
     }

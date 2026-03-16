@@ -78,7 +78,7 @@
     <string name="action_achievements">Achievements</string>
     <string name="btn_logout">Logout</string>
     <string name="coming_soon">Coming soon!</string>
-    <string name="node_type_hours_xp">%s • %dh • %d XP</string>
+    <string name="node_type_hours_xp">%1$s • %2$dh • %3$d XP</string>
     <string name="start_arrow">Start →</string>
     <string name="cc_avatar">CC</string>
     <string name="server_warmup">Server is waking up… this may take 60 s</string>
