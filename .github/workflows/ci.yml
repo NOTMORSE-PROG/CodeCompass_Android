@@ -29,8 +29,27 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
+      - name: Generate lint baseline if absent
+        run: |
+          if [ ! -f app/lint-baseline.xml ]; then
+            echo "No lint baseline found — generating one now."
+            ./gradlew :app:updateLintBaseline --stacktrace
+            echo "BASELINE_GENERATED=true" >> "$GITHUB_ENV"
+          else
+            echo "Existing baseline found — skipping generation."
+          fi
+
       - name: Run Android Lint
         run: ./gradlew :app:lintDebug --stacktrace
+
+      - name: Commit generated baseline
+        if: env.BASELINE_GENERATED == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add app/lint-baseline.xml
+          git commit -m "Generate lint baseline for pre-existing issues"
+          git push
 
       - name: Upload lint reports
         if: always()
