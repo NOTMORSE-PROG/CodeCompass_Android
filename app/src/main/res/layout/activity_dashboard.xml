@@ -547,7 +547,7 @@
                                     android:layout_gravity="center"
                                     android:contentDescription="@null"
                                     android:src="@drawable/ic_roadmap"
-                                    android:tint="@color/colorPrimary" />
+                                    app:tint="@color/colorPrimary" />
 
                             </FrameLayout>
 
@@ -606,7 +606,7 @@
                                     android:layout_gravity="center"
                                     android:contentDescription="@null"
                                     android:src="@drawable/ic_chat"
-                                    android:tint="@color/colorAiChatBorder" />
+                                    app:tint="@color/colorAiChatBorder" />
 
                             </FrameLayout>
 
@@ -674,7 +674,7 @@
                                     android:layout_gravity="center"
                                     android:contentDescription="@null"
                                     android:src="@drawable/ic_jobs"
-                                    android:tint="@color/colorOnlineGreen" />
+                                    app:tint="@color/colorOnlineGreen" />
 
                             </FrameLayout>
 
@@ -733,7 +733,7 @@
                                     android:layout_gravity="center"
                                     android:contentDescription="@null"
                                     android:src="@drawable/ic_achievements"
-                                    android:tint="@color/colorStreak" />
+                                    app:tint="@color/colorStreak" />
 
                             </FrameLayout>
 
@@ -792,7 +792,7 @@
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
                                 android:src="@drawable/ic_chat"
-                                android:tint="@color/colorAiChatBorder" />
+                                app:tint="@color/colorAiChatBorder" />
 
                         </FrameLayout>
 
@@ -864,7 +864,7 @@
                                 android:layout_gravity="center"
                                 android:contentDescription="@null"
                                 android:src="@drawable/ic_achievements"
-                                android:tint="@color/colorStreak" />
+                                app:tint="@color/colorStreak" />
 
                         </FrameLayout>
 
