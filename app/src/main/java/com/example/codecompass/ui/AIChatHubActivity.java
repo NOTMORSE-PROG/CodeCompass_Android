@@ -16,6 +16,7 @@ import com.example.codecompass.R;
 import com.example.codecompass.api.ApiClient;
 import com.example.codecompass.api.TokenManager;
 import com.example.codecompass.model.ChatSession;
+import com.example.codecompass.model.PagedResponse;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
@@ -77,10 +78,10 @@ public class AIChatHubActivity extends AppCompatActivity {
 
         ApiClient.getService()
                 .getChatSessions(TokenManager.getBearerToken(this))
-                .enqueue(new Callback<List<ChatSession>>() {
+                .enqueue(new Callback<PagedResponse<ChatSession>>() {
                     @Override
-                    public void onResponse(Call<List<ChatSession>> call,
-                                           Response<List<ChatSession>> response) {
+                    public void onResponse(Call<PagedResponse<ChatSession>> call,
+                                           Response<PagedResponse<ChatSession>> response) {
                         loadingBar.setVisibility(View.GONE);
                         swipeRefresh.setRefreshing(false);
 
@@ -89,7 +90,7 @@ public class AIChatHubActivity extends AppCompatActivity {
                             return;
                         }
                         if (response.isSuccessful() && response.body() != null) {
-                            List<ChatSession> sessions = response.body();
+                            List<ChatSession> sessions = response.body().getResults();
                             adapter.setSessions(sessions);
                             layoutEmpty.setVisibility(sessions.isEmpty() ? View.VISIBLE : View.GONE);
                             rvSessions.setVisibility(sessions.isEmpty() ? View.GONE : View.VISIBLE);
@@ -99,7 +100,7 @@ public class AIChatHubActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<List<ChatSession>> call, Throwable t) {
+                    public void onFailure(Call<PagedResponse<ChatSession>> call, Throwable t) {
                         loadingBar.setVisibility(View.GONE);
                         swipeRefresh.setRefreshing(false);
                         showError();
@@ -141,7 +142,7 @@ public class AIChatHubActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RoadmapActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         startActivity(intent);
-        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
     }
 
     // ── Bottom nav ────────────────────────────────────────────────────────────
@@ -153,7 +154,9 @@ public class AIChatHubActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.nav_chat) return true;
             if (id == R.id.nav_home) {
-                finish();
+                Intent homeIntent = new Intent(this, DashboardActivity.class);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(homeIntent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 return false;
             }

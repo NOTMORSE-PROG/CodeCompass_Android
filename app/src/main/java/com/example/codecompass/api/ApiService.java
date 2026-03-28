@@ -3,6 +3,7 @@ package com.example.codecompass.api;
 import com.example.codecompass.model.ChangePasswordRequest;
 import com.example.codecompass.model.ChatSession;
 import com.example.codecompass.model.ChatSessionDetail;
+import com.example.codecompass.model.PagedResponse;
 import com.example.codecompass.model.CompleteOnboardingRequest;
 import com.example.codecompass.model.CompleteOnboardingResponse;
 import com.example.codecompass.model.CreateSessionRequest;
@@ -74,7 +75,7 @@ public interface ApiService {
     );
 
     @GET("chat/sessions/")
-    Call<List<ChatSession>> getChatSessions(
+    Call<PagedResponse<ChatSession>> getChatSessions(
             @Header("Authorization") String bearerToken
     );
 

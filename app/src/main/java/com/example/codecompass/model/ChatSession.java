@@ -4,16 +4,16 @@ import com.google.gson.annotations.SerializedName;
 
 public class ChatSession {
 
-    @SerializedName("session_id")
+    @SerializedName("sessionId")
     private String sessionId;
 
-    @SerializedName("context_type")
+    @SerializedName("contextType")
     private String contextType;
 
     @SerializedName("title")
     private String title;
 
-    @SerializedName("updated_at")
+    @SerializedName("updatedAt")
     private String updatedAt;
 
     public String getSessionId()   { return sessionId; }

@@ -267,7 +267,9 @@ public class AIChatActivity extends AppCompatActivity {
             int id = item.getItemId();
             if (id == R.id.nav_chat) return true;
             if (id == R.id.nav_home) {
-                finish();
+                Intent homeIntent = new Intent(this, DashboardActivity.class);
+                homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(homeIntent);
                 overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 return false;
             }
@@ -275,7 +277,7 @@ public class AIChatActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, RoadmapActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 return false;
             }
             if (id == R.id.nav_profile) {
@@ -453,6 +455,7 @@ public class AIChatActivity extends AppCompatActivity {
     // ── WebSocket ─────────────────────────────────────────────────────────────
 
     private void connectWebSocket() {
+        if (sessionId == null) return;
         streamingBuffer.setLength(0);
 
         String token = TokenManager.getAccessToken(this);

@@ -2,6 +2,11 @@ package com.example.codecompass.ui;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.res.ColorStateList;
+import android.graphics.Typeface;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.StyleSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +23,8 @@ import com.example.codecompass.model.ChatMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHolder> {
 
@@ -130,6 +137,12 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
                 } else {
                     layoutTypingDots.setBackgroundResource(R.drawable.bg_chat_bubble);
                 }
+                // Tint dots to be visible against their bubble background
+                int dotColor = useLightBubbles ? 0xFF888888 : 0xCCFFFFFF;
+                ColorStateList tint = ColorStateList.valueOf(dotColor);
+                dot1.setBackgroundTintList(tint);
+                dot2.setBackgroundTintList(tint);
+                dot3.setBackgroundTintList(tint);
                 startDotAnimation();
                 return;
             }
@@ -138,7 +151,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
             stopDotAnimation();
             layoutTypingDots.setVisibility(View.GONE);
             tvMessage.setVisibility(View.VISIBLE);
-            tvMessage.setText(message.getContent());
+            tvMessage.setText(renderMarkdown(message.getContent()));
 
             LinearLayout.LayoutParams params =
                     (LinearLayout.LayoutParams) tvMessage.getLayoutParams();
@@ -192,5 +205,25 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
             dot2.setTranslationY(0f);
             dot3.setTranslationY(0f);
         }
+    }
+
+    /** Converts **bold** markdown to bold spans. Unrecognised syntax passes through unchanged. */
+    private static final Pattern BOLD_PATTERN = Pattern.compile("\\*\\*(.+?)\\*\\*", Pattern.DOTALL);
+
+    static CharSequence renderMarkdown(String text) {
+        if (text == null || !text.contains("**")) return text;
+        SpannableStringBuilder ssb = new SpannableStringBuilder(text);
+        Matcher m = BOLD_PATTERN.matcher(text);
+        int offset = 0;
+        while (m.find()) {
+            int start = m.start() - offset;
+            int end   = m.end()   - offset;
+            String inner = m.group(1);
+            ssb.replace(start, end, inner);
+            ssb.setSpan(new StyleSpan(Typeface.BOLD), start, start + inner.length(),
+                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            offset += 4; // removed 2 opening + 2 closing asterisks
+        }
+        return ssb;
     }
 }

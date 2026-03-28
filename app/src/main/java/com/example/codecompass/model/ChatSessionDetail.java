@@ -6,10 +6,10 @@ import java.util.List;
 
 public class ChatSessionDetail {
 
-    @SerializedName("session_id")
+    @SerializedName("sessionId")
     private String sessionId;
 
-    @SerializedName("context_type")
+    @SerializedName("contextType")
     private String contextType;
 
     @SerializedName("title")

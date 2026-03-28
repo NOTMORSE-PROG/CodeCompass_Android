@@ -118,7 +118,7 @@ public class ProfileActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, AIChatHubActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 return false;
             }
             Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
