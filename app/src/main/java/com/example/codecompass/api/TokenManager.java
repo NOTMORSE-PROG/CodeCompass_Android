@@ -45,6 +45,13 @@ public class TokenManager {
                 .apply();
     }
 
+    /** Updates only the access token (used by TokenAuthenticator after a silent refresh). */
+    public static void saveAccessToken(Context context, String accessToken) {
+        getPrefs(context).edit()
+                .putString(KEY_ACCESS_TOKEN, accessToken)
+                .apply();
+    }
+
     public static String getBearerToken(Context context) {
         return "Bearer " + getAccessToken(context);
     }

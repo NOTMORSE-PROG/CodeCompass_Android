@@ -73,6 +73,7 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.gridlayout)
     implementation(libs.splashscreen)
+    implementation(libs.browser)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

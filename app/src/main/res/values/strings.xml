@@ -94,6 +94,71 @@
     <string name="stat_label_roadmap">Roadmap</string>
     <string name="warmup_banner_msg">Server is starting up, this may take a moment…</string>
 
+    <!-- Roadmap -->
+    <string name="roadmap_title">My Roadmap</string>
+    <string name="roadmap_no_roadmap_title">No Roadmap Yet</string>
+    <string name="roadmap_no_roadmap_body">Complete the onboarding chat to generate your personalized AI learning roadmap.</string>
+    <string name="roadmap_generate_btn">Generate My Roadmap →</string>
+    <string name="roadmap_all_locked_msg">All nodes are locked — tap Repair to unlock your first step.</string>
+    <string name="roadmap_repair_btn">Fix It</string>
+    <string name="roadmap_loading_resources">Finding videos for this topic…</string>
+    <string name="roadmap_mark_complete">Mark Complete</string>
+    <string name="roadmap_marking">Updating…</string>
+    <string name="roadmap_completed_on">Completed %s</string>
+    <string name="roadmap_curriculum">Curriculum</string>
+    <string name="roadmap_curriculum_done">%1$d/%2$d done</string>
+    <string name="roadmap_complete_quiz_first">Pass all video quizzes to complete this node.</string>
+    <string name="roadmap_search_youtube">Search on YouTube ↗</string>
+    <string name="roadmap_node_status_locked">Locked</string>
+    <string name="roadmap_node_status_available">Available</string>
+    <string name="roadmap_node_status_in_progress">In Progress</string>
+    <string name="roadmap_node_status_completed">Done</string>
+    <string name="roadmap_prerequisite_hint">Complete \"%s\" to unlock</string>
+    <string name="roadmap_xp_gain">+%d XP</string>
+    <string name="roadmap_node_complete_msg">Node Complete!</string>
+    <string name="roadmap_phase_stats">%1$d/%2$d done · +%3$d XP</string>
+    <string name="roadmap_phase_stats_done">%1$d/%2$d done</string>
+    <string name="roadmap_nodes_progress">%1$d / %2$d nodes</string>
+    <string name="roadmap_hours_left">~%dh left</string>
+    <string name="roadmap_error_retry">Retry</string>
+    <string name="roadmap_status_active">ACTIVE</string>
+    <string name="roadmap_status_completed">COMPLETED</string>
+    <string name="roadmap_status_generating">GENERATING</string>
+    <!-- Quiz -->
+    <string name="quiz_title">Quick Check</string>
+    <string name="quiz_generating">Generating quiz…</string>
+    <string name="quiz_take">Take Quiz</string>
+    <string name="quiz_submit">Submit Answers</string>
+    <string name="quiz_passed">Passed!</string>
+    <string name="quiz_failed">Not quite.</string>
+    <string name="quiz_score">%1$d/%2$d correct (%3$d%%)</string>
+    <string name="quiz_pass_threshold">Pass threshold: %d%%</string>
+    <string name="quiz_try_again">Try Again</string>
+    <string name="quiz_breakdown">Show answer breakdown</string>
+    <string name="quiz_hide_breakdown">Hide breakdown</string>
+    <string name="quiz_generating_loading">Generating quiz…</string>
+
+    <!-- Quiz — full-screen QuizActivity strings -->
+    <string name="quiz_question_of">Question %1$d of %2$d</string>
+    <string name="quiz_leave">Leave Quiz</string>
+    <string name="quiz_next">Next →</string>
+    <string name="quiz_submit_final">Submit Quiz</string>
+    <string name="quiz_generating_full">Generating your quiz…</string>
+    <string name="quiz_checking">Checking your answers…</string>
+    <string name="quiz_passed_label">Quiz Passed!</string>
+    <string name="quiz_failed_label">Not Quite</string>
+    <string name="quiz_passed_score">%1$d / %2$d correct · %3$d%%</string>
+    <string name="quiz_failed_score">%1$d / %2$d correct · need %3$d%% to pass</string>
+    <string name="quiz_back_to_lesson">Back to Lesson</string>
+
+    <!-- Video watch gate -->
+    <string name="video_watch_to_unlock">Watch 5 minutes to unlock the quiz</string>
+
+    <!-- Roadmap Next Up banner -->
+    <string name="roadmap_next_up_prefix">Next up: </string>
+    <string name="roadmap_resource_unavailable">Unavailable</string>
+    <string name="roadmap_mark_visited">Mark as Visited ✓</string>
+
     <!-- Profile -->
     <string name="profile_title">My Profile</string>
     <string name="profile_sign_out">Sign Out</string>

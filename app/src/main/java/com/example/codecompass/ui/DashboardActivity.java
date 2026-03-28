@@ -68,6 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
     // ── State ─────────────────────────────────────────────────────────────────
     private boolean isHandling401 = false;
     private int pendingRequests = 0;
+    private int currentRoadmapId = -1;
     private final Handler warmupHandler = new Handler(Looper.getMainLooper());
 
     @Override
@@ -114,6 +115,10 @@ public class DashboardActivity extends AppCompatActivity {
         bottomNav.setOnItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_home) return true;
+            if (id == R.id.nav_roadmap) {
+                openRoadmap();
+                return false; // keep Home selected visually
+            }
             if (id == R.id.nav_profile) {
                 Intent intent = new Intent(this, ProfileActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
@@ -201,13 +206,11 @@ public class DashboardActivity extends AppCompatActivity {
     // ── Click listeners ───────────────────────────────────────────────────────
 
     private void setupClickListeners() {
-        cardRoadmap.setOnClickListener(v ->
-                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
+        cardRoadmap.setOnClickListener(v -> openRoadmap());
+        btnActionRoadmap.setOnClickListener(v -> openRoadmap());
         cardAiChat.setOnClickListener(v ->
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
         cardProgress.setOnClickListener(v ->
-                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
-        btnActionRoadmap.setOnClickListener(v ->
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
         btnActionAiChat.setOnClickListener(v ->
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
@@ -215,6 +218,13 @@ public class DashboardActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
         btnActionAchievements.setOnClickListener(v ->
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
+    }
+
+    private void openRoadmap() {
+        Intent intent = new Intent(this, RoadmapActivity.class);
+        intent.putExtra(RoadmapActivity.EXTRA_ROADMAP_ID, currentRoadmapId);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     // ── Gamification profile ──────────────────────────────────────────────────
@@ -272,6 +282,7 @@ public class DashboardActivity extends AppCompatActivity {
                         }
                         int roadmapId = extractFirstRoadmapId(response.body());
                         if (roadmapId != -1) {
+                            currentRoadmapId = roadmapId;
                             fetchRoadmapDetail(TokenManager.getBearerToken(DashboardActivity.this), roadmapId);
                         } else {
                             onRequestDone();
@@ -385,6 +396,17 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     // ── Lifecycle ─────────────────────────────────────────────────────────────
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh roadmap progress card when returning from RoadmapActivity
+        if (currentRoadmapId != -1) {
+            containerNextSteps.removeAllViews();
+            layoutNextSteps.setVisibility(View.GONE);
+            fetchRoadmapDetail(TokenManager.getBearerToken(this), currentRoadmapId);
+        }
+    }
 
     @Override
     protected void onDestroy() {

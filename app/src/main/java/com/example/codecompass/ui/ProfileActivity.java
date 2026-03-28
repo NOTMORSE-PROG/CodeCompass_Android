@@ -66,6 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
     private View loadingBarProfile;
     private int pendingRequests = 0;
     private boolean isHandling401 = false;
+    private int currentRoadmapId = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,15 +109,31 @@ public class ProfileActivity extends AppCompatActivity {
                 finish();
                 return false;
             }
+            if (id == R.id.nav_roadmap) {
+                openRoadmap();
+                return false;
+            }
             Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
             return false;
         });
+
+        // Roadmap card taps open RoadmapActivity
+        cardProfileRoadmap.setOnClickListener(v -> openRoadmap());
 
         populateHeaderFromToken();
         setupAccountSection();
         startLoading();
         loadGamificationProfile();
         loadRoadmap();
+    }
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+
+    private void openRoadmap() {
+        Intent intent = new Intent(this, RoadmapActivity.class);
+        intent.putExtra(RoadmapActivity.EXTRA_ROADMAP_ID, currentRoadmapId);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     // ── Smooth tab-switch exit ────────────────────────────────────────────────
@@ -301,6 +318,7 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                         int roadmapId = extractFirstRoadmapId(response.body());
                         if (roadmapId != -1) {
+                            currentRoadmapId = roadmapId;
                             fetchRoadmapDetail(TokenManager.getBearerToken(ProfileActivity.this), roadmapId);
                         } else {
                             onRequestDone();

@@ -48,4 +48,82 @@
     <!-- Onboarding chip (semi-transparent white — must stay as alpha hex) -->
     <color name="colorChipBackgroundWhite">#14FFFFFF</color>
     <color name="colorChipStrokeWhite">#33FFFFFF</color>
+
+    <!-- ── Roadmap feature ───────────────────────────────────────────────── -->
+
+    <!-- Node status -->
+    <color name="nodeCompletedBg">#FFFDE7</color>
+    <color name="nodeLockedBg">#FAFAFA</color>
+    <color name="nodeLockedText">#9E9E9E</color>
+    <color name="nodeLockedBorder">#E0E0E0</color>
+    <color name="nodeIconLocked">#F5F5F5</color>
+    <color name="nodeIconLockedFg">#BDBDBD</color>
+    <color name="nodeIconAvailableBg">#F0F0F0</color>
+    <color name="nodeIconAvailableFg">#757575</color>
+
+    <!-- Node type badges -->
+    <color name="nodeBadgeSkillBg">#F5F5F5</color>
+    <color name="nodeBadgeSkillText">#757575</color>
+    <color name="nodeBadgeProjectBg">#E3F2FD</color>
+    <color name="nodeBadgeProjectText">#1565C0</color>
+    <color name="nodeBadgeCertBg">#F3E5F5</color>
+    <color name="nodeBadgeCertText">#6A1B9A</color>
+    <color name="nodeBadgeQuizBg">#FFF3E0</color>
+    <color name="nodeBadgeQuizText">#E65100</color>
+
+    <!-- Resource type badges -->
+    <color name="resourceYtBg">#FFEBEE</color>
+    <color name="resourceYtText">#D32F2F</color>
+    <color name="resourceArticleBg">#E3F2FD</color>
+    <color name="resourceArticleText">#1565C0</color>
+    <color name="resourceDocBg">#F3E5F5</color>
+    <color name="resourceDocText">#6A1B9A</color>
+    <color name="resourceCourseBg">#E8F5E9</color>
+    <color name="resourceCourseText">#2E7D32</color>
+    <color name="resourceGithubBg">#212121</color>
+    <color name="resourceGithubText">#FFFFFF</color>
+    <color name="resourceGenericBg">#F5F5F5</color>
+    <color name="resourceGenericText">#757575</color>
+
+    <!-- Resource row states -->
+    <color name="resourceRowActiveBg">#FFFDE7</color>
+    <color name="resourceRowActiveBorder">#FFC300</color>
+    <color name="resourceRowDoneBg">#F1F8E9</color>
+    <color name="resourceRowDoneBorder">#A5D6A7</color>
+
+    <!-- Quiz -->
+    <color name="quizPassBg">#E8F5E9</color>
+    <color name="quizPassText">#388E3C</color>
+    <color name="quizFailBg">#FFEBEE</color>
+    <color name="quizFailText">#C62828</color>
+    <color name="quizOptionSelectedBg">#FFF9C4</color>
+    <color name="quizOptionCorrectBg">#E8F5E9</color>
+    <color name="quizOptionWrongBg">#FFEBEE</color>
+    <color name="quizOptionNormalBg">#F5F5F5</color>
+
+    <!-- Milestone badges -->
+    <color name="milestoneActiveBg">#FFC300</color>
+    <color name="milestoneActiveText">#0A0A0A</color>
+    <color name="milestoneDoneBg">#0A0A0A</color>
+    <color name="milestoneDoneText">#FFC300</color>
+    <color name="milestoneLockedBg">#F5F5F5</color>
+    <color name="milestoneLockedText">#9E9E9E</color>
+
+    <!-- Status badge text/bg -->
+    <color name="statusAvailableText">#0A0A0A</color>
+    <color name="statusInProgressBg">#FFC300</color>
+    <color name="statusInProgressText">#0A0A0A</color>
+    <color name="statusCompletedBg">#0A0A0A</color>
+    <color name="statusCompletedText">#FFC300</color>
+    <color name="statusLockedBg">#F5F5F5</color>
+    <color name="statusLockedText">#9E9E9E</color>
+
+    <!-- Misc -->
+    <color name="completedGreen">#388E3C</color>
+    <color name="progressTrack">#E0E0E0</color>
+    <color name="dividerGray">#E0E0E0</color>
+    <color name="textSecondaryLight">#9E9E9E</color>
+    <color name="markCompleteBtnBg">#0A0A0A</color>
+    <color name="markCompleteBtnText">#FFC300</color>
+    <color name="xpOverlayBg">#CC000000</color>
 </resources>

@@ -13,6 +13,14 @@ import com.example.codecompass.model.LoginResponse;
 import com.example.codecompass.model.RegisterRequest;
 import com.example.codecompass.model.RegisterResponse;
 import com.example.codecompass.model.Roadmap;
+import com.example.codecompass.model.TokenRefreshRequest;
+import com.example.codecompass.model.TokenRefreshResponse;
+import com.example.codecompass.model.roadmap.NodeResource;
+import com.example.codecompass.model.roadmap.AssessmentResponse;
+import com.example.codecompass.model.roadmap.QuizResult;
+import com.example.codecompass.model.roadmap.SubmitAnswersRequest;
+import com.example.codecompass.model.roadmap.UpdateNodeResponse;
+import com.example.codecompass.model.roadmap.UpdateNodeStatusRequest;
 import com.google.gson.JsonElement;
 
 import java.util.List;
@@ -21,12 +29,16 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 public interface ApiService {
 
     // ── Authentication ────────────────────────────────────────────────────────
+
+    @POST("auth/token/refresh/")
+    Call<TokenRefreshResponse> refreshToken(@Body TokenRefreshRequest body);
 
     @POST("auth/login/")
     Call<LoginResponse> login(@Body LoginRequest body);
@@ -83,5 +95,60 @@ public interface ApiService {
     @POST("roadmaps/generate/")
     Call<Roadmap> generateRoadmap(
             @Header("Authorization") String bearerToken
+    );
+
+    // ── Roadmap node operations ───────────────────────────────────────────────
+
+    @PATCH("roadmaps/{roadmapId}/nodes/{nodeId}/")
+    Call<UpdateNodeResponse> updateNodeStatus(
+            @Header("Authorization") String bearerToken,
+            @Path("roadmapId") int roadmapId,
+            @Path("nodeId") int nodeId,
+            @Body UpdateNodeStatusRequest body
+    );
+
+    @POST("roadmaps/{roadmapId}/nodes/{nodeId}/fetch-resources/")
+    Call<List<NodeResource>> fetchNodeResources(
+            @Header("Authorization") String bearerToken,
+            @Path("roadmapId") int roadmapId,
+            @Path("nodeId") int nodeId
+    );
+
+    @POST("roadmaps/{roadmapId}/nodes/{nodeId}/resources/{resourceId}/unlock/")
+    Call<Void> unlockVideoWatch(
+            @Header("Authorization") String bearerToken,
+            @Path("roadmapId") int roadmapId,
+            @Path("nodeId") int nodeId,
+            @Path("resourceId") int resourceId
+    );
+
+    @POST("roadmaps/{roadmapId}/nodes/{nodeId}/resources/{resourceId}/assessment/")
+    Call<AssessmentResponse> generateQuiz(
+            @Header("Authorization") String bearerToken,
+            @Path("roadmapId") int roadmapId,
+            @Path("nodeId") int nodeId,
+            @Path("resourceId") int resourceId
+    );
+
+    @POST("roadmaps/{roadmapId}/nodes/{nodeId}/resources/{resourceId}/assessment/{sessionId}/submit/")
+    Call<QuizResult> submitQuiz(
+            @Header("Authorization") String bearerToken,
+            @Path("roadmapId") int roadmapId,
+            @Path("nodeId") int nodeId,
+            @Path("resourceId") int resourceId,
+            @Path("sessionId") int sessionId,
+            @Body SubmitAnswersRequest body
+    );
+
+    @POST("roadmaps/{id}/repair/")
+    Call<Void> repairRoadmap(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int roadmapId
+    );
+
+    @POST("roadmaps/{id}/fix-structure/")
+    Call<Roadmap> fixRoadmapStructure(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int roadmapId
     );
 }

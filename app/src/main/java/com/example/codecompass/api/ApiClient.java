@@ -32,6 +32,7 @@ public class ApiClient {
                     .writeTimeout(60, TimeUnit.SECONDS)
                     .pingInterval(25, TimeUnit.SECONDS) // keeps WebSocket alive
                     .addInterceptor(logging)
+                    .authenticator(new TokenAuthenticator())
                     .build();
         }
         return okHttpClient;
