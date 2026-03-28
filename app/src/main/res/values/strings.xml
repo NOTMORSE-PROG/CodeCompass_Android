@@ -159,6 +159,26 @@
     <string name="roadmap_resource_unavailable">Unavailable</string>
     <string name="roadmap_mark_visited">Mark as Visited ✓</string>
 
+    <!-- AI Chat -->
+    <string name="ai_chat_title">AI Career Assistant</string>
+    <string name="mode_general">General</string>
+    <string name="mode_roadmap">Roadmap</string>
+    <string name="mode_jobs">Jobs</string>
+    <string name="mode_university">University</string>
+    <string name="lang_en">EN</string>
+    <string name="lang_tl">TL</string>
+    <string name="lang_tg">TG</string>
+    <string name="ai_chat_wait_streaming">Please wait for the response to finish</string>
+    <string name="chat_hub_title">AI Chat</string>
+    <string name="chat_hub_empty_title">No conversations yet</string>
+    <string name="chat_hub_empty_sub">Tap + to start your first chat</string>
+    <string name="chat_new">New Chat</string>
+    <string name="ai_chat_respond_in">Respond in:</string>
+    <string name="ai_welcome_general">Your AI career mentor.\nAsk me anything about tech careers, skills, or your learning path.</string>
+    <string name="ai_welcome_roadmap">Roadmap assistant.\nI can help you navigate, explain, or adjust your learning roadmap.</string>
+    <string name="ai_welcome_jobs">Job search guide.\nI know the Philippine tech job market — salaries, companies, interviews.</string>
+    <string name="ai_welcome_university">University advisor.\nChoosing between CCS programs or schools? I can help.</string>
+
     <!-- Profile -->
     <string name="profile_title">My Profile</string>
     <string name="profile_sign_out">Sign Out</string>

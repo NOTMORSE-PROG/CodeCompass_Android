@@ -49,6 +49,7 @@ public class DashboardActivity extends AppCompatActivity {
     private CircularProgressIndicator progressRoadmap;
     private LinearLayout layoutNextSteps;
     private LinearLayout containerNextSteps;
+    private TextView tvViewFullRoadmap;
     private LinearLayout layoutXpBadge;
     private LinearLayout layoutStreakBadge;
     private LinearLayout layoutWarmupBanner;
@@ -88,6 +89,7 @@ public class DashboardActivity extends AppCompatActivity {
         progressRoadmap    = findViewById(R.id.progressRoadmap);
         layoutNextSteps    = findViewById(R.id.layoutNextSteps);
         containerNextSteps = findViewById(R.id.containerNextSteps);
+        tvViewFullRoadmap  = findViewById(R.id.tvViewFullRoadmap);
         layoutXpBadge      = findViewById(R.id.layoutXpBadge);
         layoutStreakBadge  = findViewById(R.id.layoutStreakBadge);
         layoutWarmupBanner = findViewById(R.id.layoutWarmupBanner);
@@ -117,17 +119,24 @@ public class DashboardActivity extends AppCompatActivity {
             if (id == R.id.nav_home) return true;
             if (id == R.id.nav_roadmap) {
                 openRoadmap();
-                return false; // keep Home selected visually
+                return false;
+            }
+            if (id == R.id.nav_chat) {
+                Intent intent = new Intent(this, AIChatHubActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                return false;
             }
             if (id == R.id.nav_profile) {
                 Intent intent = new Intent(this, ProfileActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                return false; // keep Home selected visually
+                return false;
             }
             Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
-            return false; // keep Home visually selected
+            return false;
         });
 
         setupWelcomeHeader();
@@ -207,17 +216,22 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         cardRoadmap.setOnClickListener(v -> openRoadmap());
+        tvViewFullRoadmap.setOnClickListener(v -> openRoadmap());
         btnActionRoadmap.setOnClickListener(v -> openRoadmap());
-        cardAiChat.setOnClickListener(v ->
-                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
+        cardAiChat.setOnClickListener(v -> openAiChat());
         cardProgress.setOnClickListener(v ->
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
-        btnActionAiChat.setOnClickListener(v ->
-                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
+        btnActionAiChat.setOnClickListener(v -> openAiChat());
         btnActionJobs.setOnClickListener(v ->
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
         btnActionAchievements.setOnClickListener(v ->
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
+    }
+
+    private void openAiChat() {
+        Intent intent = new Intent(this, AIChatActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
     }
 
     private void openRoadmap() {
@@ -392,6 +406,7 @@ public class DashboardActivity extends AppCompatActivity {
         tvMeta.setText(String.format(Locale.getDefault(), "%s · %dh · +%d XP",
                 status, node.getEstimatedHours(), node.getXpReward()));
 
+        row.setOnClickListener(v -> openRoadmap());
         containerNextSteps.addView(row);
     }
 

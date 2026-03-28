@@ -1,6 +1,8 @@
 package com.example.codecompass.api;
 
 import com.example.codecompass.model.ChangePasswordRequest;
+import com.example.codecompass.model.ChatSession;
+import com.example.codecompass.model.ChatSessionDetail;
 import com.example.codecompass.model.CompleteOnboardingRequest;
 import com.example.codecompass.model.CompleteOnboardingResponse;
 import com.example.codecompass.model.CreateSessionRequest;
@@ -69,6 +71,17 @@ public interface ApiService {
     Call<CreateSessionResponse> createChatSession(
             @Header("Authorization") String bearerToken,
             @Body CreateSessionRequest body
+    );
+
+    @GET("chat/sessions/")
+    Call<List<ChatSession>> getChatSessions(
+            @Header("Authorization") String bearerToken
+    );
+
+    @GET("chat/sessions/{session_id}/")
+    Call<ChatSessionDetail> getChatSessionDetail(
+            @Header("Authorization") String bearerToken,
+            @Path("session_id") String sessionId
     );
 
     // ── Gamification ──────────────────────────────────────────────────────────

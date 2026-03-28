@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -24,6 +25,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.codecompass.R;
 import com.example.codecompass.api.ApiClient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.codecompass.ui.AIChatHubActivity;
 import com.example.codecompass.api.TokenManager;
 import com.example.codecompass.model.GamificationProfile;
 import com.example.codecompass.model.Roadmap;
@@ -109,6 +112,7 @@ public class RoadmapActivity extends AppCompatActivity {
         bindViews();
         setupRecycler();
         setupSwipeRefresh();
+        setupBottomNav();
 
         viewModel = new ViewModelProvider(this).get(RoadmapViewModel.class);
         int roadmapId = getIntent().getIntExtra(EXTRA_ROADMAP_ID, -1);
@@ -187,6 +191,38 @@ public class RoadmapActivity extends AppCompatActivity {
     private void setupSwipeRefresh() {
         swipeRefresh.setColorSchemeColors(getColor(R.color.colorPrimary));
         swipeRefresh.setOnRefreshListener(() -> viewModel.refresh());
+    }
+
+    private void setupBottomNav() {
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavRoadmap);
+        bottomNav.setSelectedItemId(R.id.nav_roadmap);
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_roadmap) return true;
+            if (id == R.id.nav_home) {
+                Intent intent = new Intent(this, DashboardActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                return false;
+            }
+            if (id == R.id.nav_chat) {
+                Intent intent = new Intent(this, AIChatHubActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                return false;
+            }
+            if (id == R.id.nav_profile) {
+                Intent intent = new Intent(this, ProfileActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                return false;
+            }
+            Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show();
+            return false;
+        });
     }
 
     // ── ViewModel observers ───────────────────────────────────────────────────

@@ -31,8 +31,8 @@
 
     <!-- Splash screen theme (Android 12+ native SplashScreen API) -->
     <style name="Theme.CodeCompass.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/colorSplash</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+        <item name="windowSplashScreenBackground">@color/colorSurface</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.CodeCompass</item>
     </style>
 

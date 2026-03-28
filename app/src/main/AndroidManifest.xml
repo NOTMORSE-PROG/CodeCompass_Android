@@ -66,6 +66,15 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
 
+        <activity
+            android:name=".ui.AIChatActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ui.AIChatHubActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

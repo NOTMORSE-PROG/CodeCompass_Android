@@ -16,13 +16,11 @@
 
         <!-- ── Branded Header (same as Login) ─────────────────────────────── -->
         <ImageView
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
             android:layout_marginTop="32dp"
-            android:background="@drawable/bg_circle_yellow"
             android:contentDescription="@string/app_name"
-            android:padding="14dp"
-            android:src="@drawable/ic_splash_logo" />
+            android:src="@drawable/ic_launcher_logo" />
 
         <TextView
             android:layout_width="wrap_content"

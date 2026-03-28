@@ -26,6 +26,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
 
     private final List<ChatMessage> messages = new ArrayList<>();
     private RecyclerView recyclerView;
+    private final boolean useLightBubbles;
+
+    public ChatAdapter() {
+        this.useLightBubbles = false; // dark mode — used by OnboardingActivity
+    }
+
+    public ChatAdapter(boolean useLightBubbles) {
+        this.useLightBubbles = useLightBubbles;
+    }
 
     @Override
     public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -48,7 +57,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
 
     @Override
     public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-        holder.bind(messages.get(position));
+        holder.bind(messages.get(position), useLightBubbles);
     }
 
     @Override
@@ -109,13 +118,18 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
             dot3            = itemView.findViewById(R.id.dot3);
         }
 
-        void bind(ChatMessage message) {
+        void bind(ChatMessage message, boolean useLightBubbles) {
             if (message.isTyping()) {
                 // Typing indicator — CC avatar + bouncing dots
                 tvAvatar.setVisibility(View.VISIBLE);
                 layoutTypingDots.setVisibility(View.VISIBLE);
                 tvMessage.setVisibility(View.GONE);
                 ((LinearLayout) itemView).setGravity(Gravity.START | Gravity.BOTTOM);
+                if (useLightBubbles) {
+                    layoutTypingDots.setBackgroundResource(R.drawable.bg_chat_bubble_ai_light);
+                } else {
+                    layoutTypingDots.setBackgroundResource(R.drawable.bg_chat_bubble);
+                }
                 startDotAnimation();
                 return;
             }
@@ -138,9 +152,15 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
                 ((LinearLayout) itemView).setGravity(Gravity.END | Gravity.BOTTOM);
             } else {
                 tvAvatar.setVisibility(View.VISIBLE);
-                tvMessage.setBackgroundResource(R.drawable.bg_chat_bubble);
-                tvMessage.setTextColor(
-                        itemView.getContext().getColor(R.color.colorChatAiTextDark));
+                if (useLightBubbles) {
+                    tvMessage.setBackgroundResource(R.drawable.bg_chat_bubble_ai_light);
+                    tvMessage.setTextColor(
+                            itemView.getContext().getColor(R.color.colorChatAiText));
+                } else {
+                    tvMessage.setBackgroundResource(R.drawable.bg_chat_bubble);
+                    tvMessage.setTextColor(
+                            itemView.getContext().getColor(R.color.colorChatAiTextDark));
+                }
                 params.gravity = Gravity.START;
                 ((LinearLayout) itemView).setGravity(Gravity.START | Gravity.BOTTOM);
             }
