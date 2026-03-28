@@ -58,7 +58,7 @@ jobs:
           NOTES="Built from commit [${{ github.event.workflow_run.head_sha }}](https://github.com/${{ github.repository }}/commit/${{ github.event.workflow_run.head_sha }})"
           if gh release view latest &>/dev/null; then
             gh release upload latest "$APK" --clobber
-            gh release edit latest --title "Latest Debug Build" --notes "$NOTES"
+            gh release edit latest --title "CodeCompassAndroid - Latest" --notes "$NOTES"
           else
-            gh release create latest "$APK" --title "Latest Debug Build" --notes "$NOTES"
+            gh release create latest "$APK" --title "CodeCompassAndroid - Latest" --notes "$NOTES"
           fi
