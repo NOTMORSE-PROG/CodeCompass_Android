@@ -207,6 +207,22 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
         }
     }
 
+    /** Returns a snapshot of all non-typing messages (safe to cache across tab switches). */
+    public List<ChatMessage> getMessages() {
+        List<ChatMessage> snapshot = new ArrayList<>();
+        for (ChatMessage m : messages) {
+            if (!m.isTyping()) snapshot.add(m);
+        }
+        return snapshot;
+    }
+
+    /** Replaces the entire message list (used when restoring a saved tab). */
+    public void setMessages(List<ChatMessage> newMessages) {
+        messages.clear();
+        messages.addAll(newMessages);
+        notifyDataSetChanged();
+    }
+
     /** Converts **bold** markdown to bold spans. Unrecognised syntax passes through unchanged. */
     private static final Pattern BOLD_PATTERN = Pattern.compile("\\*\\*(.+?)\\*\\*", Pattern.DOTALL);
 

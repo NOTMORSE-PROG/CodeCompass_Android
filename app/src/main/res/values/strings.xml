@@ -74,7 +74,7 @@
     <string name="quick_actions">Quick Actions</string>
     <string name="action_roadmap">View Roadmap</string>
     <string name="action_ai_chat">Chat with AI</string>
-    <string name="action_jobs">Browse Jobs</string>
+    <string name="action_jobs">Certifications</string>
     <string name="action_achievements">Achievements</string>
     <string name="btn_logout">Logout</string>
     <string name="coming_soon">Coming soon!</string>
@@ -86,7 +86,7 @@
     <string name="achievements_hint">View your achievements →</string>
     <string name="action_roadmap_sub">Plan your path</string>
     <string name="action_ai_chat_sub">Get answers instantly</string>
-    <string name="action_jobs_sub">Explore openings</string>
+    <string name="action_jobs_sub">Browse &amp; track certs</string>
     <string name="action_achievements_sub">Track your badges</string>
     <string name="roadmap_continue">Continue →</string>
     <string name="stat_label_streak">Day Streak</string>
@@ -178,6 +178,46 @@
     <string name="ai_welcome_roadmap">Roadmap assistant.\nI can help you navigate, explain, or adjust your learning roadmap.</string>
     <string name="ai_welcome_jobs">Job search guide.\nI know the Philippine tech job market — salaries, companies, interviews.</string>
     <string name="ai_welcome_university">University advisor.\nChoosing between CCS programs or schools? I can help.</string>
+
+    <!-- Achievements -->
+    <string name="achievements_title">Achievements</string>
+    <string name="achievements_subtitle">Earn XP, collect badges, and compete with other students.</string>
+    <string name="achievements_total_xp">Total XP</string>
+    <string name="achievements_level_label">Level %1$d → Next level at %2$s XP</string>
+    <string name="achievements_level_current">Level %d</string>
+    <string name="achievements_xp_range">%1$s / %2$s XP</string>
+    <string name="achievements_day_streak">day streak</string>
+    <string name="achievements_streak_active">Great job! Keep logging in every day to maintain your streak.</string>
+    <string name="achievements_streak_inactive">Log in and learn every day to keep your streak going!</string>
+    <string name="achievements_badge_count">%1$d / %2$d earned</string>
+    <string name="achievements_badges_loading">Loading badges…</string>
+    <string name="achievements_xp_empty">No XP earned yet. Complete nodes and earn badges to see your history!</string>
+    <string name="achievements_leaderboard_empty">No leaderboard data yet. Start earning XP!</string>
+    <string name="achievements_leaderboard_hint">Complete nodes to earn XP and climb the board!</string>
+    <string name="achievements_period_weekly">This Week</string>
+    <string name="achievements_period_monthly">This Month</string>
+    <string name="achievements_period_all_time">All Time</string>
+
+    <!-- Certifications -->
+    <string name="certifications_title">Certifications</string>
+    <string name="certifications_subtitle">Browse and track IT certifications to boost your career.</string>
+    <string name="certifications_filter_all">All</string>
+    <string name="certifications_filter_free_only">Free Only</string>
+    <string name="certifications_my_certs">My Certs</string>
+    <string name="certifications_track_btn">Track</string>
+    <string name="certifications_tracked">Tracked ✓</string>
+    <string name="certifications_empty">No certifications match your filters.</string>
+    <string name="certifications_status_interested">Interested</string>
+    <string name="certifications_status_studying">Studying</string>
+    <string name="certifications_status_passed">Earned ✓</string>
+    <string name="certifications_status_expired">Expired</string>
+    <string name="certifications_earned_xp">Certificate Earned! +200 XP</string>
+    <string name="certifications_how_to_title">How to Get This Certification</string>
+    <string name="certifications_skills_title">Skills You\'ll Gain</string>
+    <string name="certifications_career_title">Career Paths</string>
+    <string name="certifications_visit_official">Visit Official Page</string>
+    <string name="certifications_study_guide">Study Guide / Resources</string>
+    <string name="certifications_remove">Remove from Tracker</string>
 
     <!-- Profile -->
     <string name="profile_title">My Profile</string>

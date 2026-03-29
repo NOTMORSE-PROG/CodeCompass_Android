@@ -75,6 +75,14 @@
             android:name=".ui.AIChatHubActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.AchievementsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.CertificationsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

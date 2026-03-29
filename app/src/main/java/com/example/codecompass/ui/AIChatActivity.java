@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.codecompass.R;
 import com.example.codecompass.api.ApiClient;
 import com.example.codecompass.api.TokenManager;
+import com.example.codecompass.util.JwtUtils;
 import com.example.codecompass.model.ChatMessage;
 import com.example.codecompass.model.ChatSessionDetail;
 import com.example.codecompass.model.CreateSessionRequest;
@@ -41,7 +42,10 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.Request;
 import okhttp3.Response;
@@ -82,6 +86,11 @@ public class AIChatActivity extends AppCompatActivity {
     private int sessionRetryCount = 0;
     private int wsRetryCount = 0;
     private int previousTabPosition = 0;
+
+    // ── Per-mode session memory ───────────────────────────────────────────────
+    private final String[]                       modeSessionIds = new String[4];
+    private final Map<Integer, List<ChatMessage>> modeMessages   = new HashMap<>();
+    private final String[]                       modeTitles     = new String[4];
     private static final int MAX_RETRIES = 6;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
@@ -201,11 +210,15 @@ public class AIChatActivity extends AppCompatActivity {
     // ── Mode tabs ─────────────────────────────────────────────────────────────
 
     private void setupTabModes() {
+        String role = JwtUtils.getRole(TokenManager.getAccessToken(this));
+        boolean showUniversity = "incoming_student".equals(role);
+
         int[] labelRes = {
             R.string.mode_general, R.string.mode_roadmap,
             R.string.mode_jobs,    R.string.mode_university
         };
         for (int i = 0; i < labelRes.length; i++) {
+            if (i == 3 && !showUniversity) continue;
             TabLayout.Tab tab = tabModes.newTab();
             tab.setText(MODE_EMOJIS[i] + " " + getString(labelRes[i]));
             tabModes.addTab(tab);
@@ -226,9 +239,10 @@ public class AIChatActivity extends AppCompatActivity {
                     return;
                 }
 
+                int outgoing        = previousTabPosition;
                 previousTabPosition = pos;
                 currentContextType  = MODE_CONTEXT_TYPES[pos];
-                startNewSession(pos);
+                startNewSession(pos, outgoing);
             }
 
             @Override public void onTabUnselected(TabLayout.Tab tab)  {}
@@ -379,25 +393,54 @@ public class AIChatActivity extends AppCompatActivity {
 
     // ── Session management ────────────────────────────────────────────────────
 
-    private void startNewSession(int modeIndex) {
+    private void startNewSession(int modeIndex, int outgoingIndex) {
+        // 1. Save outgoing tab state
+        modeSessionIds[outgoingIndex] = sessionId;
+        modeMessages.put(outgoingIndex, chatAdapter.getMessages());
+        modeTitles[outgoingIndex] = (getSupportActionBar() != null
+                && getSupportActionBar().getTitle() != null)
+                ? getSupportActionBar().getTitle().toString() : null;
+
+        // 2. Tear down current connection
         if (webSocket != null) {
             webSocket.close(1000, "Mode changed");
             webSocket = null;
         }
-        sessionId            = null;
-        pendingFirstMessage  = null;
-        isStreaming          = false;
-        streamingMsgIndex    = -1;
-        sessionRetryCount    = 0;
-        wsRetryCount         = 0;
+        sessionId           = null;
+        pendingFirstMessage = null;
+        isStreaming         = false;
+        streamingMsgIndex   = -1;
+        sessionRetryCount   = 0;
+        wsRetryCount        = 0;
         streamingBuffer.setLength(0);
         clearSuggestions();
+
+        // 3. Restore incoming tab or start fresh
+        String savedId            = modeSessionIds[modeIndex];
+        List<ChatMessage> saved   = modeMessages.get(modeIndex);
+
         chatAdapter = new ChatAdapter(true);
         rvChat.setAdapter(chatAdapter);
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(R.string.ai_chat_title);
+
+        if (savedId != null && saved != null && !saved.isEmpty()) {
+            // Restore previous conversation for this tab
+            sessionId = savedId;
+            chatAdapter.setMessages(saved);
+            rvChat.scrollToPosition(saved.size() - 1);
+            String savedTitle = modeTitles[modeIndex];
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(
+                        savedTitle != null ? savedTitle : getString(R.string.ai_chat_title));
+            }
+            hideWelcomeState();
+            btnSend.setEnabled(true);
+            connectWebSocket();
+        } else {
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setTitle(R.string.ai_chat_title);
+            }
+            showWelcomeState(modeIndex);
         }
-        showWelcomeState(modeIndex);
     }
 
     private void createSession() {

@@ -644,7 +644,7 @@
                     android:layout_marginTop="10dp"
                     android:orientation="horizontal">
 
-                    <!-- Jobs action card -->
+                    <!-- Certifications action card -->
                     <androidx.cardview.widget.CardView
                         android:id="@+id/btnActionJobs"
                         android:layout_width="0dp"
@@ -676,7 +676,7 @@
                                     android:layout_height="24dp"
                                     android:layout_gravity="center"
                                     android:contentDescription="@null"
-                                    android:src="@drawable/ic_jobs"
+                                    android:src="@drawable/ic_achievements"
                                     app:tint="@color/colorOnlineGreen" />
 
                             </FrameLayout>

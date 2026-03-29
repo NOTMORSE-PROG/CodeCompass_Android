@@ -1,6 +1,8 @@
 package com.example.codecompass.api;
 
+import com.example.codecompass.model.Badge;
 import com.example.codecompass.model.ChangePasswordRequest;
+import com.example.codecompass.model.Certification;
 import com.example.codecompass.model.ChatSession;
 import com.example.codecompass.model.ChatSessionDetail;
 import com.example.codecompass.model.PagedResponse;
@@ -10,6 +12,9 @@ import com.example.codecompass.model.CreateSessionRequest;
 import com.example.codecompass.model.CreateSessionResponse;
 import com.example.codecompass.model.GamificationProfile;
 import com.example.codecompass.model.GoogleAuthRequest;
+import com.example.codecompass.model.LeaderboardEntry;
+import com.example.codecompass.model.UserBadge;
+import com.example.codecompass.model.XPEvent;
 import com.example.codecompass.model.GoogleAuthResponse;
 import com.example.codecompass.model.LoginRequest;
 import com.example.codecompass.model.LoginResponse;
@@ -18,6 +23,9 @@ import com.example.codecompass.model.RegisterResponse;
 import com.example.codecompass.model.Roadmap;
 import com.example.codecompass.model.TokenRefreshRequest;
 import com.example.codecompass.model.TokenRefreshResponse;
+import com.example.codecompass.model.TrackCertRequest;
+import com.example.codecompass.model.UpdateCertStatusRequest;
+import com.example.codecompass.model.UserCertification;
 import com.example.codecompass.model.roadmap.NodeResource;
 import com.example.codecompass.model.roadmap.AssessmentResponse;
 import com.example.codecompass.model.roadmap.QuizResult;
@@ -30,11 +38,13 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
 
@@ -90,6 +100,63 @@ public interface ApiService {
     @GET("gamification/profile/")
     Call<GamificationProfile> getGamificationProfile(
             @Header("Authorization") String bearerToken
+    );
+
+    @GET("gamification/badges/")
+    Call<PagedResponse<Badge>> getAllBadges(
+            @Header("Authorization") String bearerToken
+    );
+
+    @GET("gamification/badges/earned/")
+    Call<PagedResponse<UserBadge>> getEarnedBadges(
+            @Header("Authorization") String bearerToken
+    );
+
+    @GET("gamification/xp-history/")
+    Call<List<XPEvent>> getXPHistory(
+            @Header("Authorization") String bearerToken
+    );
+
+    @GET("gamification/leaderboard/")
+    Call<List<LeaderboardEntry>> getLeaderboard(
+            @Header("Authorization") String bearerToken,
+            @Query("period") String period
+    );
+
+    // ── Certifications ────────────────────────────────────────────────────────
+
+    @GET("certifications/")
+    Call<PagedResponse<Certification>> getCertifications(
+            @Header("Authorization") String bearerToken,
+            @Query("provider") String provider,
+            @Query("track") String track,
+            @Query("is_free") Boolean isFree,
+            @Query("search") String search,
+            @Query("page") Integer page
+    );
+
+    @GET("certifications/my/")
+    Call<PagedResponse<UserCertification>> getMyCertifications(
+            @Header("Authorization") String bearerToken
+    );
+
+    @POST("certifications/my/")
+    Call<UserCertification> trackCertification(
+            @Header("Authorization") String bearerToken,
+            @Body TrackCertRequest body
+    );
+
+    @PATCH("certifications/my/{id}/")
+    Call<UserCertification> updateCertTracking(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id,
+            @Body UpdateCertStatusRequest body
+    );
+
+    @DELETE("certifications/my/{id}/")
+    Call<Void> untrackCertification(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id
     );
 
     // ── Roadmaps ──────────────────────────────────────────────────────────────

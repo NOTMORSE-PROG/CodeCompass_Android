@@ -19,6 +19,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.codecompass.R;
 import com.example.codecompass.api.ApiClient;
 import com.example.codecompass.api.TokenManager;
+import com.example.codecompass.ui.CertificationsActivity;
 import com.example.codecompass.model.GamificationProfile;
 import com.example.codecompass.model.Roadmap;
 import com.example.codecompass.model.RoadmapNode;
@@ -222,10 +223,16 @@ public class DashboardActivity extends AppCompatActivity {
         cardProgress.setOnClickListener(v ->
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
         btnActionAiChat.setOnClickListener(v -> openAiChat());
-        btnActionJobs.setOnClickListener(v ->
-                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
-        btnActionAchievements.setOnClickListener(v ->
-                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
+        btnActionJobs.setOnClickListener(v -> {
+            Intent intent = new Intent(this, CertificationsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+        btnActionAchievements.setOnClickListener(v -> {
+                Intent intent = new Intent(this, AchievementsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
     }
 
     private void openAiChat() {
