@@ -20,6 +20,7 @@ import com.example.codecompass.R;
 import com.example.codecompass.api.ApiClient;
 import com.example.codecompass.api.TokenManager;
 import com.example.codecompass.ui.CertificationsActivity;
+import com.example.codecompass.ui.JobsActivity;
 import com.example.codecompass.model.GamificationProfile;
 import com.example.codecompass.model.Roadmap;
 import com.example.codecompass.model.RoadmapNode;
@@ -65,6 +66,7 @@ public class DashboardActivity extends AppCompatActivity {
     private CardView btnActionAiChat;
     private CardView btnActionJobs;
     private CardView btnActionAchievements;
+    private CardView cardCertifications;
     private CardView cardProgress;
 
     // ── State ─────────────────────────────────────────────────────────────────
@@ -106,6 +108,7 @@ public class DashboardActivity extends AppCompatActivity {
         btnActionAiChat    = findViewById(R.id.btnActionAiChat);
         btnActionJobs      = findViewById(R.id.btnActionJobs);
         btnActionAchievements = findViewById(R.id.btnActionAchievements);
+        cardCertifications = findViewById(R.id.cardCertifications);
 
         tvWarmupRetry.setOnClickListener(v -> refresh());
 
@@ -224,6 +227,11 @@ public class DashboardActivity extends AppCompatActivity {
                 Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
         btnActionAiChat.setOnClickListener(v -> openAiChat());
         btnActionJobs.setOnClickListener(v -> {
+            Intent intent = new Intent(this, JobsActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+        cardCertifications.setOnClickListener(v -> {
             Intent intent = new Intent(this, CertificationsActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);

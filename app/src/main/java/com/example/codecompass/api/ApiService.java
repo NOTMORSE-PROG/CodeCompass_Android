@@ -2,6 +2,8 @@ package com.example.codecompass.api;
 
 import com.example.codecompass.model.Badge;
 import com.example.codecompass.model.ChangePasswordRequest;
+import com.example.codecompass.model.JobListing;
+import com.example.codecompass.model.SavedJob;
 import com.example.codecompass.model.Certification;
 import com.example.codecompass.model.ChatSession;
 import com.example.codecompass.model.ChatSessionDetail;
@@ -231,5 +233,37 @@ public interface ApiService {
     Call<Roadmap> fixRoadmapStructure(
             @Header("Authorization") String bearerToken,
             @Path("id") int roadmapId
+    );
+
+    // ── Jobs ──────────────────────────────────────────────────────────────────
+
+    @GET("jobs/")
+    Call<PagedResponse<JobListing>> getJobs(
+            @Header("Authorization") String bearerToken,
+            @Query("page") Integer page,
+            @Query("search") String search,
+            @Query("job_type") String jobType
+    );
+
+    @GET("jobs/recommended/")
+    Call<List<JobListing>> getRecommendedJobs(
+            @Header("Authorization") String bearerToken
+    );
+
+    @GET("jobs/saved/")
+    Call<PagedResponse<SavedJob>> getSavedJobs(
+            @Header("Authorization") String bearerToken
+    );
+
+    @POST("jobs/{id}/save/")
+    Call<Void> saveJob(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int jobId
+    );
+
+    @DELETE("jobs/{id}/save/")
+    Call<Void> unsaveJob(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int jobId
     );
 }

@@ -83,6 +83,10 @@
             android:name=".ui.CertificationsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.JobsActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

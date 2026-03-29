@@ -1,6 +1,8 @@
 package com.example.codecompass.ui;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,9 +25,11 @@ import com.example.codecompass.model.RoadmapNode;
 import com.example.codecompass.model.TrackCertRequest;
 import com.example.codecompass.model.UserCertification;
 import com.example.codecompass.ui.adapter.CertificationAdapter;
+import com.example.codecompass.ui.adapter.MyCertsAdapter;
 import com.example.codecompass.ui.adapter.RecommendationAdapter;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -46,7 +50,7 @@ public class CertificationsActivity extends AppCompatActivity
         implements CertificationAdapter.OnCertActionListener,
                    CertDetailBottomSheet.OnTrackChangeListener {
 
-    // ── Track filter chips (replaces 22-provider row) ─────────────────────────
+    // ── Track filter chips ─────────────────────────────────────────────────────
     private static final String[][] TRACK_CHIPS = {
         {"all",           "All"},
         {"web",           "Web Dev"},
@@ -64,31 +68,39 @@ public class CertificationsActivity extends AppCompatActivity
 
     // ── Views ──────────────────────────────────────────────────────────────────
     private LinearProgressIndicator loadingBar;
+    private LinearLayout layoutLoadingState;
+    private TabLayout tabLayout;
+    private LinearLayout layoutBrowse;
+    private LinearLayout layoutMyCerts;
+    // Browse
     private TextInputEditText etSearch;
     private LinearLayout chipGroupProvider;
-    private Chip chipMyCerts;
     private Chip chipFreeOnly;
     private RecyclerView rvCertifications;
     private RecyclerView rvRecommendations;
     private LinearLayout sectionRecommendations;
     private TextView tvEmpty;
     private TextView tvResultCount;
+    // My Certs
+    private RecyclerView rvMyCerts;
+    private TextView tvMyCertsEmpty;
 
     // ── State ──────────────────────────────────────────────────────────────────
     private final List<Certification> allCerts = new ArrayList<>();
     private final Map<Integer, UserCertification> myCerts = new HashMap<>();
     private String activeTrack = "all";
-    private boolean showMyCerts = false;
     private boolean showFreeOnly = false;
     private String searchQuery = "";
     private int pendingRequests = 0;
     private boolean isHandling401 = false;
     private Roadmap primaryRoadmap = null;
     private boolean roadmapLoaded = false;
+    private boolean myCertsTabActive = false;
 
     // ── Adapters ────────────────────────────────────────────────────────────────
     private CertificationAdapter adapter;
     private RecommendationAdapter recommendationAdapter;
+    private MyCertsAdapter myCertsAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,33 +108,61 @@ public class CertificationsActivity extends AppCompatActivity
         setContentView(R.layout.activity_certifications);
 
         loadingBar             = findViewById(R.id.loadingBar);
+        layoutLoadingState     = findViewById(R.id.layoutLoadingState);
+        tabLayout              = findViewById(R.id.tabLayout);
+        layoutBrowse           = findViewById(R.id.layoutBrowse);
+        layoutMyCerts          = findViewById(R.id.layoutMyCerts);
         etSearch               = findViewById(R.id.etSearch);
         chipGroupProvider      = findViewById(R.id.chipGroupProvider);
-        chipMyCerts            = findViewById(R.id.chipMyCerts);
         chipFreeOnly           = findViewById(R.id.chipFreeOnly);
         rvCertifications       = findViewById(R.id.rvCertifications);
         rvRecommendations      = findViewById(R.id.rvRecommendations);
         sectionRecommendations = findViewById(R.id.sectionRecommendations);
         tvEmpty                = findViewById(R.id.tvEmpty);
         tvResultCount          = findViewById(R.id.tvResultCount);
+        rvMyCerts              = findViewById(R.id.rvMyCerts);
+        tvMyCertsEmpty         = findViewById(R.id.tvMyCertsEmpty);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
+        // Browse adapter
         adapter = new CertificationAdapter(this);
         rvCertifications.setLayoutManager(new LinearLayoutManager(this));
         rvCertifications.setAdapter(adapter);
 
+        // Recommendations adapter
         recommendationAdapter = new RecommendationAdapter(cert -> onCardTap(cert));
         rvRecommendations.setLayoutManager(
                 new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         rvRecommendations.setAdapter(recommendationAdapter);
 
+        // My Certs adapter
+        myCertsAdapter = new MyCertsAdapter((cert, uc) -> openDetail(cert, uc));
+        rvMyCerts.setLayoutManager(new LinearLayoutManager(this));
+        rvMyCerts.setAdapter(myCertsAdapter);
+
+        // Tabs
+        tabLayout.addTab(tabLayout.newTab().setText("Browse"));
+        tabLayout.addTab(tabLayout.newTab().setText("My Certs"));
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override public void onTabSelected(TabLayout.Tab tab) {
+                if (tab.getPosition() == 1) {
+                    myCertsTabActive = true;
+                    layoutBrowse.setVisibility(View.GONE);
+                    layoutMyCerts.setVisibility(View.VISIBLE);
+                    updateMyCertsView();
+                } else {
+                    myCertsTabActive = false;
+                    layoutMyCerts.setVisibility(View.GONE);
+                    layoutBrowse.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
         buildTrackChips();
 
-        chipMyCerts.setOnCheckedChangeListener((btn, checked) -> {
-            showMyCerts = checked;
-            applyFilter();
-        });
         chipFreeOnly.setOnCheckedChangeListener((btn, checked) -> {
             showFreeOnly = checked;
             applyFilter();
@@ -149,10 +189,9 @@ public class CertificationsActivity extends AppCompatActivity
         String token = TokenManager.getBearerToken(this);
         loadCertPage(token, 1);
         loadMyCerts(token);
-        loadPrimaryRoadmapForRecs(token);   // non-blocking — not in pendingRequests
+        loadPrimaryRoadmapForRecs(token);
     }
 
-    /** Fetches all certification pages recursively until `next` is null. */
     private void loadCertPage(String token, int page) {
         ApiClient.getService()
                 .getCertifications(token, null, null, null, null, page)
@@ -210,62 +249,44 @@ public class CertificationsActivity extends AppCompatActivity
                 });
     }
 
-    /**
-     * Loads the primary roadmap (list → detail) to power Recommendations.
-     * Not counted in pendingRequests — runs independently and calls
-     * updateRecommendations() when done.
-     */
     private void loadPrimaryRoadmapForRecs(String token) {
         ApiClient.getService().getRoadmaps(token).enqueue(new Callback<JsonElement>() {
             @Override
             public void onResponse(@NonNull Call<JsonElement> call,
                                    @NonNull Response<JsonElement> response) {
                 if (!response.isSuccessful() || response.body() == null) {
-                    roadmapLoaded = true;
-                    updateRecommendations();
-                    return;
+                    roadmapLoaded = true; updateRecommendations(); return;
                 }
                 int id = extractPrimaryRoadmapId(response.body());
                 if (id == -1) {
-                    roadmapLoaded = true;
-                    updateRecommendations();
-                    return;
+                    roadmapLoaded = true; updateRecommendations(); return;
                 }
                 ApiClient.getService().getRoadmap(token, id).enqueue(new Callback<Roadmap>() {
                     @Override
                     public void onResponse(@NonNull Call<Roadmap> call2,
                                            @NonNull Response<Roadmap> r2) {
-                        if (r2.isSuccessful() && r2.body() != null) {
-                            primaryRoadmap = r2.body();
-                        }
+                        if (r2.isSuccessful() && r2.body() != null) primaryRoadmap = r2.body();
                         roadmapLoaded = true;
                         updateRecommendations();
                     }
                     @Override
                     public void onFailure(@NonNull Call<Roadmap> call2, @NonNull Throwable t) {
-                        roadmapLoaded = true;
-                        updateRecommendations();
+                        roadmapLoaded = true; updateRecommendations();
                     }
                 });
             }
             @Override
             public void onFailure(@NonNull Call<JsonElement> call, @NonNull Throwable t) {
-                roadmapLoaded = true;
-                updateRecommendations();
+                roadmapLoaded = true; updateRecommendations();
             }
         });
     }
 
     private int extractPrimaryRoadmapId(JsonElement body) {
         try {
-            JsonArray arr;
-            if (body.isJsonArray()) {
-                arr = body.getAsJsonArray();
-            } else {
-                JsonObject obj = body.getAsJsonObject();
-                if (!obj.has("results")) return -1;
-                arr = obj.getAsJsonArray("results");
-            }
+            JsonArray arr = body.isJsonArray() ? body.getAsJsonArray()
+                    : body.getAsJsonObject().getAsJsonArray("results");
+            if (arr == null) return -1;
             int firstId = -1;
             for (int i = 0; i < arr.size(); i++) {
                 JsonObject r = arr.get(i).getAsJsonObject();
@@ -274,9 +295,7 @@ public class CertificationsActivity extends AppCompatActivity
                 if (r.has("isPrimary") && r.get("isPrimary").getAsBoolean()) return rid;
             }
             return firstId;
-        } catch (Exception e) {
-            return -1;
-        }
+        } catch (Exception e) { return -1; }
     }
 
     private void decrementAndRefresh() {
@@ -284,8 +303,37 @@ public class CertificationsActivity extends AppCompatActivity
         if (pendingRequests <= 0) {
             showLoading(false);
             applyFilter();
+            updateMyCertsView();
             updateRecommendations();
         }
+    }
+
+    // ── My Certs tab ───────────────────────────────────────────────────────────
+
+    private void updateMyCertsView() {
+        Map<Integer, Certification> byId = new HashMap<>();
+        for (Certification c : allCerts) byId.put(c.getId(), c);
+
+        // Apply same track / free / search filters to My Certs
+        Map<Integer, UserCertification> filtered = new HashMap<>();
+        for (Map.Entry<Integer, UserCertification> entry : myCerts.entrySet()) {
+            Certification cert = byId.get(entry.getKey());
+            if (cert == null) continue;
+            if (!activeTrack.equals("all") && !activeTrack.equals(cert.getTrack())) continue;
+            if (showFreeOnly && !cert.isFree()) continue;
+            if (!searchQuery.isEmpty()) {
+                String name = cert.getName().toLowerCase(Locale.getDefault());
+                String abbr = cert.getAbbreviation() != null
+                        ? cert.getAbbreviation().toLowerCase(Locale.getDefault()) : "";
+                if (!name.contains(searchQuery) && !abbr.contains(searchQuery)) continue;
+            }
+            filtered.put(entry.getKey(), entry.getValue());
+        }
+
+        myCertsAdapter.setData(filtered, byId);
+        boolean empty = filtered.isEmpty();
+        tvMyCertsEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
+        rvMyCerts.setVisibility(empty ? View.GONE : View.VISIBLE);
     }
 
     // ── Recommendations ────────────────────────────────────────────────────────
@@ -299,36 +347,28 @@ public class CertificationsActivity extends AppCompatActivity
                 sectionRecommendations.setVisibility(View.GONE);
                 return;
             }
-
-            // Build keyword blob from roadmap node titles
             StringBuilder sb = new StringBuilder();
             for (RoadmapNode node : primaryRoadmap.getNodes()) {
-                if (node.getTitle() != null) {
+                if (node.getTitle() != null)
                     sb.append(node.getTitle().toLowerCase(Locale.getDefault())).append(" ");
-                }
             }
             String keywordBlob = sb.toString();
 
-            // Score untracked certs by relevantSkills ∩ keywordBlob
             List<ScoredCert> scored = new ArrayList<>();
             for (Certification cert : allCerts) {
                 if (myCerts.containsKey(cert.getId())) continue;
                 if (cert.getRelevantSkills() == null || cert.getRelevantSkills().isEmpty()) continue;
                 int score = 0;
                 for (String skill : cert.getRelevantSkills()) {
-                    if (skill != null
-                            && keywordBlob.contains(skill.toLowerCase(Locale.getDefault()))) {
+                    if (skill != null && keywordBlob.contains(skill.toLowerCase(Locale.getDefault())))
                         score++;
-                    }
                 }
                 if (score > 0) scored.add(new ScoredCert(cert, score));
             }
             scored.sort((a, b) -> b.score - a.score);
 
             List<Certification> recs = new ArrayList<>();
-            for (int i = 0; i < Math.min(4, scored.size()); i++) {
-                recs.add(scored.get(i).cert);
-            }
+            for (int i = 0; i < Math.min(4, scored.size()); i++) recs.add(scored.get(i).cert);
 
             if (recs.isEmpty()) {
                 sectionRecommendations.setVisibility(View.GONE);
@@ -351,7 +391,6 @@ public class CertificationsActivity extends AppCompatActivity
         List<Certification> filtered = allCerts.stream()
                 .filter(c -> activeTrack.equals("all") || activeTrack.equals(c.getTrack()))
                 .filter(c -> !showFreeOnly || c.isFree())
-                .filter(c -> !showMyCerts || myCerts.containsKey(c.getId()))
                 .filter(c -> searchQuery.isEmpty()
                         || c.getName().toLowerCase(Locale.getDefault()).contains(searchQuery)
                         || (c.getAbbreviation() != null
@@ -369,6 +408,9 @@ public class CertificationsActivity extends AppCompatActivity
                     + (filtered.size() == 1 ? "" : "s"));
             tvResultCount.setVisibility(View.VISIBLE);
         }
+
+        // Keep My Certs view in sync with the same filters
+        updateMyCertsView();
     }
 
     // ── Track chips ────────────────────────────────────────────────────────────
@@ -381,9 +423,18 @@ public class CertificationsActivity extends AppCompatActivity
             chip.setText(label);
             chip.setCheckable(true);
             chip.setChecked(value.equals("all"));
-            chip.setChipBackgroundColorResource(R.color.colorSurface);
-            chip.setChipStrokeColorResource(R.color.colorDivider);
-            chip.setChipStrokeWidth(dpToPx(1));
+
+            int[][] chipStates = {{android.R.attr.state_checked}, {}};
+            int yellow = getColor(R.color.colorPrimary);
+            int black  = getColor(R.color.colorTextPrimary);
+            chip.setChipBackgroundColor(new ColorStateList(chipStates,
+                    new int[]{yellow, Color.WHITE}));
+            chip.setTextColor(new ColorStateList(chipStates,
+                    new int[]{black, black}));
+            chip.setChipStrokeColor(new ColorStateList(chipStates,
+                    new int[]{black, black}));
+            chip.setCheckedIconTint(ColorStateList.valueOf(black));
+            chip.setChipStrokeWidth(dpToPx(1.5f));
             chip.setTextSize(12f);
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -397,9 +448,7 @@ public class CertificationsActivity extends AppCompatActivity
                     activeTrack = value;
                     for (int i = 0; i < chipGroupProvider.getChildCount(); i++) {
                         View child = chipGroupProvider.getChildAt(i);
-                        if (child instanceof Chip && child != btn) {
-                            ((Chip) child).setChecked(false);
-                        }
+                        if (child instanceof Chip && child != btn) ((Chip) child).setChecked(false);
                     }
                     applyFilter();
                 } else {
@@ -427,9 +476,8 @@ public class CertificationsActivity extends AppCompatActivity
                                 onTracked(response.body());
                             }
                         }
-                        @Override
-                        public void onFailure(@NonNull Call<UserCertification> call,
-                                              @NonNull Throwable t) {}
+                        @Override public void onFailure(@NonNull Call<UserCertification> call,
+                                                        @NonNull Throwable t) {}
                     });
         } else {
             onCardTap(cert);
@@ -438,7 +486,10 @@ public class CertificationsActivity extends AppCompatActivity
 
     @Override
     public void onCardTap(Certification cert) {
-        UserCertification uc = myCerts.get(cert.getId());
+        openDetail(cert, myCerts.get(cert.getId()));
+    }
+
+    private void openDetail(Certification cert, UserCertification uc) {
         CertDetailBottomSheet sheet = CertDetailBottomSheet.newInstance(cert, uc);
         sheet.setOnTrackChangeListener(this);
         sheet.show(getSupportFragmentManager(), "cert_detail");
@@ -448,26 +499,24 @@ public class CertificationsActivity extends AppCompatActivity
 
     @Override
     public void onTracked(UserCertification uc) {
-        if (uc.getCertification() != null) {
-            myCerts.put(uc.getCertification().getId(), uc);
-        }
+        if (uc.getCertification() != null) myCerts.put(uc.getCertification().getId(), uc);
         applyFilter();
+        updateMyCertsView();
         updateRecommendations();
     }
 
     @Override
     public void onStatusUpdated(UserCertification uc) {
-        if (uc.getCertification() != null) {
-            myCerts.put(uc.getCertification().getId(), uc);
-        }
+        if (uc.getCertification() != null) myCerts.put(uc.getCertification().getId(), uc);
         applyFilter();
-        updateRecommendations();
+        updateMyCertsView();
     }
 
     @Override
     public void onUntracked(int certId) {
         myCerts.remove(certId);
         applyFilter();
+        updateMyCertsView();
         updateRecommendations();
     }
 
@@ -475,6 +524,23 @@ public class CertificationsActivity extends AppCompatActivity
 
     private void showLoading(boolean show) {
         loadingBar.setVisibility(show ? View.VISIBLE : View.GONE);
+        // Centered spinner only during the very first load (list still empty)
+        boolean initialLoad = show && allCerts.isEmpty();
+        layoutLoadingState.setVisibility(initialLoad ? View.VISIBLE : View.GONE);
+        if (initialLoad) {
+            layoutBrowse.setVisibility(View.GONE);
+            layoutMyCerts.setVisibility(View.GONE);
+        } else if (!show) {
+            layoutLoadingState.setVisibility(View.GONE);
+            // Restore correct content visibility based on active tab
+            if (myCertsTabActive) {
+                layoutMyCerts.setVisibility(View.VISIBLE);
+                layoutBrowse.setVisibility(View.GONE);
+            } else {
+                layoutBrowse.setVisibility(View.VISIBLE);
+                layoutMyCerts.setVisibility(View.GONE);
+            }
+        }
     }
 
     private void handle401() {
@@ -486,7 +552,7 @@ public class CertificationsActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private int dpToPx(int dp) {
+    private int dpToPx(float dp) {
         return Math.round(dp * getResources().getDisplayMetrics().density);
     }
 

@@ -45,6 +45,9 @@
     <color name="colorSurfaceVariant">#F9FAFB</color>
     <color name="colorWarningBackground">#FFF8E1</color>
 
+    <!-- Chip border — visible on beige background -->
+    <color name="colorChipBorder">#9CA3AF</color>
+
     <!-- Onboarding chip (semi-transparent white — must stay as alpha hex) -->
     <color name="colorChipBackgroundWhite">#14FFFFFF</color>
     <color name="colorChipStrokeWhite">#33FFFFFF</color>

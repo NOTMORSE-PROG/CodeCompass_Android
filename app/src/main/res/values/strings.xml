@@ -74,7 +74,7 @@
     <string name="quick_actions">Quick Actions</string>
     <string name="action_roadmap">View Roadmap</string>
     <string name="action_ai_chat">Chat with AI</string>
-    <string name="action_jobs">Certifications</string>
+    <string name="action_jobs">Find Jobs</string>
     <string name="action_achievements">Achievements</string>
     <string name="btn_logout">Logout</string>
     <string name="coming_soon">Coming soon!</string>
@@ -86,7 +86,7 @@
     <string name="achievements_hint">View your achievements →</string>
     <string name="action_roadmap_sub">Plan your path</string>
     <string name="action_ai_chat_sub">Get answers instantly</string>
-    <string name="action_jobs_sub">Browse &amp; track certs</string>
+    <string name="action_jobs_sub">Browse PH listings</string>
     <string name="action_achievements_sub">Track your badges</string>
     <string name="roadmap_continue">Continue →</string>
     <string name="stat_label_streak">Day Streak</string>
@@ -218,6 +218,26 @@
     <string name="certifications_visit_official">Visit Official Page</string>
     <string name="certifications_study_guide">Study Guide / Resources</string>
     <string name="certifications_remove">Remove from Tracker</string>
+
+    <!-- Jobs -->
+    <string name="jobs_title">Find Jobs</string>
+    <string name="jobs_search_hint">Search jobs, companies…</string>
+    <string name="jobs_tab_all">All Jobs</string>
+    <string name="jobs_tab_saved">Saved</string>
+    <string name="jobs_filter_all">All</string>
+    <string name="jobs_filter_fulltime">Full-time</string>
+    <string name="jobs_filter_parttime">Part-time</string>
+    <string name="jobs_filter_internship">Internship</string>
+    <string name="jobs_filter_freelance">Freelance</string>
+    <string name="jobs_filter_remote">Remote</string>
+    <string name="jobs_recommended">Recommended for You</string>
+    <string name="jobs_empty">No jobs found. Try different filters.</string>
+    <string name="jobs_saved_empty">No saved jobs yet. Tap the bookmark on any job to save it.</string>
+    <string name="jobs_load_more">Load more</string>
+    <string name="jobs_apply">Apply Now →</string>
+    <string name="jobs_save">Save Job</string>
+    <string name="jobs_unsave">Remove from Saved</string>
+    <string name="jobs_salary_na">Salary not listed</string>
 
     <!-- Profile -->
     <string name="profile_title">My Profile</string>
