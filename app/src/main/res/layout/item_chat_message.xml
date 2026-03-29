@@ -59,13 +59,61 @@
 
     </LinearLayout>
 
-    <!-- Message bubble -->
-    <TextView
-        android:id="@+id/tvMessage"
+    <!-- AI message content column (bubble + resources + proposal) -->
+    <LinearLayout
+        android:id="@+id/layoutAiContent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxWidth="280dp"
-        android:padding="12dp"
-        android:textSize="15sp" />
+        android:orientation="vertical"
+        android:maxWidth="280dp">
+
+        <!-- Message bubble -->
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:textSize="15sp" />
+
+        <!-- Resource link cards (horizontal scroll, shown when AI returns resources) -->
+        <HorizontalScrollView
+            android:id="@+id/scrollResources"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:id="@+id/containerResources"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingEnd="4dp"/>
+
+        </HorizontalScrollView>
+
+        <!-- Roadmap edit proposal card (shown when AI returns edit_proposals) -->
+        <FrameLayout
+            android:id="@+id/containerProposal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <!-- Roadmap switch proposal card (shown when AI returns roadmap_switch) -->
+        <FrameLayout
+            android:id="@+id/containerRoadmapSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <!-- Roadmap upskill proposal card (shown when AI returns roadmap_upskill) -->
+        <FrameLayout
+            android:id="@+id/containerRoadmapUpskill"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
 </LinearLayout>

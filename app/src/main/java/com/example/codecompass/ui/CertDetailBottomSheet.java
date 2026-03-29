@@ -367,7 +367,24 @@ public class CertDetailBottomSheet extends BottomSheetDialogFragment {
         } else {
             layoutTracked.setVisibility(View.VISIBLE);
             ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                    requireContext(), android.R.layout.simple_spinner_item, STATUS_LABELS);
+                    requireContext(), android.R.layout.simple_spinner_item, STATUS_LABELS) {
+                @Override
+                public android.view.View getView(int position, android.view.View convertView,
+                                                 android.view.ViewGroup parent) {
+                    android.view.View v = super.getView(position, convertView, parent);
+                    if (v instanceof android.widget.TextView)
+                        ((android.widget.TextView) v).setTextColor(0xFF0A0A0A);
+                    return v;
+                }
+                @Override
+                public android.view.View getDropDownView(int position, android.view.View convertView,
+                                                         android.view.ViewGroup parent) {
+                    android.view.View v = super.getDropDownView(position, convertView, parent);
+                    if (v instanceof android.widget.TextView)
+                        ((android.widget.TextView) v).setTextColor(0xFF0A0A0A);
+                    return v;
+                }
+            };
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinnerStatus.setAdapter(adapter);
             int currentIdx = indexOfStatus(userCert.getStatus());

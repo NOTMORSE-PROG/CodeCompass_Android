@@ -29,7 +29,15 @@ import com.example.codecompass.model.ChatMessage;
 import com.example.codecompass.model.ChatSessionDetail;
 import com.example.codecompass.model.CreateSessionRequest;
 import com.example.codecompass.model.CreateSessionResponse;
+import com.example.codecompass.model.EditProposal;
+import com.example.codecompass.model.ResourceLink;
+import com.example.codecompass.model.RoadmapSwitchProposal;
+import com.example.codecompass.model.RoadmapUpskillProposal;
 import com.example.codecompass.model.SessionMessage;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -91,6 +99,39 @@ public class AIChatActivity extends AppCompatActivity {
     private final String[]                       modeSessionIds = new String[4];
     private final Map<Integer, List<ChatMessage>> modeMessages   = new HashMap<>();
     private final String[]                       modeTitles     = new String[4];
+
+    // ── Proposal listener ─────────────────────────────────────────────────────
+    private final ChatAdapter.OnProposalListener proposalListener = new ChatAdapter.OnProposalListener() {
+        @Override
+        public void onApply(int messageIndex, List<EditProposal> proposals) {
+            applyProposals(messageIndex, proposals, 0);
+        }
+        @Override
+        public void onDismiss(int messageIndex) {
+            chatAdapter.markProposalsDismissed(messageIndex);
+        }
+    };
+
+    // ── Roadmap action listener ───────────────────────────────────────────────
+    private final ChatAdapter.OnRoadmapActionListener roadmapActionListener =
+            new ChatAdapter.OnRoadmapActionListener() {
+        @Override
+        public void onSwitchRoadmap(int messageIndex, RoadmapSwitchProposal proposal) {
+            callSwitchApi(messageIndex, proposal);
+        }
+        @Override
+        public void onUpskillRoadmap(int messageIndex, RoadmapUpskillProposal proposal) {
+            callUpskillApi(messageIndex, proposal);
+        }
+        @Override
+        public void onDismissRoadmapSwitch(int messageIndex) {
+            chatAdapter.markSwitchDismissed(messageIndex);
+        }
+        @Override
+        public void onDismissRoadmapUpskill(int messageIndex) {
+            chatAdapter.markUpskillDismissed(messageIndex);
+        }
+    };
     private static final int MAX_RETRIES = 6;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
@@ -153,7 +194,7 @@ public class AIChatActivity extends AppCompatActivity {
         tvWelcomeText    = findViewById(R.id.tvWelcomeText);
         containerPrompts = findViewById(R.id.containerPrompts);
 
-        chatAdapter = new ChatAdapter(true);
+        chatAdapter = new ChatAdapter(true, proposalListener, roadmapActionListener);
         rvChat.setLayoutManager(new LinearLayoutManager(this));
         rvChat.setAdapter(chatAdapter);
 
@@ -419,7 +460,7 @@ public class AIChatActivity extends AppCompatActivity {
         String savedId            = modeSessionIds[modeIndex];
         List<ChatMessage> saved   = modeMessages.get(modeIndex);
 
-        chatAdapter = new ChatAdapter(true);
+        chatAdapter = new ChatAdapter(true, proposalListener, roadmapActionListener);
         rvChat.setAdapter(chatAdapter);
 
         if (savedId != null && saved != null && !saved.isEmpty()) {
@@ -581,9 +622,59 @@ public class AIChatActivity extends AppCompatActivity {
 
                 case "stream_end":
                     String clean = obj.optString("clean_content", streamingBuffer.toString());
-                    commitStreamedMessage(clean);
+                    int committedIdx = commitStreamedMessage(clean);
                     streamingBuffer.setLength(0);
                     isStreaming = false;
+
+                    // Attach resource link cards
+                    JSONArray resArr = obj.optJSONArray("resources");
+                    if (resArr != null && resArr.length() > 0 && committedIdx >= 0) {
+                        List<ResourceLink> links = new ArrayList<>();
+                        for (int i = 0; i < resArr.length(); i++) {
+                            JSONObject r = resArr.optJSONObject(i);
+                            if (r != null) {
+                                String rTitle = r.optString("title", "");
+                                String rUrl   = r.optString("url", "");
+                                if (!rUrl.isEmpty()) links.add(new ResourceLink(rTitle, rUrl));
+                            }
+                        }
+                        if (!links.isEmpty()) chatAdapter.setResourcesAt(committedIdx, links);
+                    }
+
+                    // Attach roadmap edit proposal card
+                    JSONArray propsArr = obj.optJSONArray("edit_proposals");
+                    if (propsArr != null && propsArr.length() > 0 && committedIdx >= 0) {
+                        try {
+                            Type proposalListType =
+                                    new TypeToken<List<EditProposal>>(){}.getType();
+                            List<EditProposal> proposals =
+                                    new Gson().fromJson(propsArr.toString(), proposalListType);
+                            if (proposals != null && !proposals.isEmpty()) {
+                                chatAdapter.setProposalsAt(committedIdx, proposals);
+                            }
+                        } catch (Exception ignored) {}
+                    }
+
+                    // Attach roadmap switch card
+                    JSONObject switchObj = obj.optJSONObject("roadmap_switch");
+                    if (switchObj != null && committedIdx >= 0) {
+                        try {
+                            RoadmapSwitchProposal sw = new Gson().fromJson(
+                                    switchObj.toString(), RoadmapSwitchProposal.class);
+                            if (sw != null) chatAdapter.setRoadmapSwitchAt(committedIdx, sw);
+                        } catch (Exception ignored) {}
+                    }
+
+                    // Attach roadmap upskill card
+                    JSONObject upskillObj = obj.optJSONObject("roadmap_upskill");
+                    if (upskillObj != null && committedIdx >= 0) {
+                        try {
+                            RoadmapUpskillProposal up = new Gson().fromJson(
+                                    upskillObj.toString(), RoadmapUpskillProposal.class);
+                            if (up != null) chatAdapter.setRoadmapUpskillAt(committedIdx, up);
+                        } catch (Exception ignored) {}
+                    }
+
                     JSONArray suggestions = obj.optJSONArray("suggestions");
                     if (suggestions != null && suggestions.length() > 0) {
                         showSuggestions(suggestions);
@@ -631,14 +722,18 @@ public class AIChatActivity extends AppCompatActivity {
         }
     }
 
-    private void commitStreamedMessage(String content) {
-        if (content.isEmpty()) { streamingMsgIndex = -1; return; }
+    private int commitStreamedMessage(String content) {
+        if (content.isEmpty()) { streamingMsgIndex = -1; return -1; }
+        int committedIndex;
         if (streamingMsgIndex != -1) {
             chatAdapter.updateMessageAt(streamingMsgIndex, content);
+            committedIndex = streamingMsgIndex;
         } else {
             chatAdapter.addMessage(new ChatMessage(content, false));
+            committedIndex = chatAdapter.getItemCount() - 1;
         }
         streamingMsgIndex = -1;
+        return committedIndex;
     }
 
     // ── Send message ──────────────────────────────────────────────────────────
@@ -733,6 +828,111 @@ public class AIChatActivity extends AppCompatActivity {
     private void clearSuggestions() {
         chipContainer.removeAllViews();
         chipScrollView.setVisibility(View.GONE);
+    }
+
+    // ── Apply roadmap edit proposals ──────────────────────────────────────────
+
+    private void applyProposals(int messageIndex, List<EditProposal> proposals, int index) {
+        if (index >= proposals.size()) {
+            chatAdapter.markProposalsApplied(messageIndex);
+            Snackbar.make(rvChat, getString(R.string.proposal_applied),
+                    Snackbar.LENGTH_SHORT).show();
+            return;
+        }
+
+        EditProposal p     = proposals.get(index);
+        String       bearer = TokenManager.getBearerToken(this);
+        retrofit2.Call<Void> call = null;
+
+        switch (p.getAction() != null ? p.getAction() : "") {
+            case "edit_roadmap":
+                call = ApiClient.getService().editRoadmapMeta(
+                        bearer, p.getRoadmapId(), p.getChanges());
+                break;
+            case "edit_node":
+                call = ApiClient.getService().editNodeContent(
+                        bearer, p.getRoadmapId(), p.getNodeId(), p.getChanges());
+                break;
+            case "add_node":
+                call = ApiClient.getService().addRoadmapNode(
+                        bearer, p.getRoadmapId(), p.getChanges());
+                break;
+            case "remove_node":
+                call = ApiClient.getService().removeRoadmapNode(
+                        bearer, p.getRoadmapId(), p.getNodeId());
+                break;
+        }
+
+        if (call == null) {
+            applyProposals(messageIndex, proposals, index + 1);
+            return;
+        }
+
+        call.enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(retrofit2.Call<Void> c,
+                                   retrofit2.Response<Void> response) {
+                applyProposals(messageIndex, proposals, index + 1);
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<Void> c, Throwable t) {
+                Snackbar.make(rvChat, R.string.error_network,
+                        Snackbar.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // ── Roadmap switch / upskill API calls ───────────────────────────────────
+
+    private void callSwitchApi(int messageIndex, RoadmapSwitchProposal p) {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("roadmap_id", p.getRoadmapId());
+        body.addProperty("new_path", p.getNewPath());
+        body.addProperty("career_goal", p.getCareerGoal());
+        ApiClient.getService()
+                .switchRoadmap(TokenManager.getBearerToken(this), body)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<Void> c,
+                                           retrofit2.Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            chatAdapter.markSwitchApplied(messageIndex);
+                        } else {
+                            Snackbar.make(rvChat, R.string.error_network,
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(retrofit2.Call<Void> c, Throwable t) {
+                        Snackbar.make(rvChat, R.string.error_network,
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void callUpskillApi(int messageIndex, RoadmapUpskillProposal p) {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("roadmap_id", p.getRoadmapId());
+        ApiClient.getService()
+                .upskillRoadmap(TokenManager.getBearerToken(this), body)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(retrofit2.Call<Void> c,
+                                           retrofit2.Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            chatAdapter.markUpskillApplied(messageIndex);
+                        } else {
+                            Snackbar.make(rvChat, R.string.error_network,
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(retrofit2.Call<Void> c, Throwable t) {
+                        Snackbar.make(rvChat, R.string.error_network,
+                                Snackbar.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────

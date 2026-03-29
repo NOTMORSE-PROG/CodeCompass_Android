@@ -74,6 +74,7 @@ dependencies {
     implementation(libs.gridlayout)
     implementation(libs.splashscreen)
     implementation(libs.browser)
+    implementation(libs.pdfbox.android)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

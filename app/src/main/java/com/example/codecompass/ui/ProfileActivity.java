@@ -3,7 +3,13 @@ package com.example.codecompass.ui;
 import android.animation.ObjectAnimator;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
@@ -23,6 +29,7 @@ import com.example.codecompass.model.Roadmap;
 import com.example.codecompass.util.JwtUtils;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.progressindicator.CircularProgressIndicator;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -62,6 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
     private LinearLayout rowConnectGoogle;
     private LinearLayout rowGoogleOnly;
     private LinearLayout btnLogout;
+    private LinearLayout rowDeleteAccount;
 
     // ── Misc ──────────────────────────────────────────────────────────────────
     private View loadingBarProfile;
@@ -93,12 +101,16 @@ public class ProfileActivity extends AppCompatActivity {
         rowConnectGoogle       = findViewById(R.id.rowConnectGoogle);
         rowGoogleOnly          = findViewById(R.id.rowGoogleOnly);
         btnLogout              = findViewById(R.id.btnLogout);
+        rowDeleteAccount       = findViewById(R.id.rowDeleteAccount);
 
         // Back button
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
         // Logout
         btnLogout.setOnClickListener(v -> logout());
+
+        // Delete account
+        rowDeleteAccount.setOnClickListener(v -> showDeleteAccountDialog());
 
         // Bottom navigation — Profile is the selected tab
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavProfile);
@@ -270,6 +282,10 @@ public class ProfileActivity extends AppCompatActivity {
         return et.getText() != null ? et.getText().toString().trim() : "";
     }
 
+    private int dpToPx(float dp) {
+        return Math.round(dp * getResources().getDisplayMetrics().density);
+    }
+
     // ── Loading helpers ───────────────────────────────────────────────────────
 
     private void startLoading() {
@@ -396,6 +412,171 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     // ── Auth helpers ──────────────────────────────────────────────────────────
+
+    private void showDeleteAccountDialog() {
+        int pad = dpToPx(20);
+
+        // ── Warning message (red box) ─────────────────────────────────────────
+        TextView tvMessage = new TextView(this);
+        tvMessage.setText(R.string.profile_delete_confirm_body);
+        tvMessage.setTextSize(13f);
+        tvMessage.setTextColor(0xFFB91C1C);
+        tvMessage.setBackgroundColor(0x1FEF4444);
+        tvMessage.setPadding(dpToPx(12), dpToPx(10), dpToPx(12), dpToPx(10));
+        LinearLayout.LayoutParams msgParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        msgParams.setMargins(pad, dpToPx(8), pad, dpToPx(16));
+        tvMessage.setLayoutParams(msgParams);
+
+        // ── "Type DELETE to confirm:" label ───────────────────────────────────
+        TextView tvHint = new TextView(this);
+        tvHint.setText(R.string.profile_delete_type_hint);
+        tvHint.setTextSize(13f);
+        tvHint.setPadding(pad, 0, pad, dpToPx(4));
+
+        // ── Text input ────────────────────────────────────────────────────────
+        TextInputEditText etConfirm = new TextInputEditText(this);
+        etConfirm.setHint("DELETE");
+        etConfirm.setTextColor(Color.BLACK);
+        etConfirm.setHintTextColor(0xFF9E9E9E);  // grey placeholder
+
+        TextInputLayout til = new TextInputLayout(this);
+        ColorStateList black = ColorStateList.valueOf(Color.BLACK);
+        til.setDefaultHintTextColor(black);
+        til.setHintTextColor(black);
+        til.setBoxStrokeColorStateList(black);
+        til.setBoxStrokeColor(Color.BLACK);
+
+        LinearLayout.LayoutParams tilParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        tilParams.setMarginStart(pad);
+        tilParams.setMarginEnd(pad);
+        til.setLayoutParams(tilParams);
+        til.addView(etConfirm);
+
+        LinearLayout layoutInput = new LinearLayout(this);
+        layoutInput.setOrientation(LinearLayout.VERTICAL);
+        layoutInput.addView(tvMessage);
+        layoutInput.addView(tvHint);
+        layoutInput.addView(til);
+
+        // ── Loading section ───────────────────────────────────────────────────
+        CircularProgressIndicator spinner = new CircularProgressIndicator(this);
+        spinner.setIndeterminate(true);
+        spinner.setIndicatorColor(getColor(R.color.colorDanger));
+        LinearLayout.LayoutParams spinnerParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        spinnerParams.gravity = Gravity.CENTER_HORIZONTAL;
+        spinner.setLayoutParams(spinnerParams);
+
+        TextView tvDeleting = new TextView(this);
+        tvDeleting.setText(R.string.profile_delete_deleting);
+        tvDeleting.setGravity(Gravity.CENTER);
+        tvDeleting.setTextSize(14f);
+        tvDeleting.setTextColor(getColor(R.color.colorTextSecondary));
+        LinearLayout.LayoutParams tvDeletingParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        tvDeletingParams.topMargin = dpToPx(12);
+        tvDeleting.setLayoutParams(tvDeletingParams);
+
+        LinearLayout layoutLoading = new LinearLayout(this);
+        layoutLoading.setOrientation(LinearLayout.VERTICAL);
+        layoutLoading.setGravity(Gravity.CENTER);
+        layoutLoading.setPadding(pad, dpToPx(28), pad, dpToPx(28));
+        layoutLoading.setVisibility(View.GONE);
+        layoutLoading.addView(spinner);
+        layoutLoading.addView(tvDeleting);
+
+        // ── Root container ────────────────────────────────────────────────────
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.addView(layoutInput);
+        container.addView(layoutLoading);
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(R.string.profile_delete_confirm_title)
+                .setView(container)
+                .setNegativeButton(android.R.string.cancel, null)
+                .setPositiveButton(R.string.profile_delete_confirm_btn, null)
+                .create();
+
+        dialog.show();
+
+        // White background with rounded corners
+        if (dialog.getWindow() != null) {
+            GradientDrawable bg = new GradientDrawable();
+            bg.setColor(Color.WHITE);
+            bg.setCornerRadius(dpToPx(16));
+            dialog.getWindow().setBackgroundDrawable(bg);
+        }
+
+        Button btnDelete = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        Button btnCancel = dialog.getButton(AlertDialog.BUTTON_NEGATIVE);
+        btnDelete.setTextColor(Color.BLACK);
+        btnCancel.setTextColor(Color.BLACK);
+        btnDelete.setEnabled(false);
+
+        etConfirm.addTextChangedListener(new TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int st, int c, int a) {}
+            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                btnDelete.setEnabled("DELETE".equals(s.toString()));
+            }
+        });
+
+        btnDelete.setOnClickListener(v -> {
+            // Switch to loading view
+            layoutInput.setVisibility(View.GONE);
+            layoutLoading.setVisibility(View.VISIBLE);
+            btnDelete.setVisibility(View.GONE);
+            btnCancel.setEnabled(false);
+            dialog.setCancelable(false);
+            rowDeleteAccount.setEnabled(false);
+
+            com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+            String refresh = TokenManager.getRefreshToken(ProfileActivity.this);
+            if (refresh != null) body.addProperty("refresh", refresh);
+
+            ApiClient.getService()
+                    .deleteAccount(TokenManager.getBearerToken(ProfileActivity.this), body)
+                    .enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (response.isSuccessful()) {
+                                dialog.dismiss();
+                                Toast.makeText(ProfileActivity.this,
+                                        R.string.profile_delete_success, Toast.LENGTH_SHORT).show();
+                                TokenManager.clear(ProfileActivity.this);
+                                Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            } else if (response.code() == 401) {
+                                dialog.dismiss();
+                                handle401();
+                            } else {
+                                restoreForm();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            restoreForm();
+                        }
+
+                        private void restoreForm() {
+                            layoutLoading.setVisibility(View.GONE);
+                            layoutInput.setVisibility(View.VISIBLE);
+                            btnDelete.setVisibility(View.VISIBLE);
+                            btnCancel.setEnabled(true);
+                            dialog.setCancelable(true);
+                            rowDeleteAccount.setEnabled(true);
+                            Toast.makeText(ProfileActivity.this,
+                                    R.string.profile_delete_error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
+    }
 
     private void logout() {
         TokenManager.clear(this);

@@ -12,13 +12,24 @@
     app:cardCornerRadius="16dp"
     app:cardElevation="2dp">
 
+    <!-- Yellow left accent strip (shown in resume mode) -->
+    <View
+        android:id="@+id/viewResumeAccent"
+        android:layout_width="4dp"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingStart="16dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp">
 
-        <!-- Row 1: title + bookmark -->
+        <!-- Row 1: title + resume match badge + bookmark -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -35,6 +46,20 @@
                 android:ellipsize="end"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="15sp" />
+
+            <TextView
+                android:id="@+id/tvResumeMatchBadge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_badge_yellow"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:text="Match"
+                android:textColor="@color/colorOnPrimary"
+                android:textSize="10sp"
+                android:fontFamily="sans-serif-medium"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/btnBookmark"
@@ -100,6 +125,39 @@
             android:textColor="@color/colorPrimary"
             android:textSize="13sp"
             android:visibility="gone" />
+
+        <!-- Row 5: match terms (shown only in resume mode) -->
+        <LinearLayout
+            android:id="@+id/layoutMatchTerms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="8dp"
+                android:background="@color/colorDivider" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:text="Matched skills"
+                android:textColor="@color/colorTextSecondary"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium" />
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupMatchTerms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:chipSpacingVertical="4dp"
+                app:chipSpacingHorizontal="4dp" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

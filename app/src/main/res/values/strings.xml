@@ -169,6 +169,26 @@
     <string name="lang_tl">TL</string>
     <string name="lang_tg">TG</string>
     <string name="ai_chat_wait_streaming">Please wait for the response to finish</string>
+    <string name="proposal_applied">Roadmap updated successfully</string>
+    <!-- Roadmap switch card -->
+    <string name="switch_card_title">Switch Career Path</string>
+    <string name="switch_card_warning_title">⚠️ Your current roadmap will be archived</string>
+    <string name="switch_card_warning_body">All progress, completed nodes, and XP earned will be preserved in your history, but you won\'t be able to continue from where you left off.</string>
+    <string name="switch_card_limit">You can only switch your learning path once per day.</string>
+    <string name="switch_card_confirm">Yes, Switch My Roadmap</string>
+    <string name="switch_card_cancel">Keep Current Roadmap</string>
+    <string name="switch_card_applied">✅ Roadmap Switched! Your new roadmap is ready. Head to the Roadmap page to get started.</string>
+    <string name="switch_card_applied_limit">You\'ve used your one switch for today. You can switch again tomorrow.</string>
+    <!-- Roadmap upskill card -->
+    <string name="upskill_card_title">⬆️ Level Up Your Roadmap</string>
+    <string name="upskill_card_warning_title">Your current roadmap will be archived</string>
+    <string name="upskill_card_warning_body">All progress, completed nodes, and XP earned will be preserved. A new, more advanced roadmap will be generated for the same career path.</string>
+    <string name="upskill_card_limit">You can only upskill once per day.</string>
+    <string name="upskill_card_confirm">⬆️ Yes, Level Up</string>
+    <string name="upskill_card_cancel">Not yet</string>
+    <string name="upskill_card_applied">✅ Advanced Roadmap Ready! Head to the Roadmap page to get started.</string>
+    <string name="upskill_card_applied_limit">You\'ve used your one upskill for today. You can upskill again tomorrow.</string>
+    <string name="roadmap_action_got_it">Got it</string>
     <string name="chat_hub_title">AI Chat</string>
     <string name="chat_hub_empty_title">No conversations yet</string>
     <string name="chat_hub_empty_sub">Tap + to start your first chat</string>
@@ -238,6 +258,13 @@
     <string name="jobs_save">Save Job</string>
     <string name="jobs_unsave">Remove from Saved</string>
     <string name="jobs_salary_na">Salary not listed</string>
+    <string name="jobs_resume_upload_title">Match jobs to your resume</string>
+    <string name="jobs_resume_upload_btn">Upload PDF</string>
+    <string name="jobs_resume_analyzing">Analyzing resume…</string>
+    <string name="jobs_resume_matches">%d matches found</string>
+    <string name="jobs_resume_too_short">Resume text is too short. Try a different PDF.</string>
+    <string name="jobs_resume_error">Could not analyze resume. Try again.</string>
+    <string name="jobs_resume_clear">Clear resume</string>
 
     <!-- Profile -->
     <string name="profile_title">My Profile</string>
@@ -264,4 +291,13 @@
     <string name="profile_pwd_update">Update</string>
     <string name="profile_pwd_success">Password changed successfully</string>
     <string name="profile_pwd_mismatch">New passwords do not match</string>
+    <string name="profile_delete_account">Delete Account</string>
+    <string name="profile_delete_account_sub">Permanently delete your account and all data</string>
+    <string name="profile_delete_confirm_title">Delete Account?</string>
+    <string name="profile_delete_confirm_body">This will permanently delete your account, roadmap, progress, and all data. This action cannot be undone.</string>
+    <string name="profile_delete_type_hint">Type DELETE to confirm:</string>
+    <string name="profile_delete_confirm_btn">Delete Account</string>
+    <string name="profile_delete_deleting">Deleting your account…</string>
+    <string name="profile_delete_success">Account deleted successfully</string>
+    <string name="profile_delete_error">Failed to delete account. Please try again.</string>
 </resources>

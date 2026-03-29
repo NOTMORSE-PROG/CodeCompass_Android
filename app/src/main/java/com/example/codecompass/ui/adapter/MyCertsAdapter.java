@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -209,7 +210,17 @@ public class MyCertsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // Status badge — always visible in My Certs
             tvStatusBadge.setText(statusLabel(uc.getStatus()));
             tvStatusBadge.setVisibility(View.VISIBLE);
+
+            // "Update" button: black outlined, black text
             btnTrack.setText("Update");
+            btnTrack.setTextColor(Color.BLACK);
+            btnTrack.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+            if (btnTrack instanceof com.google.android.material.button.MaterialButton) {
+                com.google.android.material.button.MaterialButton mb =
+                        (com.google.android.material.button.MaterialButton) btnTrack;
+                mb.setStrokeColor(ColorStateList.valueOf(Color.BLACK));
+                mb.setStrokeWidth(4);
+            }
 
             btnTrack.setOnClickListener(v -> {
                 if (listener != null) listener.onCardTap(cert, uc);

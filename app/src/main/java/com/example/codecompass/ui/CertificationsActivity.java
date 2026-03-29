@@ -27,6 +27,7 @@ import com.example.codecompass.model.UserCertification;
 import com.example.codecompass.ui.adapter.CertificationAdapter;
 import com.example.codecompass.ui.adapter.MyCertsAdapter;
 import com.example.codecompass.ui.adapter.RecommendationAdapter;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.tabs.TabLayout;
@@ -81,6 +82,7 @@ public class CertificationsActivity extends AppCompatActivity
     private LinearLayout sectionRecommendations;
     private TextView tvEmpty;
     private TextView tvResultCount;
+    private MaterialButton btnLoadMore;
     // My Certs
     private RecyclerView rvMyCerts;
     private TextView tvMyCertsEmpty;
@@ -96,6 +98,8 @@ public class CertificationsActivity extends AppCompatActivity
     private Roadmap primaryRoadmap = null;
     private boolean roadmapLoaded = false;
     private boolean myCertsTabActive = false;
+    private boolean hasCertMore = false;
+    private int certNextPage = 2;
 
     // ── Adapters ────────────────────────────────────────────────────────────────
     private CertificationAdapter adapter;
@@ -120,10 +124,12 @@ public class CertificationsActivity extends AppCompatActivity
         sectionRecommendations = findViewById(R.id.sectionRecommendations);
         tvEmpty                = findViewById(R.id.tvEmpty);
         tvResultCount          = findViewById(R.id.tvResultCount);
+        btnLoadMore            = findViewById(R.id.btnLoadMore);
         rvMyCerts              = findViewById(R.id.rvMyCerts);
         tvMyCertsEmpty         = findViewById(R.id.tvMyCertsEmpty);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        btnLoadMore.setOnClickListener(v -> loadMoreCerts());
 
         // Browse adapter
         adapter = new CertificationAdapter(this);
@@ -150,11 +156,13 @@ public class CertificationsActivity extends AppCompatActivity
                     myCertsTabActive = true;
                     layoutBrowse.setVisibility(View.GONE);
                     layoutMyCerts.setVisibility(View.VISIBLE);
+                    btnLoadMore.setVisibility(View.GONE);
                     updateMyCertsView();
                 } else {
                     myCertsTabActive = false;
                     layoutMyCerts.setVisibility(View.GONE);
                     layoutBrowse.setVisibility(View.VISIBLE);
+                    btnLoadMore.setVisibility(hasCertMore ? View.VISIBLE : View.GONE);
                 }
             }
             @Override public void onTabUnselected(TabLayout.Tab tab) {}
@@ -206,10 +214,8 @@ public class CertificationsActivity extends AppCompatActivity
                             if (pageData.getResults() != null) {
                                 allCerts.addAll(pageData.getResults());
                             }
-                            if (pageData.getNext() != null) {
-                                loadCertPage(token, page + 1);
-                                return;
-                            }
+                            hasCertMore = pageData.getNext() != null;
+                            certNextPage = hasCertMore ? page + 1 : page;
                         }
                         decrementAndRefresh();
                     }
@@ -217,6 +223,41 @@ public class CertificationsActivity extends AppCompatActivity
                     public void onFailure(@NonNull Call<PagedResponse<Certification>> call,
                                           @NonNull Throwable t) {
                         decrementAndRefresh();
+                    }
+                });
+    }
+
+    private void loadMoreCerts() {
+        String token = TokenManager.getBearerToken(this);
+        btnLoadMore.setVisibility(View.GONE);
+        loadingBar.setVisibility(View.VISIBLE);
+        ApiClient.getService()
+                .getCertifications(token, null, null, null, null, certNextPage)
+                .enqueue(new Callback<PagedResponse<Certification>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<PagedResponse<Certification>> call,
+                                           @NonNull Response<PagedResponse<Certification>> response) {
+                        loadingBar.setVisibility(View.GONE);
+                        if (isHandling401) return;
+                        if (response.code() == 401) { handle401(); return; }
+                        if (response.isSuccessful() && response.body() != null) {
+                            PagedResponse<Certification> pageData = response.body();
+                            if (pageData.getResults() != null) {
+                                allCerts.addAll(pageData.getResults());
+                            }
+                            hasCertMore = pageData.getNext() != null;
+                            if (hasCertMore) certNextPage++;
+                        } else {
+                            hasCertMore = false;
+                        }
+                        applyFilter();
+                    }
+                    @Override
+                    public void onFailure(@NonNull Call<PagedResponse<Certification>> call,
+                                          @NonNull Throwable t) {
+                        loadingBar.setVisibility(View.GONE);
+                        hasCertMore = false;
+                        applyFilter();
                     }
                 });
     }
@@ -402,6 +443,7 @@ public class CertificationsActivity extends AppCompatActivity
         boolean empty = filtered.isEmpty();
         tvEmpty.setVisibility(empty ? View.VISIBLE : View.GONE);
         rvCertifications.setVisibility(empty ? View.GONE : View.VISIBLE);
+        btnLoadMore.setVisibility(hasCertMore && !myCertsTabActive ? View.VISIBLE : View.GONE);
 
         if (!allCerts.isEmpty()) {
             tvResultCount.setText(filtered.size() + " certification"

@@ -34,6 +34,9 @@ public class JobListing {
     @SerializedName("fetched_at")
     private String fetchedAt;
 
+    @SerializedName("match_terms")
+    private List<String> matchTerms;
+
     // ── Getters ───────────────────────────────────────────────────────────────
 
     public int getId() { return id; }
@@ -48,4 +51,5 @@ public class JobListing {
     public String getExperienceLevel() { return experienceLevel; }
     public boolean isPhilippinesBased() { return isPhilippinesBased; }
     public String getFetchedAt() { return fetchedAt; }
+    public List<String> getMatchTerms() { return matchTerms; }
 }

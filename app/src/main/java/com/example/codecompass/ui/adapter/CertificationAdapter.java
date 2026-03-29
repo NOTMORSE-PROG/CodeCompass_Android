@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -163,6 +164,14 @@ public class CertificationAdapter extends RecyclerView.Adapter<CertificationAdap
             } else {
                 tvStatusBadge.setVisibility(View.GONE);
                 btnTrack.setText(R.string.certifications_track_btn);
+            }
+            // Browse tab: no border, transparent bg, black text (plain text button)
+            if (btnTrack instanceof com.google.android.material.button.MaterialButton) {
+                com.google.android.material.button.MaterialButton mb =
+                        (com.google.android.material.button.MaterialButton) btnTrack;
+                mb.setStrokeWidth(0);
+                mb.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
+                mb.setTextColor(Color.BLACK);
             }
 
             btnTrack.setOnClickListener(v -> {

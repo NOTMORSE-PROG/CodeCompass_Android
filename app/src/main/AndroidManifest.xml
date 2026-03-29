@@ -58,7 +58,8 @@
         <activity
             android:name=".ui.VideoLearningActivity"
             android:exported="false"
-            android:screenOrientation="portrait" />
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
 
         <activity
             android:name=".ui.QuizActivity"

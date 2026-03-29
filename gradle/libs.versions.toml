@@ -16,6 +16,7 @@ googleid = "1.1.1"
 gridlayout = "1.0.0"
 splashscreen = "1.0.1"
 browser = "1.8.0"
+pdfbox = "2.0.27.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -37,6 +38,7 @@ googleid = { group = "com.google.android.libraries.identity.googleid", name = "g
 gridlayout = { group = "androidx.gridlayout", name = "gridlayout", version.ref = "gridlayout" }
 splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref = "splashscreen" }
 browser = { group = "androidx.browser", name = "browser", version.ref = "browser" }
+pdfbox-android = { group = "com.tom-roush", name = "pdfbox-android", version.ref = "pdfbox" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

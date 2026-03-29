@@ -195,6 +195,127 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
+                <!-- ── Resume banner ───────────────────────────────────────── -->
+                <LinearLayout
+                    android:id="@+id/layoutResumeBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="vertical">
+
+                    <!-- Idle state: invite user to upload -->
+                    <LinearLayout
+                        android:id="@+id/layoutResumeIdle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_stat_card"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/jobs_resume_upload_title"
+                            android:textColor="@color/colorTextPrimary"
+                            android:textSize="13sp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnUploadResume"
+                            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/jobs_resume_upload_btn"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="12sp"
+                            app:cornerRadius="8dp"
+                            app:strokeColor="@color/colorPrimary" />
+
+                    </LinearLayout>
+
+                    <!-- Loading state: analyzing -->
+                    <LinearLayout
+                        android:id="@+id/layoutResumeLoading"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_stat_card"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="14dp"
+                        android:visibility="gone">
+
+                        <com.google.android.material.progressindicator.CircularProgressIndicator
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:indeterminate="true"
+                            app:indicatorColor="@color/colorPrimary"
+                            app:indicatorSize="20dp"
+                            app:trackColor="@color/colorDivider" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/jobs_resume_analyzing"
+                            android:textColor="@color/colorTextSecondary"
+                            android:textSize="13sp" />
+
+                    </LinearLayout>
+
+                    <!-- Result state: resume loaded, show filename + match count -->
+                    <LinearLayout
+                        android:id="@+id/layoutResumeResult"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_stat_card"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="12dp"
+                        android:visibility="gone">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvResumeFileName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:ellipsize="end"
+                                android:fontFamily="sans-serif-medium"
+                                android:maxLines="1"
+                                android:textColor="@color/colorTextPrimary"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/tvResumeMatchCount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textColor="@color/colorPrimary"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/btnClearResume"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_marginStart="8dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/jobs_resume_clear"
+                            android:padding="4dp"
+                            android:src="@drawable/ic_close"
+                            app:tint="@color/colorTextSecondary" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
                 <!-- Result count -->
                 <TextView
                     android:id="@+id/tvResultCount"
@@ -232,7 +353,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:text="@string/jobs_load_more"
-                    android:textColor="@color/colorPrimary"
+                    android:textColor="@color/colorTextPrimary"
                     android:visibility="gone"
                     app:strokeColor="@color/colorPrimary"
                     app:cornerRadius="12dp" />

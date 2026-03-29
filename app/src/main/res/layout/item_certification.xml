@@ -142,12 +142,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:background="@drawable/bg_badge_gray"
+                    android:background="@drawable/bg_badge_black"
                     android:paddingStart="8dp"
                     android:paddingTop="3dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="3dp"
+                    android:textColor="#FFFFFF"
                     android:textSize="11sp"
+                    android:fontFamily="sans-serif-medium"
                     android:visibility="gone" />
 
                 <View
@@ -155,7 +157,7 @@
                     android:layout_height="0dp"
                     android:layout_weight="1" />
 
-                <Button
+                <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnTrack"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
@@ -164,7 +166,10 @@
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:text="@string/certifications_track_btn"
-                    android:textSize="12sp" />
+                    android:textColor="@color/colorTextPrimary"
+                    android:textSize="12sp"
+                    app:strokeColor="@color/colorTextPrimary"
+                    app:strokeWidth="1dp" />
 
             </LinearLayout>
 

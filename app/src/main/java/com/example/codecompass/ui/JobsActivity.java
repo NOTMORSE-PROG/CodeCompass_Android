@@ -1,15 +1,23 @@
 package com.example.codecompass.ui;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.OpenableColumns;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,13 +29,18 @@ import com.example.codecompass.api.ApiClient;
 import com.example.codecompass.api.TokenManager;
 import com.example.codecompass.model.JobListing;
 import com.example.codecompass.model.PagedResponse;
+import com.example.codecompass.model.ResumeMatchRequest;
 import com.example.codecompass.model.SavedJob;
 import com.example.codecompass.ui.adapter.JobAdapter;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.textfield.TextInputEditText;
+import com.tom_roush.pdfbox.android.PDFBoxResourceLoader;
+import com.tom_roush.pdfbox.pdmodel.PDDocument;
+import com.tom_roush.pdfbox.text.PDFTextStripper;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -65,41 +78,68 @@ public class JobsActivity extends AppCompatActivity
     private MaterialButton btnLoadMore;
     private SwipeRefreshLayout swipeRefresh;
 
-    // ── State ─────────────────────────────────────────────────────────────────
-    private final List<JobListing> jobs     = new ArrayList<>();
-    private final List<JobListing> savedJobsList = new ArrayList<>();
-    private final Set<Integer> savedJobIds  = new HashSet<>();
-    private int  currentPage  = 1;
-    private boolean hasMore   = false;
-    private boolean tabAllActive = true;
-    private boolean savedLoaded  = false;
-    private String  activeJobType = null;
-    private String  searchQuery   = "";
-    private boolean isHandling401 = false;
-    private final Handler searchHandler = new Handler(Looper.getMainLooper());
+    // ── Resume banner views ───────────────────────────────────────────────────
+    private LinearLayout layoutResumeIdle;
+    private LinearLayout layoutResumeLoading;
+    private LinearLayout layoutResumeResult;
+    private TextView tvResumeFileName;
+    private TextView tvResumeMatchCount;
 
-    // ── Adapter ───────────────────────────────────────────────────────────────
+    // ── State ─────────────────────────────────────────────────────────────────
+    private final List<JobListing> jobs           = new ArrayList<>();
+    private final List<JobListing> savedJobsList  = new ArrayList<>();
+    private final List<JobListing> resumeJobs     = new ArrayList<>();
+    private final Set<Integer> savedJobIds        = new HashSet<>();
+    private int  currentPage   = 1;
+    private boolean hasMore    = false;
+    private boolean tabAllActive  = true;
+    private boolean savedLoaded   = false;
+    private boolean resumeActive  = false;
+    private String  resumeFileName = null;
+    private String  activeJobType  = null;
+    private String  searchQuery    = "";
+    private boolean isHandling401  = false;
+    private final Handler searchHandler = new Handler(Looper.getMainLooper());
+    private final Handler mainHandler   = new Handler(Looper.getMainLooper());
+
+    // ── Adapter + file picker ─────────────────────────────────────────────────
     private JobAdapter adapter;
+    private ActivityResultLauncher<String> pdfPickerLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_jobs);
 
-        loadingBar        = findViewById(R.id.loadingBar);
+        PDFBoxResourceLoader.init(getApplicationContext());
+
+        loadingBar         = findViewById(R.id.loadingBar);
         layoutLoadingState = findViewById(R.id.layoutLoadingState);
-        etSearch          = findViewById(R.id.etSearch);
-        chipGroupJobType = findViewById(R.id.chipGroupJobType);
-        tabAll          = findViewById(R.id.tabAll);
-        tabSaved        = findViewById(R.id.tabSaved);
-        tabIndicator    = findViewById(R.id.tabIndicator);
-        rvJobs          = findViewById(R.id.rvJobs);
-        tvEmpty         = findViewById(R.id.tvEmpty);
-        tvResultCount   = findViewById(R.id.tvResultCount);
-        btnLoadMore     = findViewById(R.id.btnLoadMore);
-        swipeRefresh    = findViewById(R.id.swipeRefresh);
+        etSearch           = findViewById(R.id.etSearch);
+        chipGroupJobType   = findViewById(R.id.chipGroupJobType);
+        tabAll             = findViewById(R.id.tabAll);
+        tabSaved           = findViewById(R.id.tabSaved);
+        tabIndicator       = findViewById(R.id.tabIndicator);
+        rvJobs             = findViewById(R.id.rvJobs);
+        tvEmpty            = findViewById(R.id.tvEmpty);
+        tvResultCount      = findViewById(R.id.tvResultCount);
+        btnLoadMore        = findViewById(R.id.btnLoadMore);
+        swipeRefresh       = findViewById(R.id.swipeRefresh);
+
+        layoutResumeIdle    = findViewById(R.id.layoutResumeIdle);
+        layoutResumeLoading = findViewById(R.id.layoutResumeLoading);
+        layoutResumeResult  = findViewById(R.id.layoutResumeResult);
+        tvResumeFileName    = findViewById(R.id.tvResumeFileName);
+        tvResumeMatchCount  = findViewById(R.id.tvResumeMatchCount);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        findViewById(R.id.btnUploadResume).setOnClickListener(v ->
+                pdfPickerLauncher.launch("application/pdf"));
+        findViewById(R.id.btnClearResume).setOnClickListener(v -> clearResume());
+
+        pdfPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> { if (uri != null) handlePdfSelected(uri); });
 
         adapter = new JobAdapter(this);
         rvJobs.setLayoutManager(new LinearLayoutManager(this));
@@ -152,6 +192,111 @@ public class JobsActivity extends AppCompatActivity
 
         loadJobs(true);
         loadSavedJobIds();
+    }
+
+    // ── PDF handling ──────────────────────────────────────────────────────────
+
+    private void handlePdfSelected(Uri uri) {
+        resumeFileName = getFileName(uri);
+        setResumeBannerState(ResumeBannerState.LOADING);
+
+        new Thread(() -> {
+            try {
+                ContentResolver cr = getContentResolver();
+                InputStream stream = cr.openInputStream(uri);
+                if (stream == null) throw new Exception("Cannot open file");
+
+                PDDocument doc = PDDocument.load(stream);
+                PDFTextStripper stripper = new PDFTextStripper();
+                String text = stripper.getText(doc);
+                doc.close();
+                stream.close();
+
+                if (text.trim().length() < 100) {
+                    mainHandler.post(() -> {
+                        Toast.makeText(this, R.string.jobs_resume_too_short, Toast.LENGTH_LONG).show();
+                        setResumeBannerState(ResumeBannerState.IDLE);
+                    });
+                } else {
+                    mainHandler.post(() -> callRecommendFromResume(text.trim()));
+                }
+            } catch (Exception e) {
+                mainHandler.post(() -> {
+                    Toast.makeText(this, R.string.jobs_resume_error, Toast.LENGTH_LONG).show();
+                    setResumeBannerState(ResumeBannerState.IDLE);
+                });
+            }
+        }).start();
+    }
+
+    private void callRecommendFromResume(String text) {
+        String token = TokenManager.getBearerToken(this);
+        ApiClient.getService()
+                .recommendFromResume(token, new ResumeMatchRequest(text))
+                .enqueue(new Callback<List<JobListing>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<JobListing>> call,
+                                           @NonNull Response<List<JobListing>> response) {
+                        if (isHandling401) return;
+                        if (response.code() == 401) { handle401(); return; }
+                        if (response.isSuccessful() && response.body() != null) {
+                            resumeJobs.clear();
+                            resumeJobs.addAll(response.body());
+                            resumeActive = true;
+                            setResumeBannerState(ResumeBannerState.RESULT);
+                            if (tabAllActive) refreshDisplay();
+                        } else {
+                            Toast.makeText(JobsActivity.this,
+                                    R.string.jobs_resume_error, Toast.LENGTH_LONG).show();
+                            setResumeBannerState(ResumeBannerState.IDLE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<JobListing>> call,
+                                          @NonNull Throwable t) {
+                        Toast.makeText(JobsActivity.this,
+                                R.string.jobs_resume_error, Toast.LENGTH_LONG).show();
+                        setResumeBannerState(ResumeBannerState.IDLE);
+                    }
+                });
+    }
+
+    private void clearResume() {
+        resumeActive = false;
+        resumeFileName = null;
+        resumeJobs.clear();
+        setResumeBannerState(ResumeBannerState.IDLE);
+        refreshDisplay();
+    }
+
+    private enum ResumeBannerState { IDLE, LOADING, RESULT }
+
+    private void setResumeBannerState(ResumeBannerState state) {
+        layoutResumeIdle.setVisibility(state == ResumeBannerState.IDLE ? View.VISIBLE : View.GONE);
+        layoutResumeLoading.setVisibility(state == ResumeBannerState.LOADING ? View.VISIBLE : View.GONE);
+        layoutResumeResult.setVisibility(state == ResumeBannerState.RESULT ? View.VISIBLE : View.GONE);
+
+        if (state == ResumeBannerState.RESULT) {
+            tvResumeFileName.setText(resumeFileName != null ? resumeFileName : "Resume");
+            tvResumeMatchCount.setText(getString(R.string.jobs_resume_matches, resumeJobs.size()));
+        }
+    }
+
+    private String getFileName(Uri uri) {
+        String result = null;
+        if ("content".equals(uri.getScheme())) {
+            try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
+                if (cursor != null && cursor.moveToFirst()) {
+                    int idx = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                    if (idx >= 0) result = cursor.getString(idx);
+                }
+            }
+        }
+        if (result == null) {
+            result = uri.getLastPathSegment();
+        }
+        return result != null ? result : "resume.pdf";
     }
 
     // ── Data loading ──────────────────────────────────────────────────────────
@@ -270,7 +415,6 @@ public class JobsActivity extends AppCompatActivity
         String token = TokenManager.getBearerToken(this);
 
         if (wasSaved) {
-            // Optimistic remove
             savedJobIds.remove(job.getId());
             savedJobsList.removeIf(j -> j.getId() == job.getId());
             adapter.setSavedIds(savedJobIds);
@@ -290,7 +434,6 @@ public class JobsActivity extends AppCompatActivity
                         }
                     });
         } else {
-            // Optimistic add
             savedJobIds.add(job.getId());
             savedJobsList.add(0, job);
             adapter.setSavedIds(savedJobIds);
@@ -360,7 +503,16 @@ public class JobsActivity extends AppCompatActivity
     // ── Display ───────────────────────────────────────────────────────────────
 
     private void refreshDisplay() {
-        List<JobListing> displayList = tabAllActive ? jobs : savedJobsList;
+        List<JobListing> displayList;
+        if (!tabAllActive) {
+            displayList = savedJobsList;
+        } else if (resumeActive) {
+            displayList = resumeJobs;
+        } else {
+            displayList = jobs;
+        }
+
+        adapter.setResumeMode(resumeActive && tabAllActive);
         adapter.setData(displayList, savedJobIds);
 
         boolean empty = displayList.isEmpty();
@@ -376,7 +528,8 @@ public class JobsActivity extends AppCompatActivity
 
         if (tabAllActive) {
             tvEmpty.setText(R.string.jobs_empty);
-            btnLoadMore.setVisibility(hasMore ? View.VISIBLE : View.GONE);
+            // Hide load-more when showing resume results
+            btnLoadMore.setVisibility((!resumeActive && hasMore) ? View.VISIBLE : View.GONE);
         } else {
             tvEmpty.setText(R.string.jobs_saved_empty);
             btnLoadMore.setVisibility(View.GONE);
@@ -385,22 +538,18 @@ public class JobsActivity extends AppCompatActivity
 
     private void setActiveTab(boolean all) {
         tabAllActive = all;
-        int primaryColor = getResources().getColor(R.color.colorPrimary, getTheme());
+        int primaryColor   = getResources().getColor(R.color.colorPrimary, getTheme());
         int secondaryColor = getResources().getColor(R.color.colorTextSecondary, getTheme());
 
         tabAll.setTextColor(all ? primaryColor : secondaryColor);
         tabSaved.setTextColor(all ? secondaryColor : primaryColor);
 
-        // Move underline indicator
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f);
         tabIndicator.post(() -> {
             int totalWidth = tabAll.getWidth() + tabSaved.getWidth();
             if (totalWidth > 0) {
                 tabIndicator.setBackgroundColor(primaryColor);
             }
         });
-
     }
 
     // ── Job type chips ────────────────────────────────────────────────────────
@@ -442,9 +591,7 @@ public class JobsActivity extends AppCompatActivity
                 }
             });
 
-            // Apply initial active state for "All" chip
             applyChipActiveStyle(chip, value == null);
-
             chipGroupJobType.addView(chip);
         }
     }
@@ -452,9 +599,9 @@ public class JobsActivity extends AppCompatActivity
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private void applyChipActiveStyle(Chip chip, boolean active) {
-        int primary   = getColor(R.color.colorPrimary);
-        int onPrimary = getColor(R.color.colorOnPrimary);
-        int surface   = getColor(R.color.colorSurface);
+        int primary     = getColor(R.color.colorPrimary);
+        int onPrimary   = getColor(R.color.colorOnPrimary);
+        int surface     = getColor(R.color.colorSurface);
         int textPrimary = getColor(R.color.colorTextPrimary);
         chip.setChipBackgroundColor(android.content.res.ColorStateList.valueOf(active ? primary : surface));
         chip.setTextColor(active ? onPrimary : textPrimary);
@@ -463,7 +610,6 @@ public class JobsActivity extends AppCompatActivity
 
     private void showLoading(boolean show) {
         loadingBar.setVisibility(show ? View.VISIBLE : View.GONE);
-        // Show centered spinner only during the very first load (list is empty)
         boolean initialLoad = show && jobs.isEmpty() && tabAllActive;
         layoutLoadingState.setVisibility(initialLoad ? View.VISIBLE : View.GONE);
         if (initialLoad) {

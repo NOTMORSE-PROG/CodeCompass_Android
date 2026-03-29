@@ -306,7 +306,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/certifications_visit_official"
-                android:visibility="gone" />
+                android:textColor="@color/colorTextPrimary"
+                android:visibility="gone"
+                app:strokeColor="@color/colorTextPrimary"
+                app:strokeWidth="1.5dp" />
 
             <Button
                 android:id="@+id/btnStudyGuide"
@@ -315,7 +318,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/certifications_study_guide"
-                android:visibility="gone" />
+                android:textColor="@color/colorTextPrimary"
+                android:visibility="gone"
+                app:strokeColor="@color/colorTextPrimary"
+                app:strokeWidth="1.5dp" />
 
             <!-- Bottom spacer for footer -->
             <View
@@ -349,7 +355,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Track This Certification"
-            android:visibility="gone" />
+            android:textColor="@color/colorTextPrimary"
+            android:visibility="gone"
+            app:backgroundTint="@color/colorPrimary" />
 
         <!-- Tracked (not passed): status spinner row + remove link -->
         <LinearLayout
@@ -368,7 +376,8 @@
                 android:layout_weight="1"
                 android:background="@drawable/bg_spinner"
                 android:paddingStart="12dp"
-                android:paddingEnd="12dp" />
+                android:paddingEnd="12dp"
+                android:popupBackground="@color/colorSurface" />
 
             <Button
                 android:id="@+id/btnRemoveTracking"

@@ -3,6 +3,7 @@ package com.example.codecompass.api;
 import com.example.codecompass.model.Badge;
 import com.example.codecompass.model.ChangePasswordRequest;
 import com.example.codecompass.model.JobListing;
+import com.example.codecompass.model.ResumeMatchRequest;
 import com.example.codecompass.model.SavedJob;
 import com.example.codecompass.model.Certification;
 import com.example.codecompass.model.ChatSession;
@@ -35,6 +36,7 @@ import com.example.codecompass.model.roadmap.SubmitAnswersRequest;
 import com.example.codecompass.model.roadmap.UpdateNodeResponse;
 import com.example.codecompass.model.roadmap.UpdateNodeStatusRequest;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 
@@ -42,6 +44,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Header;
 import retrofit2.http.PATCH;
 import retrofit2.http.POST;
@@ -68,6 +71,12 @@ public interface ApiService {
     Call<Void> changePassword(
             @Header("Authorization") String bearerToken,
             @Body ChangePasswordRequest body
+    );
+
+    @HTTP(method = "DELETE", path = "auth/delete-account/", hasBody = true)
+    Call<Void> deleteAccount(
+            @Header("Authorization") String bearerToken,
+            @Body JsonObject body
     );
 
     // ── Onboarding ────────────────────────────────────────────────────────────
@@ -223,6 +232,37 @@ public interface ApiService {
             @Body SubmitAnswersRequest body
     );
 
+    // ── Roadmap AI edit proposals ─────────────────────────────────────────────
+
+    @PATCH("roadmaps/{id}/edit/")
+    Call<Void> editRoadmapMeta(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int roadmapId,
+            @Body JsonObject body
+    );
+
+    @PATCH("roadmaps/{id}/nodes/{nid}/edit/")
+    Call<Void> editNodeContent(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int roadmapId,
+            @Path("nid") int nodeId,
+            @Body JsonObject body
+    );
+
+    @POST("roadmaps/{id}/nodes/add/")
+    Call<Void> addRoadmapNode(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int roadmapId,
+            @Body JsonObject body
+    );
+
+    @DELETE("roadmaps/{id}/nodes/{nid}/remove/")
+    Call<Void> removeRoadmapNode(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int roadmapId,
+            @Path("nid") int nodeId
+    );
+
     @POST("roadmaps/{id}/repair/")
     Call<Void> repairRoadmap(
             @Header("Authorization") String bearerToken,
@@ -233,6 +273,20 @@ public interface ApiService {
     Call<Roadmap> fixRoadmapStructure(
             @Header("Authorization") String bearerToken,
             @Path("id") int roadmapId
+    );
+
+    // ── Roadmap path change / upskill ─────────────────────────────────────────
+
+    @POST("roadmaps/switch/")
+    Call<Void> switchRoadmap(
+            @Header("Authorization") String bearerToken,
+            @Body JsonObject body
+    );
+
+    @POST("roadmaps/upskill/")
+    Call<Void> upskillRoadmap(
+            @Header("Authorization") String bearerToken,
+            @Body JsonObject body
     );
 
     // ── Jobs ──────────────────────────────────────────────────────────────────
@@ -265,5 +319,11 @@ public interface ApiService {
     Call<Void> unsaveJob(
             @Header("Authorization") String bearerToken,
             @Path("id") int jobId
+    );
+
+    @POST("jobs/recommend-from-resume/")
+    Call<List<JobListing>> recommendFromResume(
+            @Header("Authorization") String bearerToken,
+            @Body ResumeMatchRequest body
     );
 }

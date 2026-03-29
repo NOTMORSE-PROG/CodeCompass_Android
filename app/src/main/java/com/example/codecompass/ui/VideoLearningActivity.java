@@ -10,10 +10,12 @@ import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +48,12 @@ public class VideoLearningActivity extends AppCompatActivity {
     private TextView     tvVideoChannel;
     private LinearLayout layoutQuizLocked;
     private Button       btnTakeQuiz;
+    private FrameLayout  fullscreenContainer;
+
+    // ── Fullscreen state ──────────────────────────────────────────────────────
+    private View                               fullscreenView;
+    private WebChromeClient.CustomViewCallback fullscreenCallback;
+    private OnBackPressedCallback              fullscreenBackCallback;
 
     // ── State ─────────────────────────────────────────────────────────────────
     private int     nodeId;
@@ -97,13 +105,14 @@ public class VideoLearningActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(v -> finish());
 
         // Bind views
-        webView          = findViewById(R.id.webViewVideo);
-        progressWatch    = findViewById(R.id.progressWatch);
-        tvWatchPercent   = findViewById(R.id.tvWatchPercent);
-        tvVideoTitle     = findViewById(R.id.tvVideoTitle);
-        tvVideoChannel   = findViewById(R.id.tvVideoChannel);
-        layoutQuizLocked = findViewById(R.id.layoutQuizLocked);
-        btnTakeQuiz      = findViewById(R.id.btnTakeQuiz);
+        webView             = findViewById(R.id.webViewVideo);
+        progressWatch       = findViewById(R.id.progressWatch);
+        tvWatchPercent      = findViewById(R.id.tvWatchPercent);
+        tvVideoTitle        = findViewById(R.id.tvVideoTitle);
+        tvVideoChannel      = findViewById(R.id.tvVideoChannel);
+        layoutQuizLocked    = findViewById(R.id.layoutQuizLocked);
+        btnTakeQuiz         = findViewById(R.id.btnTakeQuiz);
+        fullscreenContainer = findViewById(R.id.fullscreenContainer);
 
         // 16:9 aspect ratio for WebView
         int videoHeight = (int) (getResources().getDisplayMetrics().widthPixels * 9.0 / 16.0);
@@ -133,6 +142,27 @@ public class VideoLearningActivity extends AppCompatActivity {
         }
 
         setupWebView(videoId, savedPosition, 0, savedMaxReached);
+
+        fullscreenBackCallback = new OnBackPressedCallback(false) {
+            @Override
+            public void handleOnBackPressed() {
+                exitFullscreen();
+            }
+        };
+        getOnBackPressedDispatcher().addCallback(this, fullscreenBackCallback);
+    }
+
+    private void exitFullscreen() {
+        if (fullscreenView == null) return;
+        fullscreenContainer.removeView(fullscreenView);
+        fullscreenContainer.setVisibility(View.GONE);
+        fullscreenView = null;
+        if (fullscreenCallback != null) {
+            fullscreenCallback.onCustomViewHidden();
+            fullscreenCallback = null;
+        }
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        fullscreenBackCallback.setEnabled(false);
     }
 
     @Override
@@ -157,7 +187,29 @@ public class VideoLearningActivity extends AppCompatActivity {
                               int savedCumulative, int savedMaxReached) {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setDomStorageEnabled(true);
-        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onShowCustomView(View view, CustomViewCallback callback) {
+                if (fullscreenView != null) {
+                    callback.onCustomViewHidden();
+                    return;
+                }
+                fullscreenView = view;
+                fullscreenCallback = callback;
+                fullscreenContainer.addView(view);
+                fullscreenContainer.setVisibility(View.VISIBLE);
+                fullscreenBackCallback.setEnabled(true);
+                getWindow().getDecorView().setSystemUiVisibility(
+                        View.SYSTEM_UI_FLAG_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+            }
+
+            @Override
+            public void onHideCustomView() {
+                exitFullscreen();
+            }
+        });
         webView.addJavascriptInterface(new YouTubeProgressInterface(), "Android");
 
         String html = buildPlayerHtml(
