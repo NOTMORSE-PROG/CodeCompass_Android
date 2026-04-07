@@ -48,7 +48,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="⚠️ This will remove a roadmap node — cannot be undone."
+                android:text="@string/proposal_warning_msg"
                 android:textSize="12sp"
                 android:textColor="@color/colorError"/>
 
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="✅ Applied to your roadmap"
+            android:text="@string/proposal_applied_msg"
             android:textSize="13sp"
             android:textColor="@color/colorTextPrimary"
             android:visibility="gone"/>
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="8dp"
-                android:text="Dismiss"
+                android:text="@string/dismiss"
                 android:textSize="13sp"
                 android:textColor="@color/colorTextSecondary"
                 android:clickable="true"
@@ -91,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="Apply"
+                android:text="@string/apply"
                 android:textSize="13sp"
                 app:backgroundTint="@color/colorPrimary"
                 android:textColor="@color/colorOnPrimary"

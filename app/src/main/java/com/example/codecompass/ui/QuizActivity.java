@@ -26,6 +26,7 @@ import com.example.codecompass.viewmodel.RoadmapViewModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class QuizActivity extends AppCompatActivity {
@@ -259,21 +260,21 @@ public class QuizActivity extends AppCompatActivity {
         cancelTimer();
         progressTimer.setMax(100);
         progressTimer.setProgress(100);
-        tvTimer.setText("15s");
+        tvTimer.setText(getString(R.string.quiz_timer_seconds_format, 15));
         updateTimerUi(15);
 
         countDownTimer = new CountDownTimer(15_000, 1_000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 int secs = (int) (millisUntilFinished / 1000);
-                tvTimer.setText(secs + "s");
+                tvTimer.setText(getString(R.string.quiz_timer_seconds_format, secs));
                 progressTimer.setProgress((secs * 100) / 15);
                 updateTimerUi(secs);
             }
 
             @Override
             public void onFinish() {
-                tvTimer.setText("0s");
+                tvTimer.setText(getString(R.string.quiz_timer_seconds_format, 0));
                 progressTimer.setProgress(0);
                 updateTimerUi(0);
                 autoAdvance();
@@ -437,7 +438,7 @@ public class QuizActivity extends AppCompatActivity {
         header.addView(tvIcon);
 
         TextView tvQ = new TextView(this);
-        tvQ.setText(number + ". " + (q.getQuestion() != null ? q.getQuestion() : ""));
+        tvQ.setText(getString(R.string.quiz_result_number_format, number, q.getQuestion() != null ? q.getQuestion() : ""));
         tvQ.setTextSize(13);
         tvQ.setTypeface(null, android.graphics.Typeface.BOLD);
         tvQ.setTextColor(getColor(R.color.colorTextPrimary));
@@ -476,7 +477,7 @@ public class QuizActivity extends AppCompatActivity {
                 }
 
                 TextView tvKey = new TextView(this);
-                tvKey.setText(key.toUpperCase());
+                tvKey.setText(key.toUpperCase(java.util.Locale.getDefault()));
                 tvKey.setTextSize(11);
                 tvKey.setTypeface(null, android.graphics.Typeface.BOLD);
                 tvKey.setTextColor(getColor(R.color.colorTextSecondary));
@@ -502,7 +503,7 @@ public class QuizActivity extends AppCompatActivity {
         String explanation = item.getExplanation();
         if (explanation != null && !explanation.isEmpty()) {
             TextView tvExp = new TextView(this);
-            tvExp.setText("\uD83D\uDCA1 " + explanation);
+            tvExp.setText(getString(R.string.quiz_explanation_format, explanation));
             tvExp.setTextSize(12);
             tvExp.setTextColor(getColor(R.color.colorTextSecondary));
             tvExp.setLineSpacing(0, 1.4f);

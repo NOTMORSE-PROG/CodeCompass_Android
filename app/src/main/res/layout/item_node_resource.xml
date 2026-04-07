@@ -9,8 +9,7 @@
     android:gravity="center_vertical"
     android:paddingVertical="10dp"
     android:paddingHorizontal="12dp"
-    android:layout_marginBottom="4dp"
-    android:background="@color/colorSurface">
+    android:layout_marginBottom="4dp">
 
     <!-- Left accent border (color set programmatically for active/done states) -->
     <View
@@ -25,8 +24,8 @@
         android:id="@+id/tvResourceIndex"
         android:layout_width="24dp"
         android:layout_height="wrap_content"
-        android:text="01"
-        android:textSize="10sp"
+        android:text="@string/resource_number_placeholder"
+        android:textSize="11sp"
         android:typeface="monospace"
         android:textColor="@color/textSecondaryLight"
         android:layout_marginEnd="8dp" />
@@ -37,8 +36,8 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:gravity="center"
-        android:text="YT"
-        android:textSize="9sp"
+        android:text="@string/resource_type_youtube"
+        android:textSize="11sp"
         android:textStyle="bold"
         android:textColor="@color/resourceYtText"
         android:background="@drawable/bg_rounded_badge"
@@ -56,7 +55,7 @@
             android:id="@+id/tvResourceTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Resource title"
+            android:text="@string/resource_title_placeholder"
             android:textSize="13sp"
             android:textColor="@color/colorTextPrimary"
             android:maxLines="2"
@@ -78,7 +77,7 @@
         android:id="@+id/tvResourceDuration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="25 min"
+        android:text="@string/resource_duration_placeholder"
         android:textSize="11sp"
         android:textColor="@color/colorTextSecondary"
         android:layout_marginHorizontal="8dp" />
@@ -88,7 +87,7 @@
         android:id="@+id/tvResourceStatus"
         android:layout_width="20dp"
         android:layout_height="wrap_content"
-        android:text="○"
+        android:text="@string/resource_circle_icon"
         android:textSize="14sp"
         android:gravity="center"
         android:textColor="@color/textSecondaryLight" />
@@ -101,7 +100,7 @@
         android:layout_height="wrap_content"
         android:text="@string/roadmap_mark_visited"
         android:textColor="@color/colorPrimary"
-        android:textSize="10sp"
+        android:textSize="11sp"
         android:paddingHorizontal="4dp"
         android:visibility="gone" />
 

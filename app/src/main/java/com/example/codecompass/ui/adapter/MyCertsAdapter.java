@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -71,6 +72,7 @@ public class MyCertsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(Map<Integer, UserCertification> myCerts,
                         Map<Integer, Certification> allCertsById) {
         items.clear();
@@ -180,8 +182,8 @@ public class MyCertsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             circle.setColor(Color.parseColor(colorHex));
             tvProviderInitial.setBackground(circle);
             String initLabel = cert.getAbbreviation() != null && !cert.getAbbreviation().isEmpty()
-                    ? cert.getAbbreviation().substring(0, 1).toUpperCase()
-                    : cert.getName().substring(0, 1).toUpperCase();
+                    ? cert.getAbbreviation().substring(0, 1).toUpperCase(java.util.Locale.getDefault())
+                    : cert.getName().substring(0, 1).toUpperCase(java.util.Locale.getDefault());
             tvProviderInitial.setText(initLabel);
 
             tvCertName.setText(cert.getName());
@@ -201,7 +203,7 @@ public class MyCertsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     ? cert.getLevelDisplay() : cert.getLevel());
 
             if (cert.getEstimatedStudyHours() != null && cert.getEstimatedStudyHours() > 0) {
-                tvStudyHours.setText("~" + cert.getEstimatedStudyHours() + " hrs study");
+                tvStudyHours.setText(itemView.getContext().getString(R.string.cert_study_hours_format, cert.getEstimatedStudyHours()));
                 tvStudyHours.setVisibility(View.VISIBLE);
             } else {
                 tvStudyHours.setVisibility(View.GONE);
@@ -212,7 +214,7 @@ public class MyCertsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tvStatusBadge.setVisibility(View.VISIBLE);
 
             // "Update" button: black outlined, black text
-            btnTrack.setText("Update");
+            btnTrack.setText(R.string.cert_update_btn);
             btnTrack.setTextColor(Color.BLACK);
             btnTrack.setBackgroundTintList(ColorStateList.valueOf(Color.TRANSPARENT));
             if (btnTrack instanceof com.google.android.material.button.MaterialButton) {

@@ -446,8 +446,8 @@ public class CertificationsActivity extends AppCompatActivity
         btnLoadMore.setVisibility(hasCertMore && !myCertsTabActive ? View.VISIBLE : View.GONE);
 
         if (!allCerts.isEmpty()) {
-            tvResultCount.setText(filtered.size() + " certification"
-                    + (filtered.size() == 1 ? "" : "s"));
+            tvResultCount.setText(getString(R.string.certifications_result_count,
+                    filtered.size(), filtered.size() == 1 ? "" : "s"));
             tvResultCount.setVisibility(View.VISIBLE);
         }
 

@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/colorSurface">
+    android:orientation="vertical">
 
     <!-- Drag handle -->
     <View
@@ -106,7 +105,7 @@
                         android:id="@+id/tvResultIcon"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="✓"
+                        android:text="@string/step_done_icon"
                         android:textSize="20sp"
                         android:textColor="@color/quizPassText"
                         android:layout_marginEnd="10dp" />
@@ -130,7 +129,7 @@
                             android:id="@+id/tvResultScore"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="3/4 correct (75%)"
+                            android:text="@string/quiz_score_placeholder"
                             android:textSize="13sp"
                             android:textColor="@color/colorTextSecondary" />
 

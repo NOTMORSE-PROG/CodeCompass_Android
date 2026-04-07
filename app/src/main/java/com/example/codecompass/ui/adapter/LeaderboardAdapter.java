@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     private final List<LeaderboardEntry> entries = new ArrayList<>();
     private String currentUserName = "";
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setEntries(List<LeaderboardEntry> list, String myName) {
         entries.clear();
         entries.addAll(list);

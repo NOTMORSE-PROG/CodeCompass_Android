@@ -55,9 +55,9 @@
                 android:background="@drawable/bg_badge_yellow"
                 android:paddingHorizontal="8dp"
                 android:paddingVertical="3dp"
-                android:text="Match"
+                android:text="@string/job_match_label"
                 android:textColor="@color/colorOnPrimary"
-                android:textSize="10sp"
+                android:textSize="11sp"
                 android:fontFamily="sans-serif-medium"
                 android:visibility="gone" />
 
@@ -145,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="6dp"
-                android:text="Matched skills"
+                android:text="@string/job_matched_skills"
                 android:textColor="@color/colorTextSecondary"
                 android:textSize="11sp"
                 android:fontFamily="sans-serif-medium" />

@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<merge
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:layout_height="match_parent">
 
     <!-- ── LOADING / SUBMITTING STATE ───────────────────────────────────────── -->
     <LinearLayout
@@ -54,7 +53,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Question 1 of 10"
+                android:text="@string/quiz_question_progress"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorTextPrimary" />
@@ -110,7 +109,7 @@
                     android:id="@+id/tvTimer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="15s"
+                    android:text="@string/quiz_timer_default"
                     android:textSize="28sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorOnlineGreen"
@@ -155,7 +154,7 @@
                         android:id="@+id/tvOptionAKey"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:text="A"
+                        android:text="@string/quiz_option_a"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:textColor="@color/colorTextSecondary"
@@ -191,7 +190,7 @@
                         android:id="@+id/tvOptionBKey"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:text="B"
+                        android:text="@string/quiz_option_b"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:textColor="@color/colorTextSecondary"
@@ -227,7 +226,7 @@
                         android:id="@+id/tvOptionCKey"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:text="C"
+                        android:text="@string/quiz_option_c"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:textColor="@color/colorTextSecondary"
@@ -263,7 +262,7 @@
                         android:id="@+id/tvOptionDKey"
                         android:layout_width="28dp"
                         android:layout_height="28dp"
-                        android:text="D"
+                        android:text="@string/quiz_option_d"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         android:textColor="@color/colorTextSecondary"
@@ -328,7 +327,7 @@
                     android:id="@+id/tvResultIcon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="✓"
+                    android:text="@string/step_done_icon"
                     android:textSize="32sp"
                     android:textColor="@color/quizPassText"
                     android:layout_marginEnd="16dp" />
@@ -415,4 +414,4 @@
         </LinearLayout>
     </ScrollView>
 
-</FrameLayout>
+</merge>

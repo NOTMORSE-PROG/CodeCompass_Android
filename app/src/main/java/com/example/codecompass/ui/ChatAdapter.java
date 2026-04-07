@@ -24,6 +24,8 @@ import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import android.annotation.SuppressLint;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -346,13 +348,13 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
                             R.layout.item_edit_proposal_card, containerProposal, false);
                     int n = proposals.size();
                     ((TextView) card.findViewById(R.id.tvProposalHeader)).setText(
-                            "✏️ Roadmap Edit — " + n + " proposal" + (n == 1 ? "" : "s"));
+                            itemView.getContext().getString(R.string.proposal_header_format, n, n == 1 ? "" : "s"));
                     LinearLayout items = card.findViewById(R.id.containerProposalItems);
                     items.removeAllViews();
                     boolean hasDangerous = false;
                     for (EditProposal p : proposals) {
                         TextView tv = new TextView(itemView.getContext());
-                        tv.setText("• " + p.getSummary());
+                        tv.setText(itemView.getContext().getString(R.string.proposal_item_format, p.getSummary()));
                         tv.setTextSize(12f);
                         tv.setPadding(0, 2, 0, 2);
                         tv.setTextColor(itemView.getContext().getColor(R.color.colorTextPrimary));
@@ -394,8 +396,8 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
 
                     // Details: "New path: X\nCareer goal: Y"
                     ((TextView) card.findViewById(R.id.tvSwitchDetails)).setText(
-                            "New path: " + sw.getNewPath()
-                                    + "\nCareer goal: " + sw.getCareerGoal());
+                            itemView.getContext().getString(R.string.switch_details_format,
+                                    sw.getNewPath(), sw.getCareerGoal()));
 
                     LinearLayout layoutApplied = card.findViewById(R.id.layoutSwitchApplied);
                     LinearLayout layoutButtons = card.findViewById(R.id.layoutSwitchButtons);
@@ -436,7 +438,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
                     // Plan summary (optional)
                     TextView tvPlan = card.findViewById(R.id.tvUpskillPlan);
                     if (up.getSummary() != null && !up.getSummary().isEmpty()) {
-                        tvPlan.setText("Plan: " + up.getSummary());
+                        tvPlan.setText(itemView.getContext().getString(R.string.upskill_plan_format, up.getSummary()));
                         tvPlan.setVisibility(View.VISIBLE);
                     } else {
                         tvPlan.setVisibility(View.GONE);
@@ -511,6 +513,7 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.MessageViewHol
     }
 
     /** Replaces the entire message list (used when restoring a saved tab). */
+    @SuppressLint("NotifyDataSetChanged")
     public void setMessages(List<ChatMessage> newMessages) {
         messages.clear();
         messages.addAll(newMessages);

@@ -121,7 +121,7 @@
                         android:layout_height="24dp"
                         android:src="@drawable/ic_close"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Dismiss"
+                        android:contentDescription="@string/dismiss"
                         app:tint="@color/colorTextPrimary" />
 
                 </LinearLayout>
@@ -161,6 +161,7 @@
                             android:layout_width="32dp"
                             android:layout_height="32dp"
                             android:src="@drawable/ic_roadmap"
+                            android:contentDescription="@null"
                             app:tint="@color/colorOnPrimary" />
                     </LinearLayout>
 
@@ -257,7 +258,7 @@
             android:id="@+id/tvXpAmount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="+75 XP"
+            android:text="@string/xp_reward_75"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary" />

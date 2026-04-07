@@ -30,7 +30,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="My Roadmap"
+                android:text="@string/roadmap_header_title"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorTextPrimary"
@@ -85,7 +85,7 @@
                 android:id="@+id/tvCompletionPct"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0%"
+                android:text="@string/roadmap_progress_zero"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/colorTextPrimary" />
@@ -93,7 +93,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" complete"
+                android:text="@string/roadmap_complete_label"
                 android:textSize="13sp"
                 android:textColor="@color/colorTextSecondary" />
 
@@ -110,14 +110,14 @@
                 android:id="@+id/tvNodesDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 / 0 nodes"
+                android:text="@string/roadmap_nodes_placeholder"
                 android:textSize="13sp"
                 android:textColor="@color/colorTextSecondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" · "
+                android:text="@string/roadmap_separator"
                 android:textSize="13sp"
                 android:textColor="@color/colorTextSecondary" />
 
@@ -125,7 +125,7 @@
                 android:id="@+id/tvHoursLeft"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="~0h left"
+                android:text="@string/roadmap_hours_left_placeholder"
                 android:textSize="13sp"
                 android:textColor="@color/colorTextSecondary" />
 
@@ -133,7 +133,7 @@
                 android:id="@+id/tvStreakSeparator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" · "
+                android:text="@string/roadmap_separator"
                 android:textSize="13sp"
                 android:textColor="@color/colorTextSecondary"
                 android:visibility="gone" />
@@ -142,7 +142,7 @@
                 android:id="@+id/tvStreakStat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🔥 0"
+                android:text="@string/roadmap_streak_placeholder"
                 android:textSize="13sp"
                 android:textColor="@color/colorStreak"
                 android:visibility="gone" />

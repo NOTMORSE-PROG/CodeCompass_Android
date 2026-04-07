@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<JobListing> newJobs, Set<Integer> savedIds) {
         jobs.clear();
         if (newJobs != null) jobs.addAll(newJobs);
@@ -43,11 +45,13 @@ public class JobAdapter extends RecyclerView.Adapter<JobAdapter.JobViewHolder> {
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setSavedIds(Set<Integer> savedIds) {
         this.savedJobIds = savedIds;
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setResumeMode(boolean resumeMode) {
         this.resumeMode = resumeMode;
         notifyDataSetChanged();

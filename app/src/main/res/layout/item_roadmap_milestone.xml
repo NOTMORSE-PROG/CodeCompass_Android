@@ -25,7 +25,7 @@
             android:id="@+id/tvMilestoneTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Phase 1: Foundations"
+            android:text="@string/roadmap_milestone_title_placeholder"
             android:textSize="12sp"
             android:textStyle="bold"
             android:textColor="@color/milestoneActiveText"
@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="0/0 done"
+        android:text="@string/node_progress_placeholder"
         android:textSize="12sp"
         android:textColor="@color/nodeLockedText"
         android:layout_marginTop="4dp" />

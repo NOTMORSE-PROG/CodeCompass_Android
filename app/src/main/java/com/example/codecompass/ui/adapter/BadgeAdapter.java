@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ public class BadgeAdapter extends RecyclerView.Adapter<BadgeAdapter.ViewHolder> 
     private final List<Badge> badges = new ArrayList<>();
     private final Set<String> earnedSlugs = new HashSet<>();
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Badge> allBadges, Set<String> slugs) {
         badges.clear();
         badges.addAll(allBadges);

@@ -5,6 +5,8 @@ import com.example.codecompass.model.ChangePasswordRequest;
 import com.example.codecompass.model.JobListing;
 import com.example.codecompass.model.ResumeMatchRequest;
 import com.example.codecompass.model.SavedJob;
+import com.example.codecompass.model.University;
+import com.example.codecompass.model.UniversityRecommendation;
 import com.example.codecompass.model.Certification;
 import com.example.codecompass.model.ChatSession;
 import com.example.codecompass.model.ChatSessionDetail;
@@ -325,5 +327,26 @@ public interface ApiService {
     Call<List<JobListing>> recommendFromResume(
             @Header("Authorization") String bearerToken,
             @Body ResumeMatchRequest body
+    );
+
+    // ── Universities ──────────────────────────────────────────────────────────
+
+    @GET("universities/")
+    Call<PagedResponse<University>> getUniversities(
+            @Header("Authorization") String bearerToken,
+            @Query("search") String search,
+            @Query("university_type") String universityType,
+            @Query("page") Integer page
+    );
+
+    @GET("universities/recommendations/")
+    Call<List<UniversityRecommendation>> getUniversityRecommendations(
+            @Header("Authorization") String bearerToken
+    );
+
+    @GET("universities/{id}/")
+    Call<University> getUniversityDetail(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id
     );
 }

@@ -165,7 +165,7 @@ public class QuizBottomSheet extends BottomSheetDialogFragment {
 
             // Question text
             TextView tvQuestion = new TextView(requireContext());
-            tvQuestion.setText((qi + 1) + ". " + q.getQuestion());
+            tvQuestion.setText(getString(R.string.quiz_question_numbered, qi + 1, q.getQuestion()));
             tvQuestion.setTextSize(14f);
             tvQuestion.setTextColor(requireContext().getColor(R.color.colorTextPrimary));
             tvQuestion.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -189,7 +189,8 @@ public class QuizBottomSheet extends BottomSheetDialogFragment {
                 for (Map.Entry<String, String> entry : entries) {
                     final String letter = entry.getKey(); // "a", "b", "c", "d"
                     RadioButton rb = new RadioButton(requireContext());
-                    rb.setText(letter.toUpperCase() + ". " + entry.getValue());
+                    rb.setText(getString(R.string.quiz_option_format,
+                            letter.toUpperCase(java.util.Locale.getDefault()), entry.getValue()));
                     rb.setTextSize(13f);
                     rb.setTextColor(requireContext().getColor(R.color.colorTextPrimary));
                     rb.setButtonTintList(ColorStateList.valueOf(
@@ -200,7 +201,7 @@ public class QuizBottomSheet extends BottomSheetDialogFragment {
                     rbParams.setMargins(0, 0, 0, dpToPx(6));
                     rb.setLayoutParams(rbParams);
                     rb.setPadding(dpToPx(12), dpToPx(10), dpToPx(12), dpToPx(10));
-                    rb.setBackground(requireContext().getDrawable(R.drawable.bg_quiz_option_normal));
+                    rb.setBackground(androidx.appcompat.content.res.AppCompatResources.getDrawable(requireContext(), R.drawable.bg_quiz_option_normal));
                     rb.setTag(letter); // tag is the letter key, not an index
                     rg.addView(rb);
                 }
@@ -231,9 +232,9 @@ public class QuizBottomSheet extends BottomSheetDialogFragment {
             if (!(child instanceof RadioButton)) continue;
             RadioButton rb = (RadioButton) child;
             if (rb.getId() == selectedId) {
-                rb.setBackground(requireContext().getDrawable(R.drawable.bg_quiz_option_selected));
+                rb.setBackground(androidx.appcompat.content.res.AppCompatResources.getDrawable(requireContext(), R.drawable.bg_quiz_option_selected));
             } else {
-                rb.setBackground(requireContext().getDrawable(R.drawable.bg_quiz_option_normal));
+                rb.setBackground(androidx.appcompat.content.res.AppCompatResources.getDrawable(requireContext(), R.drawable.bg_quiz_option_normal));
             }
         }
     }
@@ -329,7 +330,7 @@ public class QuizBottomSheet extends BottomSheetDialogFragment {
             } else {
                 populateBreakdown(result);
                 layoutBreakdown.setVisibility(View.VISIBLE);
-                btnToggleBreakdown.setText("Hide breakdown");
+                btnToggleBreakdown.setText(R.string.quiz_hide_breakdown);
             }
         });
     }
@@ -351,11 +352,11 @@ public class QuizBottomSheet extends BottomSheetDialogFragment {
             if (tagLetter == null) continue;
 
             if (tagLetter.equals(item.getCorrectAnswer())) {
-                rb.setBackground(requireContext().getDrawable(R.drawable.bg_quiz_option_correct));
+                rb.setBackground(androidx.appcompat.content.res.AppCompatResources.getDrawable(requireContext(), R.drawable.bg_quiz_option_correct));
             } else if (tagLetter.equals(item.getYourAnswer()) && !item.isCorrect()) {
-                rb.setBackground(requireContext().getDrawable(R.drawable.bg_quiz_option_wrong));
+                rb.setBackground(androidx.appcompat.content.res.AppCompatResources.getDrawable(requireContext(), R.drawable.bg_quiz_option_wrong));
             } else {
-                rb.setBackground(requireContext().getDrawable(R.drawable.bg_quiz_option_normal));
+                rb.setBackground(androidx.appcompat.content.res.AppCompatResources.getDrawable(requireContext(), R.drawable.bg_quiz_option_normal));
             }
         }
     }
@@ -398,8 +399,8 @@ public class QuizBottomSheet extends BottomSheetDialogFragment {
 
             // Your answer / correct answer (if wrong)
             if (!item.isCorrect() && item.getCorrectAnswer() != null) {
-                String answerLine = "Your answer: " + item.getYourAnswer().toUpperCase()
-                        + " · Correct: " + item.getCorrectAnswer().toUpperCase();
+                String answerLine = "Your answer: " + item.getYourAnswer().toUpperCase(java.util.Locale.getDefault())
+                        + " · Correct: " + item.getCorrectAnswer().toUpperCase(java.util.Locale.getDefault());
                 TextView tvAnswer = new TextView(requireContext());
                 tvAnswer.setText(answerLine);
                 tvAnswer.setTextSize(12f);
@@ -415,7 +416,7 @@ public class QuizBottomSheet extends BottomSheetDialogFragment {
             // Explanation
             if (item.getExplanation() != null && !item.getExplanation().isEmpty()) {
                 TextView tvExp = new TextView(requireContext());
-                tvExp.setText("💡 " + item.getExplanation());
+                tvExp.setText(getString(R.string.quiz_explanation_bullet_format, item.getExplanation()));
                 tvExp.setTextSize(12f);
                 tvExp.setTextColor(requireContext().getColor(R.color.colorTextSecondary));
                 LinearLayout.LayoutParams ep = new LinearLayout.LayoutParams(

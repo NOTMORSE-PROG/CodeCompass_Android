@@ -1,5 +1,6 @@
 package com.example.codecompass.ui;
 
+import android.annotation.SuppressLint;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,7 @@ public class ChatSessionAdapter extends RecyclerView.Adapter<ChatSessionAdapter.
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setSessions(List<ChatSession> newSessions) {
         sessions.clear();
         if (newSessions != null) sessions.addAll(newSessions);

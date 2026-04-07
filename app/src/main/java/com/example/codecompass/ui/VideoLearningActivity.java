@@ -121,7 +121,7 @@ public class VideoLearningActivity extends AppCompatActivity {
         // Video metadata
         if (videoTitleForQuiz != null) tvVideoTitle.setText(videoTitleForQuiz);
         if (videoChannel != null && !videoChannel.isEmpty()) {
-            tvVideoChannel.setText("📺 " + videoChannel);
+            tvVideoChannel.setText(getString(R.string.video_channel_format, videoChannel));
             tvVideoChannel.setVisibility(View.VISIBLE);
         }
 
@@ -302,7 +302,7 @@ public class VideoLearningActivity extends AppCompatActivity {
         progressWatch.setProgress((capped * 100) / UNLOCK_THRESHOLD);
         int mins = cumulativeSeconds / 60;
         int secs = cumulativeSeconds % 60;
-        tvWatchPercent.setText(String.format("%d:%02d / 5:00", mins, secs));
+        tvWatchPercent.setText(String.format(java.util.Locale.getDefault(), "%d:%02d / 5:00", mins, secs));
     }
 
     private void onFiveMinutesReached() {

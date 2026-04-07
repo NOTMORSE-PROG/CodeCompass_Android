@@ -246,8 +246,8 @@ public class CertDetailBottomSheet extends BottomSheetDialogFragment {
         circle.setColor(Color.parseColor(colorHex));
         tvInitial.setBackground(circle);
         String initial = cert.getAbbreviation() != null && !cert.getAbbreviation().isEmpty()
-                ? cert.getAbbreviation().substring(0, 1).toUpperCase()
-                : cert.getName().substring(0, 1).toUpperCase();
+                ? cert.getAbbreviation().substring(0, 1).toUpperCase(java.util.Locale.getDefault())
+                : cert.getName().substring(0, 1).toUpperCase(java.util.Locale.getDefault());
         tvInitial.setText(initial);
 
         tvName.setText(cert.getName());
@@ -265,13 +265,13 @@ public class CertDetailBottomSheet extends BottomSheetDialogFragment {
         TextView tvHours = view.findViewById(R.id.tvDetailStudyHours);
         TextView tvCost  = view.findViewById(R.id.tvDetailCost);
         tvHours.setText(cert.getEstimatedStudyHours() != null && cert.getEstimatedStudyHours() > 0
-                ? "~" + cert.getEstimatedStudyHours() + " hours" : "Varies");
+                ? getString(R.string.cert_study_hours_format, cert.getEstimatedStudyHours()) : getString(R.string.cert_study_varies));
         if (cert.isFree()) {
-            tvCost.setText("Free");
+            tvCost.setText(R.string.cert_free_label);
         } else if (cert.getEstimatedCostPhp() != null) {
             tvCost.setText(String.format(Locale.getDefault(), "₱%,d", cert.getEstimatedCostPhp()));
         } else {
-            tvCost.setText("Paid");
+            tvCost.setText(R.string.cert_paid_label);
         }
 
         // ── Description ────────────────────────────────────────────────────────

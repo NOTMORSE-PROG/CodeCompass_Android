@@ -520,7 +520,8 @@ public class JobsActivity extends AppCompatActivity
         rvJobs.setVisibility(empty ? View.GONE : View.VISIBLE);
 
         if (!empty) {
-            tvResultCount.setText(displayList.size() + " job" + (displayList.size() == 1 ? "" : "s"));
+            tvResultCount.setText(getString(R.string.jobs_result_count,
+                    displayList.size(), displayList.size() == 1 ? "" : "s"));
             tvResultCount.setVisibility(View.VISIBLE);
         } else {
             tvResultCount.setVisibility(View.GONE);

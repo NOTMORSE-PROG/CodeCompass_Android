@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
     android:orientation="vertical">
 
     <!-- ── [1] Header bar ─────────────────────────────────────────────────── -->
@@ -23,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Back"
+            android:contentDescription="@string/nav_back"
             android:src="@drawable/ic_arrow_back"
             app:tint="@color/colorTextPrimary" />
 
@@ -97,7 +96,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-bold"
-                            android:text="⚡ XP Progress"
+                            android:text="@string/achievements_xp_progress"
                             android:textColor="@color/colorTextPrimary"
                             android:textSize="16sp" />
 
@@ -120,7 +119,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-black"
-                                android:text="0"
+                                android:text="@string/achievements_zero"
                                 android:textColor="@color/colorPrimary"
                                 android:textSize="44sp" />
 
@@ -201,7 +200,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-bold"
-                        android:text="🔥 Daily Streak"
+                        android:text="@string/achievements_daily_streak"
                         android:textColor="@color/colorTextPrimary"
                         android:textSize="16sp"
                         android:layout_marginBottom="16dp" />
@@ -222,7 +221,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="sans-serif-black"
-                                android:text="0"
+                                android:text="@string/achievements_zero"
                                 android:textColor="@color/colorStreak"
                                 android:textSize="44sp" />
 
@@ -277,7 +276,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:fontFamily="sans-serif-bold"
-                            android:text="🏆 Badges"
+                            android:text="@string/achievements_badges_header"
                             android:textColor="@color/colorTextPrimary"
                             android:textSize="16sp" />
 
@@ -330,7 +329,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-bold"
-                        android:text="⚡ XP Activity"
+                        android:text="@string/achievements_xp_activity"
                         android:textColor="@color/colorTextPrimary"
                         android:textSize="16sp"
                         android:layout_marginBottom="12dp" />
@@ -375,7 +374,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-bold"
-                        android:text="🏆 Leaderboard"
+                        android:text="@string/achievements_leaderboard_header"
                         android:textColor="@color/colorTextPrimary"
                         android:textSize="16sp"
                         android:layout_marginBottom="12dp" />

@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,17 +36,20 @@ public class NodeResourceAdapter extends RecyclerView.Adapter<NodeResourceAdapte
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setResources(List<NodeResource> newResources) {
         resources.clear();
         if (newResources != null) resources.addAll(newResources);
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void markCompleted(int resourceId) {
         completedIds.add(resourceId);
         notifyDataSetChanged();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setActiveIndex(int index) {
         this.activeIndex = index;
         notifyDataSetChanged();
@@ -67,6 +71,7 @@ public class NodeResourceAdapter extends RecyclerView.Adapter<NodeResourceAdapte
     public Set<Integer> getCompletedIds() { return new HashSet<>(completedIds); }
 
     /** Restores the completed-IDs set (called from SharedPrefs on sheet open). */
+    @SuppressLint("NotifyDataSetChanged")
     public void restoreCompletedIds(Set<Integer> ids) {
         completedIds.clear();
         if (ids != null) completedIds.addAll(ids);
@@ -127,7 +132,7 @@ public class NodeResourceAdapter extends RecyclerView.Adapter<NodeResourceAdapte
 
         void bind(NodeResource r, int pos, boolean isDone, boolean isActive,
                   Context ctx, OnResourceClickListener listener) {
-            tvIndex.setText(String.format("%02d", pos + 1));
+            tvIndex.setText(String.format(java.util.Locale.getDefault(), "%02d", pos + 1));
             tvTitle.setText(r.getTitle());
 
             // Type badge

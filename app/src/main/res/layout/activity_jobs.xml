@@ -2,9 +2,9 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBackground"
     android:orientation="vertical">
 
     <!-- ── Header ─────────────────────────────────────────────────────────── -->
@@ -20,7 +20,8 @@
             android:layout_height="?attr/actionBarSize"
             android:gravity="center_vertical"
             android:paddingStart="4dp"
-            android:paddingEnd="16dp">
+            android:paddingEnd="16dp"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:id="@+id/btnBack"
@@ -173,7 +174,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Finding jobs…"
+            android:text="@string/jobs_loading"
             android:textColor="@color/colorTextSecondary"
             android:textSize="13sp" />
 

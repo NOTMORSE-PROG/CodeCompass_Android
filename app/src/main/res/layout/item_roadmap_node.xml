@@ -3,6 +3,7 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardNode"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -18,6 +19,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:baselineAligned="false"
         android:padding="14dp">
 
         <!-- Status icon circle (40×40dp) -->
@@ -35,6 +37,7 @@
                 android:layout_height="20dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_lock"
+                android:contentDescription="@null"
                 android:visibility="gone" />
 
             <!-- Node order number (AVAILABLE / IN_PROGRESS) -->
@@ -43,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="1"
+                android:text="@string/node_number_one"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:textColor="@color/nodeIconAvailableFg"
@@ -55,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="✓"
+                android:text="@string/step_done_icon"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:textColor="@color/white"
@@ -83,7 +86,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Node Title"
+                    android:text="@string/node_title_placeholder"
                     android:textSize="14sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorTextPrimary"
@@ -95,8 +98,8 @@
                     android:id="@+id/tvNodeTypeBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SKILL"
-                    android:textSize="10sp"
+                    android:text="@string/node_skill_tag"
+                    android:textSize="11sp"
                     android:textStyle="bold"
                     android:textColor="@color/nodeBadgeSkillText"
                     android:background="@drawable/bg_rounded_badge"
@@ -116,7 +119,7 @@
                     android:id="@+id/tvNodeHours"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="⏱ 5h"
+                    android:text="@string/node_duration_placeholder"
                     android:textSize="12sp"
                     android:textColor="@color/colorTextSecondary"
                     android:layout_marginEnd="8dp" />
@@ -142,7 +145,7 @@
                     android:id="@+id/tvDifficultyLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Beginner"
+                    android:text="@string/node_difficulty_placeholder"
                     android:textSize="12sp"
                     android:textColor="@color/colorTextSecondary" />
 
@@ -168,13 +171,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="8dp"
+            tools:ignore="UseCompoundDrawables">
 
             <TextView
                 android:id="@+id/tvNodeStatusBadge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Available"
+                android:text="@string/roadmap_node_status_available"
                 android:textSize="11sp"
                 android:textStyle="bold"
                 android:textColor="@color/statusAvailableText"
@@ -189,6 +193,7 @@
                 android:layout_height="16dp"
                 android:src="@drawable/ic_arrow_back"
                 android:rotation="-90"
+                android:contentDescription="@null"
                 app:tint="@color/nodeLockedText"
                 android:visibility="visible" />
 

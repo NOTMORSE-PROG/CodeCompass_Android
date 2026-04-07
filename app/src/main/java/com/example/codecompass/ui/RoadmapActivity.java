@@ -347,7 +347,7 @@ public class RoadmapActivity extends AppCompatActivity {
                         int streak = response.body().getStreakCount();
                         if (streak > 0) {
                             tvStreakSeparator.setVisibility(View.VISIBLE);
-                            tvStreakStat.setText("🔥 " + streak);
+                            tvStreakStat.setText(getString(R.string.roadmap_streak_format, streak));
                             tvStreakStat.setVisibility(View.VISIBLE);
                         }
                     }

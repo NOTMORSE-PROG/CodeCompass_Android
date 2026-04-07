@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/colorSurface">
+    android:orientation="vertical">
 
     <!-- Drag handle -->
     <View
@@ -111,7 +110,7 @@
                             android:paddingTop="3dp"
                             android:paddingEnd="8dp"
                             android:paddingBottom="3dp"
-                            android:text="FREE"
+                            android:text="@string/cert_free_badge"
                             android:textColor="#1A7A3C"
                             android:textSize="11sp"
                             android:fontFamily="sans-serif-bold"
@@ -135,7 +134,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -149,7 +149,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Study Time"
+                        android:text="@string/cert_study_time"
                         android:textColor="@color/colorTextSecondary"
                         android:textSize="11sp" />
 
@@ -175,7 +175,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Cost"
+                        android:text="@string/cert_cost"
                         android:textColor="@color/colorTextSecondary"
                         android:textSize="11sp" />
 
@@ -198,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:fontFamily="sans-serif-bold"
-                android:text="About"
+                android:text="@string/cert_about"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="14sp" />
 
@@ -243,7 +243,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-bold"
-                    android:text="Optional Paid Upgrade"
+                    android:text="@string/cert_optional_paid"
                     android:textColor="#92400E"
                     android:textSize="12sp" />
 
@@ -354,7 +354,7 @@
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Track This Certification"
+            android:text="@string/cert_track_btn"
             android:textColor="@color/colorTextPrimary"
             android:visibility="gone"
             app:backgroundTint="@color/colorPrimary" />

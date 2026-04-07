@@ -67,9 +67,9 @@
                     android:paddingTop="2dp"
                     android:paddingEnd="6dp"
                     android:paddingBottom="2dp"
-                    android:text="FREE"
+                    android:text="@string/cert_free_badge"
                     android:textColor="#1A7A3C"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:fontFamily="sans-serif-bold"
                     android:visibility="gone" />
 
@@ -102,7 +102,7 @@
                     android:paddingTop="2dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="2dp"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textColor="@color/colorTextSecondary" />
 
                 <TextView
@@ -114,7 +114,7 @@
                     android:paddingTop="2dp"
                     android:paddingEnd="8dp"
                     android:paddingBottom="2dp"
-                    android:textSize="10sp"
+                    android:textSize="11sp"
                     android:textColor="@color/colorTextSecondary" />
 
             </LinearLayout>

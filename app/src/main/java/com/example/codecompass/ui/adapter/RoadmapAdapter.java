@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class RoadmapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void submitList(List<RoadmapDisplayItem> newItems) {
         items.clear();
         if (newItems != null) items.addAll(newItems);
@@ -109,8 +111,10 @@ public class RoadmapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Context ctx = itemView.getContext();
 
             // Title with optional ✓ prefix for completed phases
-            String prefix = milestone.isCompleted() ? "✓ " : "";
-            tvTitle.setText(prefix + milestone.getTitle());
+            String milestoneTitle = milestone.isCompleted()
+                    ? ctx.getString(R.string.roadmap_milestone_completed_format, milestone.getTitle())
+                    : milestone.getTitle();
+            tvTitle.setText(milestoneTitle);
 
             // Badge color based on milestone status
             int bg, fg;
@@ -203,7 +207,7 @@ public class RoadmapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tvTitle.setText(node.getTitle());
 
             // Hours
-            tvHours.setText("⏱ " + node.getEstimatedHours() + "h");
+            tvHours.setText(ctx.getString(R.string.node_duration_format, node.getEstimatedHours()));
 
             // Difficulty dots
             int diff = Math.max(1, Math.min(5, node.getDifficulty()));
@@ -287,7 +291,7 @@ public class RoadmapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             // Prerequisite hint — find parent node title from the adapter position context
             // Just show a generic locked message here
             tvPrerequisite.setVisibility(View.VISIBLE);
-            tvPrerequisite.setText("🔒 Complete prerequisites to unlock");
+            tvPrerequisite.setText(R.string.node_locked_prerequisites);
         }
 
         private void applyAvailableStyle(RoadmapNode node, Context ctx) {

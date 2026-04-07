@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">CodeCompass</string>
     <string name="app_tagline">Navigate Your Tech Career</string>
 
@@ -104,22 +104,13 @@
     <string name="roadmap_loading_resources">Finding videos for this topic…</string>
     <string name="roadmap_mark_complete">Mark Complete</string>
     <string name="roadmap_marking">Updating…</string>
-    <string name="roadmap_completed_on">Completed %s</string>
     <string name="roadmap_curriculum">Curriculum</string>
-    <string name="roadmap_curriculum_done">%1$d/%2$d done</string>
     <string name="roadmap_complete_quiz_first">Pass all video quizzes to complete this node.</string>
-    <string name="roadmap_search_youtube">Search on YouTube ↗</string>
     <string name="roadmap_node_status_locked">Locked</string>
     <string name="roadmap_node_status_available">Available</string>
     <string name="roadmap_node_status_in_progress">In Progress</string>
     <string name="roadmap_node_status_completed">Done</string>
-    <string name="roadmap_prerequisite_hint">Complete \"%s\" to unlock</string>
-    <string name="roadmap_xp_gain">+%d XP</string>
     <string name="roadmap_node_complete_msg">Node Complete!</string>
-    <string name="roadmap_phase_stats">%1$d/%2$d done · +%3$d XP</string>
-    <string name="roadmap_phase_stats_done">%1$d/%2$d done</string>
-    <string name="roadmap_nodes_progress">%1$d / %2$d nodes</string>
-    <string name="roadmap_hours_left">~%dh left</string>
     <string name="roadmap_error_retry">Retry</string>
     <string name="roadmap_status_active">ACTIVE</string>
     <string name="roadmap_status_completed">COMPLETED</string>
@@ -131,11 +122,8 @@
     <string name="quiz_submit">Submit Answers</string>
     <string name="quiz_passed">Passed!</string>
     <string name="quiz_failed">Not quite.</string>
-    <string name="quiz_score">%1$d/%2$d correct (%3$d%%)</string>
-    <string name="quiz_pass_threshold">Pass threshold: %d%%</string>
     <string name="quiz_try_again">Try Again</string>
     <string name="quiz_breakdown">Show answer breakdown</string>
-    <string name="quiz_hide_breakdown">Hide breakdown</string>
     <string name="quiz_generating_loading">Generating quiz…</string>
 
     <!-- Quiz — full-screen QuizActivity strings -->
@@ -147,8 +135,8 @@
     <string name="quiz_checking">Checking your answers…</string>
     <string name="quiz_passed_label">Quiz Passed!</string>
     <string name="quiz_failed_label">Not Quite</string>
-    <string name="quiz_passed_score">%1$d / %2$d correct · %3$d%%</string>
-    <string name="quiz_failed_score">%1$d / %2$d correct · need %3$d%% to pass</string>
+    <string name="quiz_passed_score" tools:ignore="PluralsCandidate">%1$d / %2$d correct · %3$d%%</string>
+    <string name="quiz_failed_score" tools:ignore="PluralsCandidate">%1$d / %2$d correct · need %3$d%% to pass</string>
     <string name="quiz_back_to_lesson">Back to Lesson</string>
 
     <!-- Video watch gate -->
@@ -209,7 +197,7 @@
     <string name="achievements_day_streak">day streak</string>
     <string name="achievements_streak_active">Great job! Keep logging in every day to maintain your streak.</string>
     <string name="achievements_streak_inactive">Log in and learn every day to keep your streak going!</string>
-    <string name="achievements_badge_count">%1$d / %2$d earned</string>
+    <string name="achievements_badge_count" tools:ignore="PluralsCandidate">%1$d / %2$d earned</string>
     <string name="achievements_badges_loading">Loading badges…</string>
     <string name="achievements_xp_empty">No XP earned yet. Complete nodes and earn badges to see your history!</string>
     <string name="achievements_leaderboard_empty">No leaderboard data yet. Start earning XP!</string>
@@ -221,16 +209,9 @@
     <!-- Certifications -->
     <string name="certifications_title">Certifications</string>
     <string name="certifications_subtitle">Browse and track IT certifications to boost your career.</string>
-    <string name="certifications_filter_all">All</string>
     <string name="certifications_filter_free_only">Free Only</string>
-    <string name="certifications_my_certs">My Certs</string>
     <string name="certifications_track_btn">Track</string>
-    <string name="certifications_tracked">Tracked ✓</string>
     <string name="certifications_empty">No certifications match your filters.</string>
-    <string name="certifications_status_interested">Interested</string>
-    <string name="certifications_status_studying">Studying</string>
-    <string name="certifications_status_passed">Earned ✓</string>
-    <string name="certifications_status_expired">Expired</string>
     <string name="certifications_earned_xp">Certificate Earned! +200 XP</string>
     <string name="certifications_how_to_title">How to Get This Certification</string>
     <string name="certifications_skills_title">Skills You\'ll Gain</string>
@@ -244,24 +225,16 @@
     <string name="jobs_search_hint">Search jobs, companies…</string>
     <string name="jobs_tab_all">All Jobs</string>
     <string name="jobs_tab_saved">Saved</string>
-    <string name="jobs_filter_all">All</string>
-    <string name="jobs_filter_fulltime">Full-time</string>
-    <string name="jobs_filter_parttime">Part-time</string>
-    <string name="jobs_filter_internship">Internship</string>
-    <string name="jobs_filter_freelance">Freelance</string>
-    <string name="jobs_filter_remote">Remote</string>
-    <string name="jobs_recommended">Recommended for You</string>
     <string name="jobs_empty">No jobs found. Try different filters.</string>
     <string name="jobs_saved_empty">No saved jobs yet. Tap the bookmark on any job to save it.</string>
     <string name="jobs_load_more">Load more</string>
     <string name="jobs_apply">Apply Now →</string>
     <string name="jobs_save">Save Job</string>
     <string name="jobs_unsave">Remove from Saved</string>
-    <string name="jobs_salary_na">Salary not listed</string>
     <string name="jobs_resume_upload_title">Match jobs to your resume</string>
     <string name="jobs_resume_upload_btn">Upload PDF</string>
     <string name="jobs_resume_analyzing">Analyzing resume…</string>
-    <string name="jobs_resume_matches">%d matches found</string>
+    <string name="jobs_resume_matches" tools:ignore="PluralsCandidate">%d matches found</string>
     <string name="jobs_resume_too_short">Resume text is too short. Try a different PDF.</string>
     <string name="jobs_resume_error">Could not analyze resume. Try again.</string>
     <string name="jobs_resume_clear">Clear resume</string>
@@ -300,4 +273,167 @@
     <string name="profile_delete_deleting">Deleting your account…</string>
     <string name="profile_delete_success">Account deleted successfully</string>
     <string name="profile_delete_error">Failed to delete account. Please try again.</string>
+
+    <!-- Shared UI symbols (translatable="false" — these are icons, not words) -->
+    <string name="nav_back" translatable="false">Back</string>
+    <string name="arrow_right" translatable="false">→</string>
+    <string name="dismiss">Dismiss</string>
+    <string name="apply">Apply</string>
+    <string name="xp_reward_75" translatable="false">+75 XP</string>
+
+    <!-- Achievements screen -->
+    <string name="achievements_xp_progress">⚡ XP Progress</string>
+    <string name="achievements_zero" translatable="false">0</string>
+    <string name="achievements_daily_streak">🔥 Daily Streak</string>
+    <string name="achievements_badges_header">🏆 Badges</string>
+    <string name="achievements_xp_activity">⚡ XP Activity</string>
+    <string name="achievements_leaderboard_header">🏆 Leaderboard</string>
+
+    <!-- AI Chat Hub screen -->
+    <string name="chat_hub_icon" translatable="false">💬</string>
+
+    <!-- Certifications screen -->
+    <string name="certifications_search_hint">Search certifications…</string>
+    <string name="certifications_loading">Loading certifications…</string>
+    <string name="certifications_recommended">Recommended for You</string>
+    <string name="certifications_empty_tracked">No tracked certifications yet.\nBrowse and tap Track to start!</string>
+
+    <!-- Dashboard screen -->
+    <!-- arrow_right defined above -->
+
+    <!-- Jobs screen -->
+    <string name="jobs_loading">Finding jobs…</string>
+
+    <!-- Quiz screen -->
+    <string name="quiz_question_progress">Question 1 of 10</string>
+    <string name="quiz_timer_seconds_format" translatable="false">%ds</string>
+    <string name="quiz_timer_default" translatable="false">15s</string>
+    <string name="quiz_result_number_format">%1$d. %2$s</string>
+    <string name="quiz_explanation_format">💡 %s</string>
+    <string name="quiz_option_a" translatable="false">A</string>
+    <string name="quiz_option_b" translatable="false">B</string>
+    <string name="quiz_option_c" translatable="false">C</string>
+    <string name="quiz_option_d" translatable="false">D</string>
+    <!-- quiz correct mark reuses step_done_icon (✓) defined above -->
+
+    <!-- Roadmap screen -->
+    <!-- dismiss defined above, xp_reward_75 defined above -->
+    <string name="roadmap_streak_format" translatable="false">🔥 %d</string>
+
+    <!-- Video Learning screen -->
+    <string name="video_timer_default" translatable="false">0:00 / 5:00</string>
+    <string name="video_locked_icon" translatable="false">🔒</string>
+
+    <!-- Cert detail bottom sheet -->
+    <string name="cert_free_badge" translatable="false">FREE</string>
+    <string name="cert_free_label">Free</string>
+    <string name="cert_paid_label">Paid</string>
+    <string name="cert_study_hours_format">~%d hrs study</string>
+    <string name="cert_study_varies">Varies</string>
+    <string name="cert_update_btn">Update</string>
+    <string name="cert_study_time">Study Time</string>
+    <string name="cert_cost">Cost</string>
+    <string name="cert_about">About</string>
+    <string name="cert_optional_paid">Optional Paid Upgrade</string>
+    <string name="cert_track_btn">Track This Certification</string>
+
+    <!-- Job detail bottom sheet -->
+    <string name="job_description_header">Job Description</string>
+    <string name="jobs_result_count" tools:ignore="PluralsCandidate">%1$d job%2$s</string>
+
+    <!-- Node detail bottom sheet -->
+    <string name="node_number_one" translatable="false">1</string>
+    <string name="node_skill_tag" translatable="false">SKILL</string>
+    <string name="node_in_progress">In Progress</string>
+    <string name="node_title_placeholder">Node Title</string>
+    <string name="node_duration_format" translatable="false">⏱ %dh</string>
+    <string name="node_duration_placeholder" translatable="false">⏱ 5h</string>
+    <string name="node_difficulty_placeholder">Beginner</string>
+    <string name="node_progress_placeholder" translatable="false">0/0 done</string>
+    <string name="node_completed_on_format">✓ Completed on %s</string>
+    <string name="node_locked_prerequisites">🔒 Complete prerequisites to unlock</string>
+
+    <!-- Quiz bottom sheet -->
+    <string name="quiz_score_placeholder" translatable="false">3/4 correct (75%)</string>
+    <string name="quiz_hide_breakdown">Hide breakdown</string>
+    <string name="quiz_question_numbered">%1$d. %2$s</string>
+    <string name="quiz_option_format">%1$s. %2$s</string>
+    <string name="quiz_explanation_bullet_format">💡 %s</string>
+
+    <!-- University detail bottom sheet -->
+    <string name="uni_location_pin" translatable="false">📍</string>
+    <string name="uni_match_score_format">%d%%</string>
+    <string name="uni_match_reason_format">• %s</string>
+    <string name="uni_location_format">%1$s, %2$s</string>
+    <string name="uni_accreditation_level">Level %d</string>
+    <string name="uni_accreditation_na">N/A</string>
+    <string name="uni_board_exam">Board Exam</string>
+    <string name="uni_duration_years_format" translatable="false">%d years</string>
+    <string name="uni_specializations_format">Specializations: %s</string>
+    <string name="uni_view_curriculum">View Curriculum ↗</string>
+
+    <!-- Edit proposal card -->
+    <string name="proposal_warning_msg">⚠️ This will remove a roadmap node — cannot be undone.</string>
+    <string name="proposal_applied_msg">✅ Applied to your roadmap</string>
+    <string name="proposal_header_format" translatable="false">✏️ Roadmap Edit — %1$d proposal%2$s</string>
+    <string name="proposal_item_format">• %s</string>
+    <string name="switch_details_format">New path: %1$s\nCareer goal: %2$s</string>
+    <string name="upskill_plan_format">Plan: %s</string>
+
+    <!-- Job item -->
+    <string name="job_match_label">Match</string>
+    <string name="job_matched_skills">Matched skills</string>
+
+    <!-- Node resource item -->
+    <string name="resource_number_placeholder" translatable="false">01</string>
+    <string name="resource_type_youtube" translatable="false">YT</string>
+    <string name="resource_title_placeholder">Resource title</string>
+    <string name="resource_duration_placeholder" translatable="false">25 min</string>
+    <string name="resource_circle_icon" translatable="false">○</string>
+
+    <!-- Resource card item -->
+    <string name="icon_link_emoji" translatable="false">🔗</string>
+
+    <!-- Roadmap milestone item -->
+    <string name="roadmap_milestone_title_placeholder">Phase 1: Foundations</string>
+
+    <!-- Roadmap subsection divider item -->
+    <string name="roadmap_subsection_divider_placeholder" translatable="false">PROJECTS</string>
+
+    <!-- Roadmap header view -->
+    <string name="roadmap_header_title">My Roadmap</string>
+    <string name="roadmap_progress_zero" translatable="false">0%</string>
+    <string name="roadmap_complete_label"> complete</string>
+    <string name="roadmap_nodes_placeholder" translatable="false">0 / 0 nodes</string>
+    <string name="roadmap_separator" translatable="false"> · </string>
+    <string name="roadmap_hours_left_placeholder" translatable="false">~0h left</string>
+    <string name="roadmap_streak_placeholder" translatable="false">🔥 0</string>
+
+    <!-- Universities -->
+    <string name="universities_title">Universities</string>
+    <string name="universities_subtitle">Find the right CS program for you</string>
+    <string name="universities_back">Back</string>
+    <string name="universities_search_hint">Search universities…</string>
+    <string name="universities_loading">Loading universities…</string>
+    <string name="universities_top_recommendations">Top Recommendations</string>
+    <string name="universities_recommendations_subtitle">Personalized based on your profile</string>
+    <string name="universities_recs_empty">No recommendations yet.\nComplete your profile to get personalized matches!</string>
+    <string name="universities_browse_empty">No universities match your filters.</string>
+    <string name="universities_ched_coe">CHED CoE</string>
+    <string name="universities_ched_cod">CHED CoD</string>
+    <string name="universities_match_score_label">Match Score</string>
+    <string name="universities_accreditation_label">Accreditation</string>
+    <string name="universities_tuition_label">Tuition Range</string>
+    <string name="universities_programs_label">Programs Offered</string>
+    <string name="universities_visit_website">Visit Official Website</string>
+    <string name="universities_match_label">match</string>
+    <string name="universities_result_count" tools:ignore="PluralsCandidate">%1$d universit%2$s</string>
+    <string name="certifications_result_count" tools:ignore="PluralsCandidate">%1$d certification%2$s</string>
+
+    <!-- Video Learning screen -->
+    <string name="video_channel_format" translatable="false">📺 %s</string>
+
+    <!-- Adapter strings -->
+    <string name="rec_track_level_format">%1$s · %2$s</string>
+    <string name="roadmap_milestone_completed_format" translatable="false">✓ %s</string>
 </resources>

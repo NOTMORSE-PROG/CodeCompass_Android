@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -63,6 +64,7 @@ public class CertificationAdapter extends RecyclerView.Adapter<CertificationAdap
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Certification> certs, Map<Integer, UserCertification> tracking) {
         this.certs = certs != null ? certs : new ArrayList<>();
         this.tracking = tracking != null ? tracking : new HashMap<>();
@@ -121,8 +123,8 @@ public class CertificationAdapter extends RecyclerView.Adapter<CertificationAdap
             circle.setColor(Color.parseColor(colorHex));
             tvProviderInitial.setBackground(circle);
             String label = cert.getAbbreviation() != null && !cert.getAbbreviation().isEmpty()
-                    ? cert.getAbbreviation().substring(0, 1).toUpperCase()
-                    : cert.getName().substring(0, 1).toUpperCase();
+                    ? cert.getAbbreviation().substring(0, 1).toUpperCase(java.util.Locale.getDefault())
+                    : cert.getName().substring(0, 1).toUpperCase(java.util.Locale.getDefault());
             tvProviderInitial.setText(label);
 
             // Name
@@ -149,7 +151,7 @@ public class CertificationAdapter extends RecyclerView.Adapter<CertificationAdap
 
             // Study hours
             if (cert.getEstimatedStudyHours() != null && cert.getEstimatedStudyHours() > 0) {
-                tvStudyHours.setText("~" + cert.getEstimatedStudyHours() + " hrs study");
+                tvStudyHours.setText(itemView.getContext().getString(R.string.cert_study_hours_format, cert.getEstimatedStudyHours()));
                 tvStudyHours.setVisibility(View.VISIBLE);
             } else {
                 tvStudyHours.setVisibility(View.GONE);
@@ -160,7 +162,7 @@ public class CertificationAdapter extends RecyclerView.Adapter<CertificationAdap
                 String statusLabel = getStatusLabel(uc.getStatus());
                 tvStatusBadge.setText(statusLabel);
                 tvStatusBadge.setVisibility(View.VISIBLE);
-                btnTrack.setText("Update");
+                btnTrack.setText(R.string.cert_update_btn);
             } else {
                 tvStatusBadge.setVisibility(View.GONE);
                 btnTrack.setText(R.string.certifications_track_btn);

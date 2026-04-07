@@ -186,7 +186,7 @@ public class NodeDetailBottomSheet extends BottomSheetDialogFragment {
         applyStatusBadge();
 
         tvTitle.setText(node.getTitle());
-        tvHours.setText("⏱ " + node.getEstimatedHours() + "h");
+        tvHours.setText(getString(R.string.node_duration_format, node.getEstimatedHours()));
 
         int diff = Math.max(1, Math.min(5, node.getDifficulty()));
         View[] dots = {bsDot1, bsDot2, bsDot3, bsDot4, bsDot5};
@@ -207,7 +207,7 @@ public class NodeDetailBottomSheet extends BottomSheetDialogFragment {
         }
 
         if (node.isCompleted() && node.getCompletedAt() != null) {
-            tvCompletedDate.setText("✓ Completed on " + formatDate(node.getCompletedAt()));
+            tvCompletedDate.setText(getString(R.string.node_completed_on_format, formatDate(node.getCompletedAt())));
             tvCompletedDate.setVisibility(View.VISIBLE);
             btnMarkComplete.setVisibility(View.GONE);
             tvQuizGateInfo.setVisibility(View.GONE);

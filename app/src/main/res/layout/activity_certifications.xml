@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorBackground">
+    android:layout_height="match_parent">
 
     <!-- Loading bar at top -->
     <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -39,7 +38,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Back"
+                android:contentDescription="@string/nav_back"
                 android:src="@drawable/ic_arrow_back" />
 
             <TextView
@@ -88,7 +87,7 @@
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:hint="Search certifications…"
+                android:hint="@string/certifications_search_hint"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:maxLines="1"
@@ -162,7 +161,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Loading certifications…"
+                    android:text="@string/certifications_loading"
                     android:textColor="@color/colorTextSecondary"
                     android:textSize="13sp" />
 
@@ -201,7 +200,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="4dp"
                         android:fontFamily="sans-serif-bold"
-                        android:text="Recommended for You"
+                        android:text="@string/certifications_recommended"
                         android:textColor="@color/colorTextPrimary"
                         android:textSize="14sp" />
 
@@ -280,7 +279,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:padding="40dp"
-                    android:text="No tracked certifications yet.\nBrowse and tap Track to start!"
+                    android:text="@string/certifications_empty_tracked"
                     android:textColor="@color/colorTextSecondary"
                     android:textSize="14sp"
                     android:visibility="gone" />

@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
@@ -29,6 +30,7 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setData(List<Certification> certs) {
         this.certs = certs != null ? certs : new ArrayList<>();
         notifyDataSetChanged();
@@ -75,8 +77,8 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
             tvProviderInitial.setBackground(circle);
 
             String label = cert.getAbbreviation() != null && !cert.getAbbreviation().isEmpty()
-                    ? cert.getAbbreviation().substring(0, 1).toUpperCase()
-                    : cert.getName().substring(0, 1).toUpperCase();
+                    ? cert.getAbbreviation().substring(0, 1).toUpperCase(java.util.Locale.getDefault())
+                    : cert.getName().substring(0, 1).toUpperCase(java.util.Locale.getDefault());
             tvProviderInitial.setText(label);
 
             tvName.setText(cert.getName());
@@ -84,7 +86,7 @@ public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAd
             String track = cert.getTrackDisplay() != null ? cert.getTrackDisplay() : cert.getTrack();
             String level = cert.getLevelDisplay() != null ? cert.getLevelDisplay() : cert.getLevel();
             if (track != null && level != null) {
-                tvTrack.setText(track + " · " + level);
+                tvTrack.setText(itemView.getContext().getString(R.string.rec_track_level_format, track, level));
             } else if (track != null) {
                 tvTrack.setText(track);
             } else {

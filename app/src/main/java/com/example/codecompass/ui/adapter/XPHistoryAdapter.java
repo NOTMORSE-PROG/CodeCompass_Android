@@ -1,5 +1,6 @@
 package com.example.codecompass.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ public class XPHistoryAdapter extends RecyclerView.Adapter<XPHistoryAdapter.View
 
     private final List<XPEvent> events = new ArrayList<>();
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setEvents(List<XPEvent> list) {
         events.clear();
         events.addAll(list);
