@@ -40,11 +40,11 @@ public class UniversityRecommendation {
 
     private List<CCSProgram> programs;
 
-    // Recommendation-specific fields
-    @SerializedName("match_score")
+    // Recommendation-specific fields — backend returns camelCase keys
+    @SerializedName("matchScore")
     private int matchScore;
 
-    @SerializedName("match_reasons")
+    @SerializedName("matchReasons")
     private List<String> matchReasons;
 
     public int getId() { return id; }

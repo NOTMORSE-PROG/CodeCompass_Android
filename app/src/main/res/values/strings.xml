@@ -382,6 +382,7 @@
     <string name="upskill_plan_format">Plan: %s</string>
 
     <!-- Job item -->
+    <string name="error_no_browser">No browser app found to open this link.</string>
     <string name="job_match_label">Match</string>
     <string name="job_matched_skills">Matched skills</string>
 

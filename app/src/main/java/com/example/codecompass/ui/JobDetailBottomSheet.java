@@ -110,10 +110,12 @@ public class JobDetailBottomSheet extends BottomSheetDialogFragment {
     }
 
     private void openUrl(String url) {
-        try {
-            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-        } catch (Exception e) {
-            Toast.makeText(requireContext(), "Could not open link.", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        if (intent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Toast.makeText(requireContext(),
+                    R.string.error_no_browser, Toast.LENGTH_LONG).show();
         }
     }
 
