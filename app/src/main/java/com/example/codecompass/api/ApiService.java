@@ -251,18 +251,12 @@ public interface ApiService {
             @Body JsonObject body
     );
 
-    @POST("roadmaps/{id}/nodes/add/")
-    Call<Void> addRoadmapNode(
+    @PATCH("roadmaps/{id}/nodes/{nid}/replace/")
+    Call<Void> replaceRoadmapNode(
             @Header("Authorization") String bearerToken,
             @Path("id") int roadmapId,
+            @Path("nid") int nodeId,
             @Body JsonObject body
-    );
-
-    @DELETE("roadmaps/{id}/nodes/{nid}/remove/")
-    Call<Void> removeRoadmapNode(
-            @Header("Authorization") String bearerToken,
-            @Path("id") int roadmapId,
-            @Path("nid") int nodeId
     );
 
     @POST("roadmaps/{id}/repair/")

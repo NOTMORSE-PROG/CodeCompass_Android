@@ -34,13 +34,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"/>
 
-        <!-- Danger warning (shown only if remove_node is present) -->
+        <!-- Warning (shown for replace_node proposals) -->
         <LinearLayout
             android:id="@+id/layoutDangerWarning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="#FFEBEE"
+            android:background="#FFF8E1"
             android:padding="8dp"
             android:visibility="gone"
             android:orientation="horizontal">
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/proposal_warning_msg"
                 android:textSize="12sp"
-                android:textColor="@color/colorError"/>
+                android:textColor="#F57F17"/>
 
         </LinearLayout>
 

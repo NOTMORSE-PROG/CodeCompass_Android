@@ -853,13 +853,9 @@ public class AIChatActivity extends AppCompatActivity {
                 call = ApiClient.getService().editNodeContent(
                         bearer, p.getRoadmapId(), p.getNodeId(), p.getChanges());
                 break;
-            case "add_node":
-                call = ApiClient.getService().addRoadmapNode(
-                        bearer, p.getRoadmapId(), p.getChanges());
-                break;
-            case "remove_node":
-                call = ApiClient.getService().removeRoadmapNode(
-                        bearer, p.getRoadmapId(), p.getNodeId());
+            case "replace_node":
+                call = ApiClient.getService().replaceRoadmapNode(
+                        bearer, p.getRoadmapId(), p.getNodeId(), p.getChanges());
                 break;
         }
 
@@ -872,7 +868,12 @@ public class AIChatActivity extends AppCompatActivity {
             @Override
             public void onResponse(retrofit2.Call<Void> c,
                                    retrofit2.Response<Void> response) {
-                applyProposals(messageIndex, proposals, index + 1);
+                if (response.code() == 429) {
+                    Snackbar.make(rvChat, R.string.error_replace_node_rate_limit,
+                            Snackbar.LENGTH_LONG).show();
+                } else {
+                    applyProposals(messageIndex, proposals, index + 1);
+                }
             }
 
             @Override

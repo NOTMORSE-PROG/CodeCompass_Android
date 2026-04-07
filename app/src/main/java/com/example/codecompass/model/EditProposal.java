@@ -13,7 +13,7 @@ import com.google.gson.annotations.SerializedName;
 public class EditProposal {
 
     @SerializedName("action")
-    private String action;          // edit_node | edit_roadmap | add_node | remove_node
+    private String action;          // edit_node | edit_roadmap | replace_node
 
     @SerializedName("roadmap_id")
     private int roadmapId;
@@ -34,6 +34,6 @@ public class EditProposal {
     public String    getSummary()   { return summary; }
 
     public boolean isDangerous() {
-        return "remove_node".equals(action);
+        return "replace_node".equals(action);
     }
 }
