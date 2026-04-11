@@ -48,6 +48,14 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug --no-daemon
 
+      - name: Verify APK signing certificate SHA-1
+        run: |
+          APK=$(ls app/build/outputs/apk/debug/*.apk)
+          echo "=== APK: $APK ==="
+          BUILD_TOOLS=$(ls -d $ANDROID_SDK_ROOT/build-tools/* | sort -V | tail -1)
+          echo "=== Signing certificate fingerprints ==="
+          $BUILD_TOOLS/apksigner verify --print-certs "$APK" | grep -E "SHA-1|SHA-256|Signer"
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
