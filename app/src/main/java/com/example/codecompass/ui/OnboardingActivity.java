@@ -253,6 +253,24 @@ public class OnboardingActivity extends AppCompatActivity {
             @Override
             public void onClosing(WebSocket ws, int code, String reason) {
                 ws.close(1000, null);
+                // Server-initiated close: reset state and reconnect unless it was our own clean close.
+                if (code != 1000) {
+                    mainHandler.post(() -> {
+                        removeTypingIndicator();
+                        isStreaming = false;
+                        streamingBuffer.setLength(0);
+                        if (!isFinishing() && !isCompleting) {
+                            wsRetryCount++;
+                            int msgRes = (wsRetryCount <= 2)
+                                    ? R.string.error_server_starting : R.string.error_connection_lost;
+                            Snackbar.make(rvChat, msgRes, Snackbar.LENGTH_LONG).show();
+                            long delay = Math.min(3000L * (1L << (wsRetryCount - 1)), 30_000L);
+                            mainHandler.postDelayed(() -> {
+                                if (!isFinishing() && !isCompleting) connectWebSocket();
+                            }, delay);
+                        }
+                    });
+                }
             }
 
             @Override

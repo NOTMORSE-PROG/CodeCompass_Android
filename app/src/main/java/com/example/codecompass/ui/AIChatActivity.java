@@ -582,6 +582,30 @@ public class AIChatActivity extends AppCompatActivity {
             @Override
             public void onClosing(WebSocket ws, int code, String reason) {
                 ws.close(1000, null);
+                // Server-initiated close: reset state and reconnect unless it was our own clean close.
+                if (code != 1000) {
+                    mainHandler.post(() -> {
+                        removeTypingIndicator();
+                        isStreaming = false;
+                        streamingBuffer.setLength(0);
+                        // Session no longer exists on server — force recreation on reconnect.
+                        if (code == 4004) sessionId = null;
+                        if (!isFinishing()) {
+                            wsRetryCount++;
+                            int msgRes = (wsRetryCount <= 2)
+                                    ? R.string.error_server_starting
+                                    : R.string.error_connection_lost;
+                            Snackbar.make(rvChat, msgRes, Snackbar.LENGTH_LONG).show();
+                            long delay = Math.min(3000L * (1L << (wsRetryCount - 1)), 30_000L);
+                            mainHandler.postDelayed(() -> {
+                                if (!isFinishing()) {
+                                    if (sessionId == null) createSession();
+                                    else connectWebSocket();
+                                }
+                            }, delay);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -773,7 +797,12 @@ public class AIChatActivity extends AppCompatActivity {
             JSONObject payload = new JSONObject();
             payload.put("message", text);
             payload.put("language", chatLanguage);
-            webSocket.send(payload.toString());
+            boolean sent = webSocket != null && webSocket.send(payload.toString());
+            if (!sent) {
+                removeTypingIndicator();
+                isStreaming = false;
+                Snackbar.make(rvChat, R.string.error_network, Snackbar.LENGTH_SHORT).show();
+            }
         } catch (Exception e) {
             removeTypingIndicator();
             isStreaming = false;
