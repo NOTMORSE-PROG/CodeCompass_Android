@@ -83,9 +83,16 @@ public class TokenAuthenticator implements Authenticator {
 
                 if (refreshResp.isSuccessful() && refreshResp.body() != null) {
                     String newAccessToken = refreshResp.body().getAccess();
-                    TokenManager.saveAccessToken(
-                            com.example.codecompass.CodeCompassApp.getInstance(),
-                            newAccessToken);
+                    String newRefreshToken = refreshResp.body().getRefresh();
+                    if (newRefreshToken != null) {
+                        TokenManager.saveTokens(
+                                com.example.codecompass.CodeCompassApp.getInstance(),
+                                newAccessToken, newRefreshToken);
+                    } else {
+                        TokenManager.saveAccessToken(
+                                com.example.codecompass.CodeCompassApp.getInstance(),
+                                newAccessToken);
+                    }
                     return response.request().newBuilder()
                             .header("Authorization", "Bearer " + newAccessToken)
                             .header(RETRY_HEADER, "1")

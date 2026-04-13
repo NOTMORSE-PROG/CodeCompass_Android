@@ -49,6 +49,10 @@
             android:windowSoftInputMode="adjustResize" />
 
         <activity
+            android:name=".ui.VerifyEmailPendingActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.OnboardingActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />

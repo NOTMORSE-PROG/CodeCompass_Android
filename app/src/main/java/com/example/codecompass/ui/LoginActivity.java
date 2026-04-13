@@ -120,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                                         body.getUser().isHasPassword(),
                                         body.getUser().isGoogleConnected());
                             }
-                            navigateAfterAuth(JwtUtils.isOnboarded(body.getAccess()));
+                            navigateAfterAuth(body.getAccess());
                         } else {
                             showApiError(response);
                         }
@@ -197,7 +197,7 @@ public class LoginActivity extends AppCompatActivity {
                                             body.getUser().isHasPassword(),
                                             body.getUser().isGoogleConnected());
                                 }
-                                navigateAfterAuth(JwtUtils.isOnboarded(body.getAccess()));
+                                navigateAfterAuth(body.getAccess());
                             } else {
                                 showApiError(response);
                             }
@@ -219,9 +219,13 @@ public class LoginActivity extends AppCompatActivity {
 
     // ── Navigation (mirrors web getPostLoginRoute) ────────────────────────────
 
-    private void navigateAfterAuth(boolean isOnboarded) {
+    private void navigateAfterAuth(String accessToken) {
         Intent intent;
-        if (isOnboarded) {
+        if (!JwtUtils.isEmailVerified(accessToken)) {
+            intent = new Intent(this, VerifyEmailPendingActivity.class);
+            intent.putExtra(VerifyEmailPendingActivity.EXTRA_EMAIL,
+                    JwtUtils.getEmail(accessToken));
+        } else if (JwtUtils.isOnboarded(accessToken)) {
             intent = new Intent(this, DashboardActivity.class);
         } else {
             intent = new Intent(this, OnboardingActivity.class);

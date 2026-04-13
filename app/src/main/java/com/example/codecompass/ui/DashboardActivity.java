@@ -69,7 +69,6 @@ public class DashboardActivity extends AppCompatActivity {
     private CardView btnActionAchievements;
     private CardView cardCertifications;
     private CardView cardUniversities;
-    private CardView cardProgress;
 
     // ── State ─────────────────────────────────────────────────────────────────
     private boolean isHandling401 = false;
@@ -105,7 +104,6 @@ public class DashboardActivity extends AppCompatActivity {
         swipeRefresh       = findViewById(R.id.swipeRefresh);
         cardRoadmap        = findViewById(R.id.cardRoadmap);
         cardAiChat         = findViewById(R.id.cardAiChat);
-        cardProgress       = findViewById(R.id.cardProgress);
         btnActionRoadmap   = findViewById(R.id.btnActionRoadmap);
         btnActionAiChat    = findViewById(R.id.btnActionAiChat);
         btnActionJobs      = findViewById(R.id.btnActionJobs);
@@ -226,8 +224,6 @@ public class DashboardActivity extends AppCompatActivity {
         tvViewFullRoadmap.setOnClickListener(v -> openRoadmap());
         btnActionRoadmap.setOnClickListener(v -> openRoadmap());
         cardAiChat.setOnClickListener(v -> openAiChat());
-        cardProgress.setOnClickListener(v ->
-                Toast.makeText(this, R.string.coming_soon, Toast.LENGTH_SHORT).show());
         btnActionAiChat.setOnClickListener(v -> openAiChat());
         btnActionJobs.setOnClickListener(v -> {
             Intent intent = new Intent(this, JobsActivity.class);

@@ -55,4 +55,9 @@ public class JwtUtils {
         JSONObject p = decode(token);
         return p != null && p.optBoolean("is_onboarded", false);
     }
+
+    public static boolean isEmailVerified(String token) {
+        JSONObject p = decode(token);
+        return p != null && p.optBoolean("email_verified", false);
+    }
 }

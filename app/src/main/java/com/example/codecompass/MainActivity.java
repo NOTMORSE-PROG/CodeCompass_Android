@@ -14,6 +14,7 @@ import com.example.codecompass.api.TokenManager;
 import com.example.codecompass.ui.DashboardActivity;
 import com.example.codecompass.ui.LoginActivity;
 import com.example.codecompass.ui.OnboardingActivity;
+import com.example.codecompass.ui.VerifyEmailPendingActivity;
 import com.example.codecompass.util.JwtUtils;
 
 /**
@@ -48,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
             // null, empty, or expired token — clear stale data and force re-login
             TokenManager.clear(this);
             goTo(LoginActivity.class, true);
+        } else if (!JwtUtils.isEmailVerified(token)) {
+            goTo(VerifyEmailPendingActivity.class, true);
         } else if (!JwtUtils.isOnboarded(token)) {
             goTo(OnboardingActivity.class, true);
         } else {

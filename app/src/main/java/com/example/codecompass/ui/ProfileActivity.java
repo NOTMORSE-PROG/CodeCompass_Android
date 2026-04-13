@@ -24,6 +24,8 @@ import com.example.codecompass.api.ApiClient;
 import com.example.codecompass.ui.AIChatHubActivity;
 import com.example.codecompass.api.TokenManager;
 import com.example.codecompass.model.ChangePasswordRequest;
+import com.example.codecompass.model.ChangePasswordResponse;
+import com.example.codecompass.model.MessageResponse;
 import com.example.codecompass.model.GamificationProfile;
 import com.example.codecompass.model.Roadmap;
 import com.example.codecompass.util.JwtUtils;
@@ -213,66 +215,173 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void showChangePasswordDialog() {
         View dialogView = getLayoutInflater().inflate(R.layout.dialog_change_password, null);
-        TextInputEditText etOld     = dialogView.findViewById(R.id.etOldPassword);
-        TextInputEditText etNew     = dialogView.findViewById(R.id.etNewPassword);
-        TextInputEditText etConfirm = dialogView.findViewById(R.id.etConfirmPassword);
-        TextInputLayout   tilOld    = dialogView.findViewById(R.id.tilOldPassword);
-        TextInputLayout   tilNew    = dialogView.findViewById(R.id.tilNewPassword);
-        TextInputLayout   tilConfirm = dialogView.findViewById(R.id.tilConfirmPassword);
+
+        // Step 1 views
+        LinearLayout stepSendOtp      = dialogView.findViewById(R.id.stepSendOtp);
+        com.google.android.material.button.MaterialButton btnSendOtp =
+                dialogView.findViewById(R.id.btnSendOtp);
+        android.widget.ProgressBar progressSendOtp =
+                dialogView.findViewById(R.id.progressSendOtp);
+
+        // Step 2 views
+        LinearLayout stepVerifyOtp    = dialogView.findViewById(R.id.stepVerifyOtp);
+        TextInputEditText etOtp       = dialogView.findViewById(R.id.etOtp);
+        TextInputEditText etNew       = dialogView.findViewById(R.id.etNewPassword);
+        TextInputEditText etConfirm   = dialogView.findViewById(R.id.etConfirmPassword);
+        TextInputLayout   tilOtp      = dialogView.findViewById(R.id.tilOtp);
+        TextInputLayout   tilNew      = dialogView.findViewById(R.id.tilNewPassword);
+        TextInputLayout   tilConfirm  = dialogView.findViewById(R.id.tilConfirmPassword);
+        TextView tvResendCode         = dialogView.findViewById(R.id.tvResendCode);
 
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(R.string.profile_pwd_dialog_title)
                 .setView(dialogView)
                 .setNegativeButton(android.R.string.cancel, null)
-                .setPositiveButton(R.string.profile_pwd_update, null) // set listener below to prevent auto-dismiss
+                .setPositiveButton(R.string.profile_pwd_update, null)
                 .create();
 
         dialog.show();
 
-        // Override positive button so we can validate before dismissing
+        // Hide Update button initially (only visible in Step 2)
         Button btnUpdate = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+        btnUpdate.setVisibility(View.GONE);
+
+        // ── Step 1: Send OTP ─────────────────────────────────────────────
+        btnSendOtp.setOnClickListener(v -> {
+            btnSendOtp.setEnabled(false);
+            btnSendOtp.setText(R.string.profile_pwd_sending);
+            progressSendOtp.setVisibility(View.VISIBLE);
+
+            ApiClient.getService()
+                    .sendChangePasswordOtp(TokenManager.getBearerToken(this))
+                    .enqueue(new Callback<MessageResponse>() {
+                        @Override
+                        public void onResponse(Call<MessageResponse> call,
+                                               Response<MessageResponse> response) {
+                            progressSendOtp.setVisibility(View.GONE);
+                            if (response.isSuccessful()) {
+                                Toast.makeText(ProfileActivity.this,
+                                        R.string.profile_pwd_otp_sent, Toast.LENGTH_SHORT).show();
+                                // Flip to Step 2
+                                stepSendOtp.setVisibility(View.GONE);
+                                stepVerifyOtp.setVisibility(View.VISIBLE);
+                                btnUpdate.setVisibility(View.VISIBLE);
+                            } else if (response.code() == 401) {
+                                dialog.dismiss();
+                                handle401();
+                            } else {
+                                btnSendOtp.setEnabled(true);
+                                btnSendOtp.setText(R.string.profile_pwd_send_code);
+                                Toast.makeText(ProfileActivity.this,
+                                        R.string.error_network, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<MessageResponse> call, Throwable t) {
+                            progressSendOtp.setVisibility(View.GONE);
+                            btnSendOtp.setEnabled(true);
+                            btnSendOtp.setText(R.string.profile_pwd_send_code);
+                            Toast.makeText(ProfileActivity.this,
+                                    R.string.error_network, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
+
+        // ── Resend code link ─────────────────────────────────────────────
+        tvResendCode.setOnClickListener(v -> {
+            tvResendCode.setEnabled(false);
+            ApiClient.getService()
+                    .sendChangePasswordOtp(TokenManager.getBearerToken(this))
+                    .enqueue(new Callback<MessageResponse>() {
+                        @Override
+                        public void onResponse(Call<MessageResponse> call,
+                                               Response<MessageResponse> response) {
+                            tvResendCode.setEnabled(true);
+                            if (response.isSuccessful()) {
+                                Toast.makeText(ProfileActivity.this,
+                                        R.string.profile_pwd_otp_sent, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<MessageResponse> call, Throwable t) {
+                            tvResendCode.setEnabled(true);
+                        }
+                    });
+        });
+
+        // ── Step 2: Verify OTP + Change Password ─────────────────────────
         btnUpdate.setOnClickListener(v -> {
-            String old     = text(etOld);
+            String otp     = text(etOtp);
             String newPwd  = text(etNew);
             String confirm = text(etConfirm);
 
-            tilOld.setError(null);
+            tilOtp.setError(null);
             tilNew.setError(null);
             tilConfirm.setError(null);
 
-            if (old.isEmpty()) { tilOld.setError(getString(R.string.error_field_required)); return; }
-            if (newPwd.length() < 8) { tilNew.setError(getString(R.string.error_password_short)); return; }
-            if (!newPwd.equals(confirm)) { tilConfirm.setError(getString(R.string.profile_pwd_mismatch)); return; }
+            if (otp.length() < 6) {
+                tilOtp.setError(getString(R.string.error_field_required)); return;
+            }
+            if (newPwd.length() < 8) {
+                tilNew.setError(getString(R.string.error_password_short)); return;
+            }
+            if (!newPwd.equals(confirm)) {
+                tilConfirm.setError(getString(R.string.profile_pwd_mismatch)); return;
+            }
 
             btnUpdate.setEnabled(false);
             ChangePasswordRequest req = new ChangePasswordRequest(
-                    old, newPwd, confirm, TokenManager.getRefreshToken(this));
+                    otp, newPwd, confirm, TokenManager.getRefreshToken(this));
 
             ApiClient.getService()
                     .changePassword(TokenManager.getBearerToken(this), req)
-                    .enqueue(new Callback<Void>() {
+                    .enqueue(new Callback<ChangePasswordResponse>() {
                         @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (response.isSuccessful()) {
+                        public void onResponse(Call<ChangePasswordResponse> call,
+                                               Response<ChangePasswordResponse> response) {
+                            if (response.isSuccessful() && response.body() != null) {
+                                ChangePasswordResponse body = response.body();
+                                // Save fresh tokens so the session stays valid
+                                if (body.getAccess() != null && body.getRefresh() != null) {
+                                    TokenManager.saveTokens(ProfileActivity.this,
+                                            body.getAccess(), body.getRefresh());
+                                }
                                 dialog.dismiss();
                                 Toast.makeText(ProfileActivity.this,
                                         R.string.profile_pwd_success, Toast.LENGTH_SHORT).show();
                             } else if (response.code() == 400) {
                                 btnUpdate.setEnabled(true);
-                                tilOld.setError(getString(R.string.error_network));
+                                // Try to show OTP-specific error
+                                try {
+                                    String raw = response.errorBody().string();
+                                    org.json.JSONObject json = new org.json.JSONObject(raw);
+                                    if (json.has("otp")) {
+                                        tilOtp.setError(json.getJSONArray("otp").getString(0));
+                                    } else if (json.has("new_password")) {
+                                        tilNew.setError(json.getJSONArray("new_password").getString(0));
+                                    } else if (json.has("detail")) {
+                                        tilOtp.setError(json.getString("detail"));
+                                    } else {
+                                        tilOtp.setError(getString(R.string.profile_pwd_otp_invalid));
+                                    }
+                                } catch (Exception e) {
+                                    tilOtp.setError(getString(R.string.profile_pwd_otp_invalid));
+                                }
                             } else if (response.code() == 401) {
                                 dialog.dismiss();
                                 handle401();
                             } else {
                                 btnUpdate.setEnabled(true);
-                                tilOld.setError(getString(R.string.error_network));
+                                tilOtp.setError(getString(R.string.error_network));
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
+                        public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
                             btnUpdate.setEnabled(true);
-                            tilOld.setError(getString(R.string.error_network));
+                            tilOtp.setError(getString(R.string.error_network));
                         }
                     });
         });

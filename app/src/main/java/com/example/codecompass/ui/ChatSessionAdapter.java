@@ -5,6 +5,7 @@ import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -26,11 +27,18 @@ public class ChatSessionAdapter extends RecyclerView.Adapter<ChatSessionAdapter.
         void onSessionClick(ChatSession session);
     }
 
+    public interface OnSessionDeleteListener {
+        void onSessionDelete(ChatSession session);
+    }
+
     private final List<ChatSession> sessions = new ArrayList<>();
     private final OnSessionClickListener listener;
+    private final OnSessionDeleteListener deleteListener;
 
-    public ChatSessionAdapter(OnSessionClickListener listener) {
-        this.listener = listener;
+    public ChatSessionAdapter(OnSessionClickListener listener,
+                              OnSessionDeleteListener deleteListener) {
+        this.listener       = listener;
+        this.deleteListener = deleteListener;
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -50,7 +58,15 @@ public class ChatSessionAdapter extends RecyclerView.Adapter<ChatSessionAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
-        holder.bind(sessions.get(position), listener);
+        holder.bind(sessions.get(position), listener, deleteListener);
+    }
+
+    public void removeSession(ChatSession session) {
+        int idx = sessions.indexOf(session);
+        if (idx >= 0) {
+            sessions.remove(idx);
+            notifyItemRemoved(idx);
+        }
     }
 
     @Override
@@ -59,26 +75,30 @@ public class ChatSessionAdapter extends RecyclerView.Adapter<ChatSessionAdapter.
     // ── ViewHolder ────────────────────────────────────────────────────────────
 
     static class VH extends RecyclerView.ViewHolder {
-        private final TextView tvEmoji;
-        private final TextView tvTitle;
-        private final TextView tvMode;
-        private final TextView tvTime;
+        private final TextView    tvEmoji;
+        private final TextView    tvTitle;
+        private final TextView    tvMode;
+        private final TextView    tvTime;
+        private final ImageButton btnDelete;
 
         VH(@NonNull View itemView) {
             super(itemView);
-            tvEmoji = itemView.findViewById(R.id.tvEmoji);
-            tvTitle = itemView.findViewById(R.id.tvTitle);
-            tvMode  = itemView.findViewById(R.id.tvMode);
-            tvTime  = itemView.findViewById(R.id.tvTime);
+            tvEmoji   = itemView.findViewById(R.id.tvEmoji);
+            tvTitle   = itemView.findViewById(R.id.tvTitle);
+            tvMode    = itemView.findViewById(R.id.tvMode);
+            tvTime    = itemView.findViewById(R.id.tvTime);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
 
-        void bind(ChatSession session, OnSessionClickListener listener) {
+        void bind(ChatSession session, OnSessionClickListener listener,
+                  OnSessionDeleteListener deleteListener) {
             tvEmoji.setText(emojiFor(session.getContextType()));
             String title = session.getTitle();
             tvTitle.setText((title != null && !title.isEmpty()) ? title : "Untitled Chat");
             tvMode.setText(labelFor(session.getContextType()));
             tvTime.setText(relativeTime(session.getUpdatedAt()));
             itemView.setOnClickListener(v -> listener.onSessionClick(session));
+            btnDelete.setOnClickListener(v -> deleteListener.onSessionDelete(session));
         }
 
         private static String emojiFor(String contextType) {

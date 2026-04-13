@@ -2,7 +2,10 @@ package com.example.codecompass.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TokenRefreshResponse {
+public class ChangePasswordResponse {
+
+    @SerializedName("detail")
+    private String detail;
 
     @SerializedName("access")
     private String access;
@@ -10,6 +13,7 @@ public class TokenRefreshResponse {
     @SerializedName("refresh")
     private String refresh;
 
+    public String getDetail()  { return detail; }
     public String getAccess()  { return access; }
     public String getRefresh() { return refresh; }
 }

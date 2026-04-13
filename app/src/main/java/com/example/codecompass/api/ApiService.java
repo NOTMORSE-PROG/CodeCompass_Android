@@ -2,6 +2,10 @@ package com.example.codecompass.api;
 
 import com.example.codecompass.model.Badge;
 import com.example.codecompass.model.ChangePasswordRequest;
+import com.example.codecompass.model.ChangePasswordResponse;
+import com.example.codecompass.model.MessageResponse;
+import com.example.codecompass.model.ResendVerificationRequest;
+import com.example.codecompass.model.ResendVerificationResponse;
 import com.example.codecompass.model.JobListing;
 import com.example.codecompass.model.ResumeMatchRequest;
 import com.example.codecompass.model.SavedJob;
@@ -69,8 +73,14 @@ public interface ApiService {
     @POST("auth/google/")
     Call<GoogleAuthResponse> googleAuth(@Body GoogleAuthRequest body);
 
+    @POST("auth/resend-verification/")
+    Call<ResendVerificationResponse> resendVerification(@Body ResendVerificationRequest body);
+
+    @POST("auth/send-change-password-otp/")
+    Call<MessageResponse> sendChangePasswordOtp(@Header("Authorization") String bearerToken);
+
     @POST("auth/change-password/")
-    Call<Void> changePassword(
+    Call<ChangePasswordResponse> changePassword(
             @Header("Authorization") String bearerToken,
             @Body ChangePasswordRequest body
     );
@@ -104,6 +114,12 @@ public interface ApiService {
 
     @GET("chat/sessions/{session_id}/")
     Call<ChatSessionDetail> getChatSessionDetail(
+            @Header("Authorization") String bearerToken,
+            @Path("session_id") String sessionId
+    );
+
+    @DELETE("chat/sessions/{session_id}/")
+    Call<Void> deleteChatSession(
             @Header("Authorization") String bearerToken,
             @Path("session_id") String sessionId
     );

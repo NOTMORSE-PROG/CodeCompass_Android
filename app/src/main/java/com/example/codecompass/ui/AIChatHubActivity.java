@@ -6,6 +6,8 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -52,7 +54,7 @@ public class AIChatHubActivity extends AppCompatActivity {
         layoutEmpty  = findViewById(R.id.layoutEmpty);
         swipeRefresh = findViewById(R.id.swipeRefresh);
 
-        adapter = new ChatSessionAdapter(session -> openSession(session));
+        adapter = new ChatSessionAdapter(this::openSession, this::confirmDeleteSession);
         rvSessions.setLayoutManager(new LinearLayoutManager(this));
         rvSessions.setAdapter(adapter);
 
@@ -104,6 +106,43 @@ public class AIChatHubActivity extends AppCompatActivity {
                         loadingBar.setVisibility(View.GONE);
                         swipeRefresh.setRefreshing(false);
                         showError();
+                    }
+                });
+    }
+
+    private void confirmDeleteSession(ChatSession session) {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.delete_conversation_confirm_title)
+                .setMessage(R.string.delete_conversation_confirm_msg)
+                .setPositiveButton(android.R.string.ok, (d, w) -> deleteSession(session))
+                .setNegativeButton(android.R.string.cancel, null)
+                .show();
+    }
+
+    private void deleteSession(ChatSession session) {
+        ApiClient.getService()
+                .deleteChatSession(TokenManager.getBearerToken(this), session.getSessionId())
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (response.isSuccessful()) {
+                            adapter.removeSession(session);
+                            if (adapter.getItemCount() == 0) {
+                                layoutEmpty.setVisibility(View.VISIBLE);
+                                rvSessions.setVisibility(View.GONE);
+                            }
+                            Snackbar.make(rvSessions, R.string.conversation_deleted,
+                                    Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            Snackbar.make(rvSessions, R.string.error_network,
+                                    Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        Snackbar.make(rvSessions, R.string.error_network,
+                                Snackbar.LENGTH_SHORT).show();
                     }
                 });
     }

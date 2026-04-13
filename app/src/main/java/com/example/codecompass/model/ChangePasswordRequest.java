@@ -4,8 +4,8 @@ import com.google.gson.annotations.SerializedName;
 
 public class ChangePasswordRequest {
 
-    @SerializedName("old_password")
-    private final String oldPassword;
+    @SerializedName("otp")
+    private final String otp;
 
     @SerializedName("new_password")
     private final String newPassword;
@@ -16,9 +16,9 @@ public class ChangePasswordRequest {
     @SerializedName("refresh")
     private final String refresh;
 
-    public ChangePasswordRequest(String oldPassword, String newPassword,
+    public ChangePasswordRequest(String otp, String newPassword,
                                   String newPasswordConfirm, String refresh) {
-        this.oldPassword        = oldPassword;
+        this.otp                = otp;
         this.newPassword        = newPassword;
         this.newPasswordConfirm = newPasswordConfirm;
         this.refresh            = refresh;

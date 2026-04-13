@@ -152,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 body.getUser().isHasPassword(),
                                 body.getUser().isGoogleConnected());
                     }
-                    goToOnboarding();
+                    goToVerifyEmail(text(etEmail));
                 } else {
                     showApiError(response);
                 }
@@ -227,7 +227,9 @@ public class RegisterActivity extends AppCompatActivity {
                                             body.getUser().isHasPassword(),
                                             body.getUser().isGoogleConnected());
                                 }
-                                if (JwtUtils.isOnboarded(body.getAccess())) {
+                                if (!JwtUtils.isEmailVerified(body.getAccess())) {
+                                    goToVerifyEmail(JwtUtils.getEmail(body.getAccess()));
+                                } else if (JwtUtils.isOnboarded(body.getAccess())) {
                                     Intent intent = new Intent(RegisterActivity.this,
                                             DashboardActivity.class);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -256,6 +258,14 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────
+
+    private void goToVerifyEmail(String email) {
+        Intent intent = new Intent(this, VerifyEmailPendingActivity.class);
+        intent.putExtra(VerifyEmailPendingActivity.EXTRA_EMAIL, email);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
 
     private void goToOnboarding() {
         Intent intent = new Intent(this, OnboardingActivity.class);
