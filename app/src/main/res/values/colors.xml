@@ -42,10 +42,6 @@
     <color name="colorSurfaceVariant">#F9FAFB</color>
     <color name="colorWarningBackground">#FFF8E1</color>
 
-    <!-- Onboarding chip (semi-transparent white — must stay as alpha hex) -->
-    <color name="colorChipBackgroundWhite">#14FFFFFF</color>
-    <color name="colorChipStrokeWhite">#33FFFFFF</color>
-
     <!-- ── Roadmap feature ───────────────────────────────────────────────── -->
 
     <!-- Node status -->

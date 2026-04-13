@@ -1,6 +1,7 @@
 package com.example.codecompass.ui;
 
 import android.content.Intent;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
@@ -830,7 +831,8 @@ public class AIChatActivity extends AppCompatActivity {
             String option;
             try { option = suggestions.getString(i); } catch (Exception e) { continue; }
 
-            Chip chip = new Chip(this);
+            Chip chip = new Chip(new ContextThemeWrapper(this,
+                    com.google.android.material.R.style.Widget_MaterialComponents_Chip_Choice), null, 0);
             chip.setText(option);
             chip.setChipBackgroundColor(
                     ColorStateList.valueOf(getColor(R.color.colorBrandYellowPale)));

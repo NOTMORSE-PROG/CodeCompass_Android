@@ -1,6 +1,7 @@
 package com.example.codecompass.ui;
 
 import android.content.Intent;
+import androidx.appcompat.view.ContextThemeWrapper;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -454,10 +455,11 @@ public class OnboardingActivity extends AppCompatActivity {
         for (int i = 0; i < suggestions.length(); i++) {
             String option;
             try { option = suggestions.getString(i); } catch (Exception e) { continue; }
-            Chip chip = new Chip(this);
+            Chip chip = new Chip(new ContextThemeWrapper(this,
+                    com.google.android.material.R.style.Widget_MaterialComponents_Chip_Choice), null, 0);
             chip.setText(option);
-            chip.setChipBackgroundColor(ColorStateList.valueOf(getResources().getColor(R.color.colorChipBackgroundWhite, getTheme())));
-            chip.setChipStrokeColor(ColorStateList.valueOf(getResources().getColor(R.color.colorChipStrokeWhite, getTheme())));
+            chip.setChipBackgroundColor(ColorStateList.valueOf(Color.parseColor("#1A1A1A")));
+            chip.setChipStrokeColor(ColorStateList.valueOf(Color.parseColor("#80FFFFFF")));
             chip.setChipStrokeWidth(dp);
             chip.setTextColor(Color.WHITE);
             chip.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13f);
