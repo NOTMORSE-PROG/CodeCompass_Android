@@ -29,6 +29,7 @@ import com.example.codecompass.api.ApiClient;
 import com.example.codecompass.api.TokenManager;
 import com.example.codecompass.model.JobListing;
 import com.example.codecompass.model.PagedResponse;
+import com.example.codecompass.model.ResumeMatchFromIdRequest;
 import com.example.codecompass.model.ResumeMatchRequest;
 import com.example.codecompass.model.SavedJob;
 import com.example.codecompass.ui.adapter.JobAdapter;
@@ -133,8 +134,7 @@ public class JobsActivity extends AppCompatActivity
         tvResumeMatchCount  = findViewById(R.id.tvResumeMatchCount);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
-        findViewById(R.id.btnUploadResume).setOnClickListener(v ->
-                pdfPickerLauncher.launch("application/pdf"));
+        findViewById(R.id.btnUploadResume).setOnClickListener(v -> showResumeSourceSheet());
         findViewById(R.id.btnClearResume).setOnClickListener(v -> clearResume());
 
         pdfPickerLauncher = registerForActivityResult(
@@ -268,6 +268,70 @@ public class JobsActivity extends AppCompatActivity
         resumeJobs.clear();
         setResumeBannerState(ResumeBannerState.IDLE);
         refreshDisplay();
+    }
+
+    // ── Resume source picker ──────────────────────────────────────────────────
+
+    private void showResumeSourceSheet() {
+        ResumeSourceBottomSheet sheet = new ResumeSourceBottomSheet();
+        sheet.setListener(new ResumeSourceBottomSheet.Listener() {
+            @Override
+            public void onSavedResumeChosen(int resumeId, String resumeTitle) {
+                resumeFileName = resumeTitle;
+                setResumeBannerState(ResumeBannerState.LOADING);
+                callRecommendFromResumeId(resumeId);
+            }
+
+            @Override
+            public void onUploadPdfChosen() {
+                pdfPickerLauncher.launch("application/pdf");
+            }
+
+            @Override
+            public void onAuthExpired() {
+                handle401();
+            }
+        });
+        sheet.show(getSupportFragmentManager(), "resume_source");
+    }
+
+    private void callRecommendFromResumeId(int resumeId) {
+        String token = TokenManager.getBearerToken(this);
+        ApiClient.getService()
+                .recommendFromResumeId(token, new ResumeMatchFromIdRequest(resumeId))
+                .enqueue(new Callback<List<JobListing>>() {
+                    @Override
+                    public void onResponse(@NonNull Call<List<JobListing>> call,
+                                           @NonNull Response<List<JobListing>> response) {
+                        if (isHandling401) return;
+                        if (response.code() == 401) { handle401(); return; }
+                        if (response.isSuccessful() && response.body() != null) {
+                            resumeJobs.clear();
+                            resumeJobs.addAll(response.body());
+                            resumeActive = true;
+                            setResumeBannerState(ResumeBannerState.RESULT);
+                            if (tabAllActive) refreshDisplay();
+                        } else if (response.code() == 400) {
+                            Toast.makeText(JobsActivity.this,
+                                    R.string.jobs_resume_source_empty_content,
+                                    Toast.LENGTH_LONG).show();
+                            setResumeBannerState(ResumeBannerState.IDLE);
+                        } else {
+                            Toast.makeText(JobsActivity.this,
+                                    R.string.jobs_resume_error, Toast.LENGTH_LONG).show();
+                            setResumeBannerState(ResumeBannerState.IDLE);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call<List<JobListing>> call,
+                                          @NonNull Throwable t) {
+                        if (isHandling401) return;
+                        Toast.makeText(JobsActivity.this,
+                                R.string.jobs_resume_error, Toast.LENGTH_LONG).show();
+                        setResumeBannerState(ResumeBannerState.IDLE);
+                    }
+                });
     }
 
     private enum ResumeBannerState { IDLE, LOADING, RESULT }

@@ -6,7 +6,19 @@ import com.example.codecompass.model.ChangePasswordResponse;
 import com.example.codecompass.model.MessageResponse;
 import com.example.codecompass.model.ResendVerificationRequest;
 import com.example.codecompass.model.ResendVerificationResponse;
+import com.example.codecompass.model.AtsScoreRequest;
+import com.example.codecompass.model.AtsScoreResponse;
+import com.example.codecompass.model.CreateResumeRequest;
+import com.example.codecompass.model.GenerateBulletsRequest;
+import com.example.codecompass.model.GenerateBulletsResponse;
+import com.example.codecompass.model.GenerateSummaryRequest;
+import com.example.codecompass.model.GenerateSummaryResponse;
 import com.example.codecompass.model.JobListing;
+import com.example.codecompass.model.ParseJobRequest;
+import com.example.codecompass.model.ParseJobResponse;
+import com.example.codecompass.model.Resume;
+import com.example.codecompass.model.ResumeListResponse;
+import com.example.codecompass.model.ResumeMatchFromIdRequest;
 import com.example.codecompass.model.ResumeMatchRequest;
 import com.example.codecompass.model.SavedJob;
 import com.example.codecompass.model.University;
@@ -339,6 +351,12 @@ public interface ApiService {
             @Body ResumeMatchRequest body
     );
 
+    @POST("jobs/recommend-from-resume-id/")
+    Call<List<JobListing>> recommendFromResumeId(
+            @Header("Authorization") String bearerToken,
+            @Body ResumeMatchFromIdRequest body
+    );
+
     // ── Universities ──────────────────────────────────────────────────────────
 
     @GET("universities/")
@@ -358,5 +376,64 @@ public interface ApiService {
     Call<University> getUniversityDetail(
             @Header("Authorization") String bearerToken,
             @Path("id") int id
+    );
+
+    // ── Resumes ──────────────────────────────────────────────────────────────
+
+    @GET("resumes/")
+    Call<ResumeListResponse> getResumes(
+            @Header("Authorization") String bearerToken
+    );
+
+    @POST("resumes/")
+    Call<Resume> createResume(
+            @Header("Authorization") String bearerToken,
+            @Body CreateResumeRequest body
+    );
+
+    @GET("resumes/{id}/")
+    Call<Resume> getResume(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id
+    );
+
+    @PATCH("resumes/{id}/")
+    Call<Resume> updateResume(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id,
+            @Body JsonObject body
+    );
+
+    @DELETE("resumes/{id}/")
+    Call<Void> deleteResume(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id
+    );
+
+    @POST("resumes/{id}/generate-bullets/")
+    Call<GenerateBulletsResponse> generateBullets(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id,
+            @Body GenerateBulletsRequest body
+    );
+
+    @POST("resumes/{id}/generate-summary/")
+    Call<GenerateSummaryResponse> generateSummary(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id,
+            @Body GenerateSummaryRequest body
+    );
+
+    @POST("resumes/parse-job/")
+    Call<ParseJobResponse> parseJobDescription(
+            @Header("Authorization") String bearerToken,
+            @Body ParseJobRequest body
+    );
+
+    @POST("resumes/{id}/score-ats/")
+    Call<AtsScoreResponse> scoreAts(
+            @Header("Authorization") String bearerToken,
+            @Path("id") int id,
+            @Body AtsScoreRequest body
     );
 }

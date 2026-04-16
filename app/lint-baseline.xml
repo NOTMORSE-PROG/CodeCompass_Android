@@ -19,7 +19,7 @@
         errorLine2="                                                   ~~~~~~~~~~~">
         <location
             file="src/main/java/com/example/codecompass/ui/OnboardingActivity.java"
-            line="305"
+            line="324"
             column="52"/>
     </issue>
 
@@ -30,7 +30,7 @@
         errorLine2="                                                   ~~~~~~~~~~~">
         <location
             file="src/main/java/com/example/codecompass/ui/OnboardingActivity.java"
-            line="328"
+            line="347"
             column="52"/>
     </issue>
 
@@ -41,7 +41,7 @@
         errorLine2="                                                              ~~~~~~~~~~~">
         <location
             file="src/main/java/com/example/codecompass/ui/ProfileActivity.java"
-            line="175"
+            line="177"
             column="63"/>
     </issue>
 
@@ -52,7 +52,7 @@
         errorLine2="                     ~~~~~~~~~~~">
         <location
             file="src/main/java/com/example/codecompass/ui/ProfileActivity.java"
-            line="188"
+            line="190"
             column="22"/>
     </issue>
 
@@ -107,7 +107,7 @@
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="371"
+            line="378"
             column="5"/>
     </issue>
 
@@ -118,7 +118,7 @@
         errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/values/strings.xml"
-            line="378"
+            line="386"
             column="5"/>
     </issue>
 
@@ -607,6 +607,226 @@
     </issue>
 
     <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_select_template` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_select_template&quot;>Select Template&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="579"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_template_modern` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_template_modern&quot;>Modern&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="581"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_template_classic` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_template_classic&quot;>Classic&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="582"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_template_minimal` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_template_minimal&quot;>Minimal&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="583"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_template_executive` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_template_executive&quot;>Executive&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="584"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_template_sidebar` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_template_sidebar&quot;>Sidebar&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="585"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_empty_list` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_empty_list&quot;>No resumes yet. Tap + to create one.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="588"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_ats_analyzing` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_ats_analyzing&quot;>Analyzing your resume…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="591"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_ats_missing_general` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_ats_missing_general&quot;>Missing Keywords&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="592"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_ai_bullets_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_ai_bullets_title&quot;>AI Bullet Points&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="608"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_add_bullet` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_add_bullet&quot;>Add Bullet&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="609"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_bullets_generating` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_bullets_generating&quot;>Generating bullet points…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="610"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_ai_summary_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_ai_summary_title&quot;>AI Summary&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="617"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_summary_generating` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_summary_generating&quot;>Generating summary…&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="618"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_years_entry` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_years_entry&quot;>Entry-level&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="622"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_years_1_2` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_years_1_2&quot;>1-2 years&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="623"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_years_3_5` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_years_3_5&quot;>3-5 years&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="624"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_years_5_plus` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_years_5_plus&quot;>5+ years&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="625"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_collapse` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_collapse&quot;>Collapse&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="629"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.resume_expand` appears to be unused"
+        errorLine1="    &lt;string name=&quot;resume_expand&quot;>Expand&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="630"
+            column="13"/>
+    </issue>
+
+    <issue
         id="TooManyViews"
         message="`activity_dashboard.xml` has more than 80 views, bad for performance"
         errorLine1="                                &lt;ImageView"
@@ -615,6 +835,28 @@
             file="src/main/res/layout/activity_dashboard.xml"
             line="733"
             column="34"/>
+    </issue>
+
+    <issue
+        id="TypographyDashes"
+        message="Replace &quot;-&quot; with an &quot;en dash&quot; character (–, &amp;#8211;) ?"
+        errorLine1="    &lt;string name=&quot;resume_years_1_2&quot;>1-2 years&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="623"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="TypographyDashes"
+        message="Replace &quot;-&quot; with an &quot;en dash&quot; character (–, &amp;#8211;) ?"
+        errorLine1="    &lt;string name=&quot;resume_years_3_5&quot;>3-5 years&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="624"
+            column="37"/>
     </issue>
 
     <issue
@@ -822,7 +1064,7 @@
         errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
         <location
             file="src/main/res/layout/activity_dashboard.xml"
-            line="963"
+            line="1034"
             column="33"/>
     </issue>
 

@@ -69,6 +69,7 @@ public class DashboardActivity extends AppCompatActivity {
     private CardView btnActionAchievements;
     private CardView cardCertifications;
     private CardView cardUniversities;
+    private CardView cardResumeBuilder;
 
     // ── State ─────────────────────────────────────────────────────────────────
     private boolean isHandling401 = false;
@@ -110,6 +111,7 @@ public class DashboardActivity extends AppCompatActivity {
         btnActionAchievements = findViewById(R.id.btnActionAchievements);
         cardCertifications = findViewById(R.id.cardCertifications);
         cardUniversities   = findViewById(R.id.cardUniversities);
+        cardResumeBuilder  = findViewById(R.id.cardResumeBuilder);
 
         tvWarmupRetry.setOnClickListener(v -> refresh());
 
@@ -237,6 +239,11 @@ public class DashboardActivity extends AppCompatActivity {
         });
         cardUniversities.setOnClickListener(v -> {
             Intent intent = new Intent(this, UniversitiesActivity.class);
+            startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+        cardResumeBuilder.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ResumeListActivity.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });

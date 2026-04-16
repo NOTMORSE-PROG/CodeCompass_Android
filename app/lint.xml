@@ -17,4 +17,10 @@
         bitmaps) is the standard Android pattern for launcher icons. This is expected.
     -->
     <issue id="IconXmlAndPng" severity="ignore" />
+
+    <!--
+        AndroidGradlePluginVersion: AGP 9.1.0 is the version in use. This warning fires
+        if a newer version is detected, but updating AGP requires careful migration testing.
+    -->
+    <issue id="AndroidGradlePluginVersion" severity="ignore" />
 </lint>

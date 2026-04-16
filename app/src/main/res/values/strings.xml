@@ -238,6 +238,13 @@
     <string name="jobs_resume_too_short">Resume text is too short. Try a different PDF.</string>
     <string name="jobs_resume_error">Could not analyze resume. Try again.</string>
     <string name="jobs_resume_clear">Clear resume</string>
+    <string name="jobs_resume_source_title">Choose resume source</string>
+    <string name="jobs_resume_source_saved">Use a saved resume</string>
+    <string name="jobs_resume_source_loading">Loading your resumes…</string>
+    <string name="jobs_resume_source_none_hint">You haven\'t saved any resumes yet — upload a PDF below or build one in Resume Builder.</string>
+    <string name="jobs_resume_source_or">or</string>
+    <string name="jobs_resume_source_upload">Upload a PDF</string>
+    <string name="jobs_resume_source_empty_content">This resume has too little content. Add experience or skills first.</string>
 
     <!-- Profile -->
     <string name="profile_title">My Profile</string>
@@ -470,4 +477,161 @@
     <string name="delete_conversation_confirm_title">Delete conversation?</string>
     <string name="delete_conversation_confirm_msg">This conversation will be permanently deleted.</string>
     <string name="conversation_deleted">Conversation deleted</string>
+
+    <!-- Resume Builder -->
+    <string name="resume_builder_title">Resume Builder</string>
+    <string name="resume_builder_subtitle">Build ATS-optimized resumes</string>
+    <string name="resume_list_title">My Resumes</string>
+    <string name="resume_new">New Resume</string>
+    <string name="resume_new_title_hint">Resume title</string>
+    <string name="resume_create">Create Resume</string>
+    <string name="resume_empty_title">No resumes yet</string>
+    <string name="resume_empty_subtitle">Tap + below to build your first\nATS-optimized resume</string>
+    <string name="resume_create_new_title">New Resume</string>
+    <string name="resume_choose_template">Choose a Template</string>
+    <string name="resume_delete_title">Delete Resume?</string>
+    <string name="resume_delete_confirm">This resume will be permanently deleted.</string>
+    <string name="resume_deleted">Resume deleted</string>
+    <string name="resume_updated_ago">Updated %s</string>
+
+    <!-- Resume Editor -->
+    <string name="resume_tab_info">Info</string>
+    <string name="resume_tab_summary">Summary</string>
+    <string name="resume_tab_experience">Experience</string>
+    <string name="resume_tab_education">Education</string>
+    <string name="resume_tab_skills">Skills</string>
+    <string name="resume_tab_projects">Projects</string>
+    <string name="resume_tab_certs">Certs</string>
+    <string name="resume_save_saved">Saved</string>
+    <string name="resume_save_saving">Saving…</string>
+    <string name="resume_save_unsaved">Unsaved</string>
+    <string name="resume_save_error">Save failed. Try again.</string>
+
+    <!-- Resume Info tab -->
+    <string name="resume_info_name">Full Name</string>
+    <string name="resume_info_job_title">Job Title / Role</string>
+    <string name="resume_info_email">Email</string>
+    <string name="resume_info_phone">Phone</string>
+    <string name="resume_info_location">Location</string>
+    <string name="resume_info_linkedin">LinkedIn URL</string>
+    <string name="resume_info_github">GitHub URL</string>
+    <string name="resume_info_website">Portfolio / Website</string>
+
+    <!-- Resume Summary tab -->
+    <string name="resume_summary_hint">Write a professional summary…</string>
+    <string name="resume_ai_generate_summary">AI Generate Summary</string>
+    <string name="resume_summary_target_role">Target Role</string>
+    <string name="resume_summary_strengths">Key Strengths (comma-separated)</string>
+    <string name="resume_summary_years">Years of Experience</string>
+    <string name="resume_summary_use">Use This</string>
+
+    <!-- Resume Experience tab -->
+    <string name="resume_add_experience">Add Experience</string>
+    <string name="resume_exp_company">Company</string>
+    <string name="resume_exp_title">Job Title</string>
+    <string name="resume_exp_location">Location</string>
+    <string name="resume_exp_start_date">Start Date</string>
+    <string name="resume_exp_end_date">End Date</string>
+    <string name="resume_exp_current">I currently work here</string>
+    <string name="resume_exp_bullets_label">Achievements / Bullets</string>
+    <string name="resume_ai_generate_bullets">AI Generate Bullets</string>
+    <string name="resume_bullet_hint">Describe an achievement…</string>
+    <string name="resume_exp_empty">No experience added yet.</string>
+
+    <!-- Resume Education tab -->
+    <string name="resume_add_education">Add Education</string>
+    <string name="resume_edu_school">School / University</string>
+    <string name="resume_edu_degree">Degree (e.g. BS Computer Science)</string>
+    <string name="resume_edu_field">Field of Study</string>
+    <string name="resume_edu_start_date">Start Date</string>
+    <string name="resume_edu_end_date">End Date</string>
+    <string name="resume_edu_gpa">GPA (optional)</string>
+    <string name="resume_edu_empty">No education added yet.</string>
+
+    <!-- Resume Skills tab -->
+    <string name="resume_skills_technical">Technical Skills</string>
+    <string name="resume_skills_tools">Tools &amp; Technologies</string>
+    <string name="resume_skills_soft">Soft Skills</string>
+    <string name="resume_skills_add_hint">Add a skill…</string>
+
+    <!-- Resume Projects tab -->
+    <string name="resume_add_project">Add Project</string>
+    <string name="resume_proj_name">Project Name</string>
+    <string name="resume_proj_description">Description</string>
+    <string name="resume_proj_tech">Tech Stack (comma-separated)</string>
+    <string name="resume_proj_link">Project Link (optional)</string>
+    <string name="resume_proj_empty">No projects added yet.</string>
+
+    <!-- Resume Certifications tab -->
+    <string name="resume_add_certification">Add Certification</string>
+    <string name="resume_cert_name">Certification Name</string>
+    <string name="resume_cert_issuer">Issuer (e.g. Amazon, Google)</string>
+    <string name="resume_cert_date">Date (e.g. Mar 2024)</string>
+    <string name="resume_cert_empty">No certifications added yet.</string>
+
+    <!-- Resume Preview -->
+    <string name="resume_preview">Preview</string>
+    <string name="resume_export_pdf">Export PDF</string>
+    <string name="resume_change_template">Template</string>
+    <string name="resume_change_color">Color</string>
+
+    <!-- Resume Templates -->
+    <string name="resume_select_template">Select Template</string>
+    <string name="resume_template_picker_title">Choose Template</string>
+    <string name="resume_template_modern">Modern</string>
+    <string name="resume_template_classic">Classic</string>
+    <string name="resume_template_minimal">Minimal</string>
+    <string name="resume_template_executive">Executive</string>
+    <string name="resume_template_sidebar">Sidebar</string>
+
+    <!-- Resume list -->
+    <string name="resume_empty_list">No resumes yet. Tap + to create one.</string>
+
+    <!-- Resume ATS Scoring -->
+    <string name="resume_ats_analyzing">Analyzing your resume…</string>
+    <string name="resume_ats_missing_general">Missing Keywords</string>
+    <string name="resume_ats_score">ATS Score</string>
+    <string name="resume_ats_paste_hint">Paste the job description here…</string>
+    <string name="resume_ats_analyze">Analyze Match</string>
+    <string name="resume_ats_min_chars">Job description must be at least 50 characters.</string>
+    <string name="resume_ats_keywords_label">Keywords (50%%)</string>
+    <string name="resume_ats_title_label">Title Match (25%%)</string>
+    <string name="resume_ats_structure_label">Structure (25%%)</string>
+    <string name="resume_ats_matched">Matched Keywords</string>
+    <string name="resume_ats_missing_required">Missing Required</string>
+    <string name="resume_ats_missing_preferred">Missing Preferred</string>
+    <string name="resume_ats_suggestions">Suggestions</string>
+    <string name="resume_ats_clear">Clear Results</string>
+    <string name="resume_ats_error">Could not analyze. Try again.</string>
+
+    <!-- Resume AI Bullets dialog -->
+    <string name="resume_ai_bullets_title">AI Bullet Points</string>
+    <string name="resume_add_bullet">Add Bullet</string>
+    <string name="resume_bullets_generating">Generating bullet points…</string>
+    <string name="resume_ai_bullets_job_title">Job Title</string>
+    <string name="resume_ai_bullets_achievement">Describe your achievement</string>
+    <string name="resume_ai_bullets_generate">Generate</string>
+    <string name="resume_ai_bullets_use">Use</string>
+
+    <!-- Resume AI Summary dialog -->
+    <string name="resume_ai_summary_title">AI Summary</string>
+    <string name="resume_summary_generating">Generating summary…</string>
+    <string name="resume_ai_summary_generate">Generate Summaries</string>
+
+    <!-- Years of experience options -->
+    <string name="resume_years_entry">Entry-level</string>
+    <string name="resume_years_1_2">1-2 years</string>
+    <string name="resume_years_3_5">3-5 years</string>
+    <string name="resume_years_5_plus">5+ years</string>
+
+    <!-- Generic resume actions -->
+    <string name="resume_delete_item">Remove</string>
+    <string name="resume_collapse">Collapse</string>
+    <string name="resume_expand">Expand</string>
+
+    <!-- UI labels extracted from layouts -->
+    <string name="resume_editor_menu_description">Menu</string>
+    <string name="ats_score_initial_value">0</string>
+    <string name="add_item_button">+</string>
+    <string name="template_selected_label">Selected</string>
 </resources>
