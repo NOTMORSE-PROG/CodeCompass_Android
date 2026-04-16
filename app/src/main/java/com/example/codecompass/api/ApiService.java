@@ -264,9 +264,13 @@ public interface ApiService {
 
     // ── Roadmap AI edit proposals ─────────────────────────────────────────────
 
+    // X-Chat-Session-Id header is sent by AIChatActivity when the mutation
+    // originates from chat. Backend's FromRoadmapScopedSession permission
+    // verifies the session is scope=roadmap before applying.
     @PATCH("roadmaps/{id}/edit/")
     Call<Void> editRoadmapMeta(
             @Header("Authorization") String bearerToken,
+            @Header("X-Chat-Session-Id") String chatSessionId,
             @Path("id") int roadmapId,
             @Body JsonObject body
     );
@@ -274,6 +278,7 @@ public interface ApiService {
     @PATCH("roadmaps/{id}/nodes/{nid}/edit/")
     Call<Void> editNodeContent(
             @Header("Authorization") String bearerToken,
+            @Header("X-Chat-Session-Id") String chatSessionId,
             @Path("id") int roadmapId,
             @Path("nid") int nodeId,
             @Body JsonObject body
@@ -282,6 +287,7 @@ public interface ApiService {
     @PATCH("roadmaps/{id}/nodes/{nid}/replace/")
     Call<Void> replaceRoadmapNode(
             @Header("Authorization") String bearerToken,
+            @Header("X-Chat-Session-Id") String chatSessionId,
             @Path("id") int roadmapId,
             @Path("nid") int nodeId,
             @Body JsonObject body
@@ -304,12 +310,14 @@ public interface ApiService {
     @POST("roadmaps/switch/")
     Call<Void> switchRoadmap(
             @Header("Authorization") String bearerToken,
+            @Header("X-Chat-Session-Id") String chatSessionId,
             @Body JsonObject body
     );
 
     @POST("roadmaps/upskill/")
     Call<Void> upskillRoadmap(
             @Header("Authorization") String bearerToken,
+            @Header("X-Chat-Session-Id") String chatSessionId,
             @Body JsonObject body
     );
 

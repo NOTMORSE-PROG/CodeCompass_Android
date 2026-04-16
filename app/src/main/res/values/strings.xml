@@ -382,6 +382,7 @@
     <!-- Edit proposal card -->
     <string name="proposal_warning_msg">⚠️ This will reset the node\'s progress to locked. You can only replace a node once per day.</string>
     <string name="error_replace_node_rate_limit">You can only replace a node once per day.</string>
+    <string name="error_scope_not_roadmap">Roadmap changes happen in the Roadmap tab. Switch over there to apply this.</string>
     <string name="proposal_applied_msg">✅ Applied to your roadmap</string>
     <string name="proposal_header_format" translatable="false">✏️ Roadmap Edit — %1$d proposal%2$s</string>
     <string name="proposal_item_format">• %s</string>

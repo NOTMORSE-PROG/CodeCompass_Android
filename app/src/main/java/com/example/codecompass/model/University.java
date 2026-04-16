@@ -1,7 +1,5 @@
 package com.example.codecompass.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class University {
@@ -10,31 +8,23 @@ public class University {
     private String name;
     private String abbreviation;
 
-    @SerializedName("university_type")
     private String universityType;
 
     private String region;
     private String city;
 
-    @SerializedName("website_url")
     private String websiteUrl;
 
-    @SerializedName("logo_url")
     private String logoUrl;
 
-    @SerializedName("accreditation_level")
     private int accreditationLevel;
 
-    @SerializedName("ched_coe")
     private boolean chedCoe;
 
-    @SerializedName("ched_cod")
     private boolean chedCod;
 
-    @SerializedName("tuition_range_min")
     private Integer tuitionRangeMin;
 
-    @SerializedName("tuition_range_max")
     private Integer tuitionRangeMax;
 
     private List<CCSProgram> programs;

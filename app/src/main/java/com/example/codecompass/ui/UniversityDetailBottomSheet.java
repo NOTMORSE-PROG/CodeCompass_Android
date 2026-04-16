@@ -300,12 +300,13 @@ public class UniversityDetailBottomSheet extends BottomSheetDialogFragment {
         if (curriculumUrl != null && !curriculumUrl.isEmpty()) {
             MaterialButton btnCurriculum = new MaterialButton(
                     new android.view.ContextThemeWrapper(getContext(),
-                            com.google.android.material.R.style.Widget_MaterialComponents_Button_TextButton),
+                            com.google.android.material.R.style.Widget_MaterialComponents_Button),
                     null, 0);
             btnCurriculum.setText(R.string.uni_view_curriculum);
             btnCurriculum.setTextSize(12f);
-            btnCurriculum.setTextColor(Color.parseColor("#2563EB"));
-            btnCurriculum.setPadding(0, dpToPx(4), 0, 0);
+            btnCurriculum.setTextColor(Color.WHITE);
+            btnCurriculum.setBackgroundTintList(android.content.res.ColorStateList.valueOf(requireContext().getColor(R.color.colorPrimary)));
+            btnCurriculum.setPadding(dpToPx(12), dpToPx(4), dpToPx(12), dpToPx(4));
             LinearLayout.LayoutParams btnLp = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT

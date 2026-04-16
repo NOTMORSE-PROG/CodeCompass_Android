@@ -1,7 +1,5 @@
 package com.example.codecompass.model;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.util.List;
 
 public class CCSProgram {
@@ -11,15 +9,12 @@ public class CCSProgram {
     private String abbreviation;
     private String description;
 
-    @SerializedName("duration_years")
     private int durationYears;
 
     private List<String> specializations;
 
-    @SerializedName("has_board_exam")
     private boolean hasBoardExam;
 
-    @SerializedName("curriculum_url")
     private String curriculumUrl;
 
     public int getId() { return id; }

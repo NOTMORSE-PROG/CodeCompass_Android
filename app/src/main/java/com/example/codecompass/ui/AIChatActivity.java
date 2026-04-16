@@ -666,9 +666,17 @@ public class AIChatActivity extends AppCompatActivity {
                         if (!links.isEmpty()) chatAdapter.setResourcesAt(committedIdx, links);
                     }
 
+                    // Render-time scope guard: roadmap mutation cards (Apply / Confirm
+                    // / Upskill) must NEVER appear outside the Roadmap tab. Server-side
+                    // _extract_tags_for_scope should already have nulled these payloads
+                    // for non-roadmap sessions, but belt-and-braces — an older backend
+                    // or a buggy response shouldn't be able to surface an actionable
+                    // card in General / Jobs / University chat.
+                    boolean canShowRoadmapCards = "roadmap".equals(currentContextType);
+
                     // Attach roadmap edit proposal card
                     JSONArray propsArr = obj.optJSONArray("edit_proposals");
-                    if (propsArr != null && propsArr.length() > 0 && committedIdx >= 0) {
+                    if (canShowRoadmapCards && propsArr != null && propsArr.length() > 0 && committedIdx >= 0) {
                         try {
                             Type proposalListType =
                                     new TypeToken<List<EditProposal>>(){}.getType();
@@ -682,7 +690,7 @@ public class AIChatActivity extends AppCompatActivity {
 
                     // Attach roadmap switch card
                     JSONObject switchObj = obj.optJSONObject("roadmap_switch");
-                    if (switchObj != null && committedIdx >= 0) {
+                    if (canShowRoadmapCards && switchObj != null && committedIdx >= 0) {
                         try {
                             RoadmapSwitchProposal sw = new Gson().fromJson(
                                     switchObj.toString(), RoadmapSwitchProposal.class);
@@ -692,7 +700,7 @@ public class AIChatActivity extends AppCompatActivity {
 
                     // Attach roadmap upskill card
                     JSONObject upskillObj = obj.optJSONObject("roadmap_upskill");
-                    if (upskillObj != null && committedIdx >= 0) {
+                    if (canShowRoadmapCards && upskillObj != null && committedIdx >= 0) {
                         try {
                             RoadmapUpskillProposal up = new Gson().fromJson(
                                     upskillObj.toString(), RoadmapUpskillProposal.class);
@@ -864,6 +872,15 @@ public class AIChatActivity extends AppCompatActivity {
     // ── Apply roadmap edit proposals ──────────────────────────────────────────
 
     private void applyProposals(int messageIndex, List<EditProposal> proposals, int index) {
+        // Scope guard — only the Roadmap tab can apply roadmap mutations.
+        // Server-side (FromRoadmapScopedSession) is authoritative; this keeps
+        // stale tags from a non-roadmap tab from even issuing the request.
+        if (index == 0 && !"roadmap".equals(currentContextType)) {
+            Snackbar.make(rvChat, R.string.error_scope_not_roadmap,
+                    Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         if (index >= proposals.size()) {
             chatAdapter.markProposalsApplied(messageIndex);
             Snackbar.make(rvChat, getString(R.string.proposal_applied),
@@ -871,22 +888,23 @@ public class AIChatActivity extends AppCompatActivity {
             return;
         }
 
-        EditProposal p     = proposals.get(index);
+        EditProposal p      = proposals.get(index);
         String       bearer = TokenManager.getBearerToken(this);
+        String       sid    = sessionId;   // current roadmap-tab session
         retrofit2.Call<Void> call = null;
 
         switch (p.getAction() != null ? p.getAction() : "") {
             case "edit_roadmap":
                 call = ApiClient.getService().editRoadmapMeta(
-                        bearer, p.getRoadmapId(), p.getChanges());
+                        bearer, sid, p.getRoadmapId(), p.getChanges());
                 break;
             case "edit_node":
                 call = ApiClient.getService().editNodeContent(
-                        bearer, p.getRoadmapId(), p.getNodeId(), p.getChanges());
+                        bearer, sid, p.getRoadmapId(), p.getNodeId(), p.getChanges());
                 break;
             case "replace_node":
                 call = ApiClient.getService().replaceRoadmapNode(
-                        bearer, p.getRoadmapId(), p.getNodeId(), p.getChanges());
+                        bearer, sid, p.getRoadmapId(), p.getNodeId(), p.getChanges());
                 break;
         }
 
@@ -918,12 +936,17 @@ public class AIChatActivity extends AppCompatActivity {
     // ── Roadmap switch / upskill API calls ───────────────────────────────────
 
     private void callSwitchApi(int messageIndex, RoadmapSwitchProposal p) {
+        if (!"roadmap".equals(currentContextType)) {
+            Snackbar.make(rvChat, R.string.error_scope_not_roadmap,
+                    Snackbar.LENGTH_LONG).show();
+            return;
+        }
         com.google.gson.JsonObject body = new com.google.gson.JsonObject();
         body.addProperty("roadmap_id", p.getRoadmapId());
         body.addProperty("new_path", p.getNewPath());
         body.addProperty("career_goal", p.getCareerGoal());
         ApiClient.getService()
-                .switchRoadmap(TokenManager.getBearerToken(this), body)
+                .switchRoadmap(TokenManager.getBearerToken(this), sessionId, body)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(retrofit2.Call<Void> c,
@@ -944,10 +967,15 @@ public class AIChatActivity extends AppCompatActivity {
     }
 
     private void callUpskillApi(int messageIndex, RoadmapUpskillProposal p) {
+        if (!"roadmap".equals(currentContextType)) {
+            Snackbar.make(rvChat, R.string.error_scope_not_roadmap,
+                    Snackbar.LENGTH_LONG).show();
+            return;
+        }
         com.google.gson.JsonObject body = new com.google.gson.JsonObject();
         body.addProperty("roadmap_id", p.getRoadmapId());
         ApiClient.getService()
-                .upskillRoadmap(TokenManager.getBearerToken(this), body)
+                .upskillRoadmap(TokenManager.getBearerToken(this), sessionId, body)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(retrofit2.Call<Void> c,
