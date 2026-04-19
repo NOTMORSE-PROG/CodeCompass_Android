@@ -162,6 +162,43 @@ public class RoadmapViewModel extends AndroidViewModel {
                 });
     }
 
+    public void generateFinalAssessment() {
+        if (roadmapId < 0) return;
+        repo.generateFinalAssessment(roadmapId,
+                new RoadmapRepository.Callback1<AssessmentResponse>() {
+                    @Override
+                    public void onSuccess(AssessmentResponse data) {
+                        quizReadyEvent.postValue(data);
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        errorLive.postValue(message);
+                    }
+                });
+    }
+
+    public void submitFinalAssessment(int sessionId, Map<String, String> answers) {
+        if (roadmapId < 0) return;
+        repo.submitFinalAssessment(roadmapId, sessionId, answers,
+                new RoadmapRepository.Callback1<QuizResult>() {
+                    @Override
+                    public void onSuccess(QuizResult data) {
+                        quizResultEvent.postValue(data);
+                        // After a passing final assessment, reload the roadmap so
+                        // cert nodes appear unlocked and the final_assessment is marked done.
+                        if (data != null && data.isPassed()) {
+                            load();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        errorLive.postValue(message);
+                    }
+                });
+    }
+
     public void repairRoadmap() {
         if (roadmapId < 0) return;
         repo.repairRoadmap(roadmapId, new RoadmapRepository.Callback1<Void>() {
@@ -199,22 +236,27 @@ public class RoadmapViewModel extends AndroidViewModel {
      * Converts the flat node list from the API (sorted by nodeOrder) into
      * a RecyclerView-friendly list with milestone headers and subsection dividers.
      *
-     * Structure produced per phase:
-     *   MilestoneHeader  (with done/total count + remaining XP)
-     *   SkillNode / AssessmentNode …
-     *   [PROJECTS divider]
-     *   ProjectNode …
-     *   [CERTIFICATIONS divider]
+     * New roadmap structure:
+     *   MilestoneHeader (Phase 1..3)
+     *     SkillNode / AssessmentNode …
+     *     [PROJECTS divider]
+     *     ProjectNode …
+     *   [FINAL ASSESSMENT divider]       ← global, after all phases
+     *   FinalAssessmentNode
+     *   [CERTIFICATIONS divider]         ← global, after Final Assessment
      *   CertificationNode …
+     *
+     * Backward compat: legacy roadmaps have certifications under a per-phase
+     * milestone. When a roadmap has NO final_assessment node, certifications
+     * stay inline under their milestone (old per-phase layout) and no global
+     * "CERTIFICATIONS" divider is emitted.
      */
     private List<RoadmapDisplayItem> flatten(List<RoadmapNode> nodes) {
         if (nodes == null || nodes.isEmpty()) return new ArrayList<>();
 
-        // Sort by nodeOrder ascending
         List<RoadmapNode> sorted = new ArrayList<>(nodes);
         Collections.sort(sorted, (a, b) -> a.getNodeOrder() - b.getNodeOrder());
 
-        // Pre-compute per-milestone stats (keyed by milestone id)
         Map<Integer, Integer> milestoneTotal = new HashMap<>();
         Map<Integer, Integer> milestoneDone  = new HashMap<>();
         Map<Integer, Integer> milestoneXP    = new HashMap<>();
@@ -231,33 +273,64 @@ public class RoadmapViewModel extends AndroidViewModel {
             }
         }
 
+        boolean hasFinalAssessment = false;
+        for (RoadmapNode node : sorted) {
+            if (RoadmapNode.TYPE_FINAL_ASSESSMENT.equals(node.getNodeType())) {
+                hasFinalAssessment = true;
+                break;
+            }
+        }
+
         List<RoadmapDisplayItem> items = new ArrayList<>();
-        boolean projectDividerAdded    = false;
-        boolean certDividerAdded       = false;
+        List<RoadmapNode> finalAssessmentNodes = new ArrayList<>();
+        List<RoadmapNode> certNodes            = new ArrayList<>();
+        boolean projectDividerAdded = false;
+        boolean certDividerInPhase  = false;
 
         for (RoadmapNode node : sorted) {
-            if (node.isMilestone()) {
-                // New phase — reset subsection divider flags
-                projectDividerAdded = false;
-                certDividerAdded    = false;
+            String type = node.getNodeType();
 
+            if (node.isMilestone()) {
+                projectDividerAdded = false;
+                certDividerInPhase  = false;
                 int total = milestoneTotal.getOrDefault(node.getId(), 0);
                 int done  = milestoneDone.getOrDefault(node.getId(), 0);
                 int xp    = milestoneXP.getOrDefault(node.getId(), 0);
                 items.add(RoadmapDisplayItem.milestone(node, total, done, xp));
+                continue;
+            }
 
-            } else {
-                String type = node.getNodeType();
+            if (RoadmapNode.TYPE_FINAL_ASSESSMENT.equals(type)) {
+                finalAssessmentNodes.add(node);
+                continue;
+            }
 
-                if (RoadmapNode.TYPE_PROJECT.equals(type) && !projectDividerAdded) {
-                    items.add(RoadmapDisplayItem.divider("PROJECTS"));
-                    projectDividerAdded = true;
-                } else if (RoadmapNode.TYPE_CERTIFICATION.equals(type) && !certDividerAdded) {
-                    items.add(RoadmapDisplayItem.divider("CERTIFICATIONS"));
-                    certDividerAdded = true;
-                }
+            if (RoadmapNode.TYPE_CERTIFICATION.equals(type) && hasFinalAssessment) {
+                certNodes.add(node);
+                continue;
+            }
 
-                items.add(RoadmapDisplayItem.nodeCard(node));
+            if (RoadmapNode.TYPE_PROJECT.equals(type) && !projectDividerAdded) {
+                items.add(RoadmapDisplayItem.divider("PROJECTS"));
+                projectDividerAdded = true;
+            } else if (RoadmapNode.TYPE_CERTIFICATION.equals(type) && !certDividerInPhase) {
+                items.add(RoadmapDisplayItem.divider("CERTIFICATIONS"));
+                certDividerInPhase = true;
+            }
+
+            items.add(RoadmapDisplayItem.nodeCard(node));
+        }
+
+        if (!finalAssessmentNodes.isEmpty()) {
+            items.add(RoadmapDisplayItem.divider("FINAL ASSESSMENT"));
+            for (RoadmapNode n : finalAssessmentNodes) {
+                items.add(RoadmapDisplayItem.nodeCard(n));
+            }
+        }
+        if (!certNodes.isEmpty()) {
+            items.add(RoadmapDisplayItem.divider("CERTIFICATIONS"));
+            for (RoadmapNode n : certNodes) {
+                items.add(RoadmapDisplayItem.nodeCard(n));
             }
         }
 

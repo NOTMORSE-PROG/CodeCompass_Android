@@ -262,6 +262,20 @@ public interface ApiService {
             @Body SubmitAnswersRequest body
     );
 
+    @POST("roadmaps/{roadmapId}/final-assessment/")
+    Call<AssessmentResponse> generateFinalAssessment(
+            @Header("Authorization") String bearerToken,
+            @Path("roadmapId") int roadmapId
+    );
+
+    @POST("roadmaps/{roadmapId}/final-assessment/{sessionId}/submit/")
+    Call<QuizResult> submitFinalAssessment(
+            @Header("Authorization") String bearerToken,
+            @Path("roadmapId") int roadmapId,
+            @Path("sessionId") int sessionId,
+            @Body SubmitAnswersRequest body
+    );
+
     // ── Roadmap AI edit proposals ─────────────────────────────────────────────
 
     // X-Chat-Session-Id header is sent by AIChatActivity when the mutation

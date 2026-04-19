@@ -183,6 +183,50 @@ public class RoadmapRepository {
                 });
     }
 
+    // ── Final Assessment (roadmap-wide 10-question quiz) ──────────────────────
+
+    public void generateFinalAssessment(int roadmapId, Callback1<AssessmentResponse> cb) {
+        api.generateFinalAssessment(bearer(), roadmapId)
+                .enqueue(new Callback<AssessmentResponse>() {
+                    @Override
+                    public void onResponse(Call<AssessmentResponse> call,
+                                           Response<AssessmentResponse> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            cb.onSuccess(response.body());
+                        } else {
+                            cb.onError("Error " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AssessmentResponse> call, Throwable t) {
+                        cb.onError(t.getMessage());
+                    }
+                });
+    }
+
+    public void submitFinalAssessment(int roadmapId, int sessionId,
+                                      Map<String, String> answers, Callback1<QuizResult> cb) {
+        api.submitFinalAssessment(bearer(), roadmapId, sessionId,
+                new SubmitAnswersRequest(answers))
+                .enqueue(new Callback<QuizResult>() {
+                    @Override
+                    public void onResponse(Call<QuizResult> call,
+                                           Response<QuizResult> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            cb.onSuccess(response.body());
+                        } else {
+                            cb.onError("Error " + response.code());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<QuizResult> call, Throwable t) {
+                        cb.onError(t.getMessage());
+                    }
+                });
+    }
+
     // ── Fix structure + load (called on initial roadmap open) ─────────────────
 
     /**

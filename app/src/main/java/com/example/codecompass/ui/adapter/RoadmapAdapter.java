@@ -240,6 +240,9 @@ public class RoadmapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 case RoadmapNode.TYPE_ASSESSMENT:
                     label = "QUIZ"; bg = R.color.nodeBadgeQuizBg; fg = R.color.nodeBadgeQuizText;
                     break;
+                case RoadmapNode.TYPE_FINAL_ASSESSMENT:
+                    label = "FINAL"; bg = R.color.nodeBadgeQuizBg; fg = R.color.nodeBadgeQuizText;
+                    break;
                 default:
                     label = "SKILL"; bg = R.color.nodeBadgeSkillBg; fg = R.color.nodeBadgeSkillText;
                     break;

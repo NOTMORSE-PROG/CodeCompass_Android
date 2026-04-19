@@ -97,6 +97,17 @@ public class RoadmapActivity extends AppCompatActivity {
                 }
             });
 
+    // Receives RESULT_OK from QuizActivity (MODE_FINAL) when the final assessment passes.
+    // ViewModel already reloads the roadmap on pass (so certs appear unlocked), but we
+    // trigger an explicit load here too in case the result arrives first.
+    private final ActivityResultLauncher<Intent> finalAssessmentResultLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null
+                        && result.getData().getBooleanExtra(QuizActivity.RESULT_FINAL_PASSED, false)) {
+                    viewModel.load();
+                }
+            });
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -419,6 +430,19 @@ public class RoadmapActivity extends AppCompatActivity {
     // ── Node tap ──────────────────────────────────────────────────────────────
 
     private void openNodeDetail(RoadmapNode node) {
+        // Final Assessment bypasses the bottom sheet — it launches QuizActivity directly
+        // in MODE_FINAL with the roadmap ID. The backend generates 10 questions based on
+        // the roadmap's skill + project content across all phases.
+        if (RoadmapNode.TYPE_FINAL_ASSESSMENT.equals(node.getNodeType())) {
+            if (node.isLocked()) return;  // locked → no action
+            Intent intent = new Intent(this, QuizActivity.class);
+            intent.putExtra(QuizActivity.EXTRA_ROADMAP_ID, viewModel.getRoadmapId());
+            intent.putExtra(QuizActivity.EXTRA_MODE, QuizActivity.MODE_FINAL);
+            finalAssessmentResultLauncher.launch(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            return;
+        }
+
         // Immediately transition AVAILABLE → IN_PROGRESS (mirrors web behavior)
         if (node.isAvailable()) {
             viewModel.updateNodeStatus(node.getId(), RoadmapNode.STATUS_IN_PROGRESS);

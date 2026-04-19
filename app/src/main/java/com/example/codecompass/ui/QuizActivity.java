@@ -36,7 +36,11 @@ public class QuizActivity extends AppCompatActivity {
     public static final String EXTRA_NODE_ID      = "nodeId";
     public static final String EXTRA_RESOURCE_ID  = "resourceId";
     public static final String EXTRA_VIDEO_TITLE  = "videoTitle";
+    public static final String EXTRA_MODE         = "mode";
+    public static final String MODE_VIDEO         = "video";
+    public static final String MODE_FINAL         = "final";
     public static final String RESULT_RESOURCE_ID = "resourceId";
+    public static final String RESULT_FINAL_PASSED = "finalAssessmentPassed";
 
     // ── Option key order ──────────────────────────────────────────────────────
     private static final String[] KEYS = {"a", "b", "c", "d"};
@@ -76,6 +80,7 @@ public class QuizActivity extends AppCompatActivity {
     private int                     roadmapId;
     private int                     nodeId;
     private int                     resourceId;
+    private String                  mode = MODE_VIDEO;
     private List<AssessmentQuestion> questions    = new ArrayList<>();
     private int                     sessionId;
     private int                     currentIndex;
@@ -93,6 +98,8 @@ public class QuizActivity extends AppCompatActivity {
         roadmapId  = getIntent().getIntExtra(EXTRA_ROADMAP_ID, -1);
         nodeId     = getIntent().getIntExtra(EXTRA_NODE_ID, -1);
         resourceId = getIntent().getIntExtra(EXTRA_RESOURCE_ID, -1);
+        String modeExtra = getIntent().getStringExtra(EXTRA_MODE);
+        if (MODE_FINAL.equals(modeExtra)) mode = MODE_FINAL;
 
         bindViews();
 
@@ -110,7 +117,15 @@ public class QuizActivity extends AppCompatActivity {
         });
 
         showLoading(getString(R.string.quiz_generating_full));
-        viewModel.generateQuiz(nodeId, resourceId);
+        startQuizGeneration();
+    }
+
+    private void startQuizGeneration() {
+        if (MODE_FINAL.equals(mode)) {
+            viewModel.generateFinalAssessment();
+        } else {
+            viewModel.generateQuiz(nodeId, resourceId);
+        }
     }
 
     @Override
@@ -357,7 +372,11 @@ public class QuizActivity extends AppCompatActivity {
 
     private void submitAll() {
         showLoading(getString(R.string.quiz_checking));
-        viewModel.submitQuiz(nodeId, resourceId, sessionId, answers);
+        if (MODE_FINAL.equals(mode)) {
+            viewModel.submitFinalAssessment(sessionId, answers);
+        } else {
+            viewModel.submitQuiz(nodeId, resourceId, sessionId, answers);
+        }
     }
 
     // ── Results ───────────────────────────────────────────────────────────────
@@ -539,7 +558,11 @@ public class QuizActivity extends AppCompatActivity {
 
     private void finishWithPass() {
         Intent out = new Intent();
-        out.putExtra(RESULT_RESOURCE_ID, resourceId);
+        if (MODE_FINAL.equals(mode)) {
+            out.putExtra(RESULT_FINAL_PASSED, true);
+        } else {
+            out.putExtra(RESULT_RESOURCE_ID, resourceId);
+        }
         setResult(RESULT_OK, out);
         finish();
     }
@@ -556,7 +579,7 @@ public class QuizActivity extends AppCompatActivity {
         questions.clear();
         viewModel.clearQuizEvents();
         showLoading(getString(R.string.quiz_generating_full));
-        viewModel.generateQuiz(nodeId, resourceId);
+        startQuizGeneration();
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

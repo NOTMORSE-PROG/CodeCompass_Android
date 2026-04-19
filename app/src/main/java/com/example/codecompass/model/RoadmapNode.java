@@ -15,11 +15,12 @@ public class RoadmapNode implements Serializable {
     public static final String STATUS_COMPLETED   = "completed";
 
     // ── Node type constants ───────────────────────────────────────────────────
-    public static final String TYPE_MILESTONE    = "milestone";
-    public static final String TYPE_SKILL        = "skill";
-    public static final String TYPE_PROJECT      = "project";
-    public static final String TYPE_ASSESSMENT   = "assessment";
-    public static final String TYPE_CERTIFICATION = "certification";
+    public static final String TYPE_MILESTONE        = "milestone";
+    public static final String TYPE_SKILL            = "skill";
+    public static final String TYPE_PROJECT          = "project";
+    public static final String TYPE_ASSESSMENT       = "assessment";
+    public static final String TYPE_FINAL_ASSESSMENT = "final_assessment";
+    public static final String TYPE_CERTIFICATION    = "certification";
 
     // ── Fields ────────────────────────────────────────────────────────────────
 
