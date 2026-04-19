@@ -322,13 +322,31 @@ public class RoadmapViewModel extends AndroidViewModel {
         }
 
         if (!finalAssessmentNodes.isEmpty()) {
-            items.add(RoadmapDisplayItem.divider("FINAL ASSESSMENT"));
+            int faTotal = finalAssessmentNodes.size();
+            int faDone  = 0;
+            int faXp    = 0;
+            for (RoadmapNode n : finalAssessmentNodes) {
+                if (n.isCompleted()) faDone++;
+                else faXp += n.getXpReward();
+            }
+            boolean faCompleted = faDone == faTotal;
+            items.add(RoadmapDisplayItem.sectionHeader(
+                    "Phase 4: Final Assessment", faTotal, faDone, faXp, faCompleted));
             for (RoadmapNode n : finalAssessmentNodes) {
                 items.add(RoadmapDisplayItem.nodeCard(n));
             }
         }
         if (!certNodes.isEmpty()) {
-            items.add(RoadmapDisplayItem.divider("CERTIFICATIONS"));
+            int cTotal = certNodes.size();
+            int cDone  = 0;
+            int cXp    = 0;
+            for (RoadmapNode n : certNodes) {
+                if (n.isCompleted()) cDone++;
+                else cXp += n.getXpReward();
+            }
+            boolean cCompleted = cDone == cTotal;
+            items.add(RoadmapDisplayItem.sectionHeader(
+                    "Phase 5: Certifications", cTotal, cDone, cXp, cCompleted));
             for (RoadmapNode n : certNodes) {
                 items.add(RoadmapDisplayItem.nodeCard(n));
             }

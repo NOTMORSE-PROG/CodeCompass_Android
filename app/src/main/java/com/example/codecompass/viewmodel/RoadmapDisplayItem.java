@@ -9,9 +9,10 @@ import com.example.codecompass.model.RoadmapNode;
  */
 public class RoadmapDisplayItem {
 
-    public static final int TYPE_MILESTONE  = 0;
-    public static final int TYPE_DIVIDER    = 1;
-    public static final int TYPE_NODE_CARD  = 2;
+    public static final int TYPE_MILESTONE     = 0;
+    public static final int TYPE_DIVIDER       = 1;
+    public static final int TYPE_NODE_CARD     = 2;
+    public static final int TYPE_SECTION_HEADER = 3;  // synthetic phase header (no DB milestone)
 
     private final int type;
 
@@ -26,6 +27,10 @@ public class RoadmapDisplayItem {
 
     // TYPE_NODE_CARD fields
     private RoadmapNode node;
+
+    // TYPE_SECTION_HEADER fields
+    private String sectionLabel;
+    private boolean sectionCompleted;
 
     // ── Factory constructors ──────────────────────────────────────────────────
 
@@ -51,6 +56,17 @@ public class RoadmapDisplayItem {
         return item;
     }
 
+    public static RoadmapDisplayItem sectionHeader(String label, int total, int done,
+                                                    int xpRemaining, boolean completed) {
+        RoadmapDisplayItem item = new RoadmapDisplayItem(TYPE_SECTION_HEADER);
+        item.sectionLabel = label;
+        item.phaseTotal = total;
+        item.phaseDone = done;
+        item.phaseXpRemaining = xpRemaining;
+        item.sectionCompleted = completed;
+        return item;
+    }
+
     private RoadmapDisplayItem(int type) {
         this.type = type;
     }
@@ -67,4 +83,7 @@ public class RoadmapDisplayItem {
     public String getDividerLabel() { return dividerLabel; }
 
     public RoadmapNode getNode() { return node; }
+
+    public String getSectionLabel() { return sectionLabel; }
+    public boolean isSectionCompleted() { return sectionCompleted; }
 }

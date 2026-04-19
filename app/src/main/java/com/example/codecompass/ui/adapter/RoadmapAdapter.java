@@ -59,6 +59,9 @@ public class RoadmapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             case RoadmapDisplayItem.TYPE_DIVIDER:
                 return new DividerViewHolder(
                         inflater.inflate(R.layout.item_roadmap_subsection_divider, parent, false));
+            case RoadmapDisplayItem.TYPE_SECTION_HEADER:
+                return new SectionHeaderViewHolder(
+                        inflater.inflate(R.layout.item_roadmap_milestone, parent, false));
             default: // TYPE_NODE_CARD
                 return new NodeCardViewHolder(
                         inflater.inflate(R.layout.item_roadmap_node, parent, false));
@@ -68,7 +71,9 @@ public class RoadmapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         RoadmapDisplayItem item = items.get(position);
-        if (holder instanceof MilestoneViewHolder) {
+        if (holder instanceof SectionHeaderViewHolder) {
+            ((SectionHeaderViewHolder) holder).bind(item);
+        } else if (holder instanceof MilestoneViewHolder) {
             ((MilestoneViewHolder) holder).bind(item);
         } else if (holder instanceof DividerViewHolder) {
             ((DividerViewHolder) holder).bind(item.getDividerLabel());
@@ -132,6 +137,51 @@ public class RoadmapAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             tvTitle.setTextColor(fg);
 
             // Stats line
+            int total = item.getPhaseTotal();
+            int done  = item.getPhaseDone();
+            int xp    = item.getPhaseXpRemaining();
+            if (total > 0) {
+                String stats = xp > 0
+                        ? String.format(Locale.getDefault(), "%d/%d done · +%d XP", done, total, xp)
+                        : String.format(Locale.getDefault(), "%d/%d done", done, total);
+                tvStats.setText(stats);
+                tvStats.setVisibility(View.VISIBLE);
+            } else {
+                tvStats.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    // ── Section Header ViewHolder (synthetic phase header — no DB milestone) ─────
+
+    static class SectionHeaderViewHolder extends RecyclerView.ViewHolder {
+        final TextView tvTitle;
+        final TextView tvStats;
+
+        SectionHeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvTitle = itemView.findViewById(R.id.tvMilestoneTitle);
+            tvStats = itemView.findViewById(R.id.tvMilestoneStats);
+        }
+
+        void bind(RoadmapDisplayItem item) {
+            Context ctx = itemView.getContext();
+            String label = item.isSectionCompleted()
+                    ? ctx.getString(R.string.roadmap_milestone_completed_format, item.getSectionLabel())
+                    : item.getSectionLabel();
+            tvTitle.setText(label);
+
+            int bg, fg;
+            if (item.isSectionCompleted()) {
+                bg = ctx.getColor(R.color.milestoneDoneBg);
+                fg = ctx.getColor(R.color.milestoneDoneText);
+            } else {
+                bg = ctx.getColor(R.color.milestoneLockedBg);
+                fg = ctx.getColor(R.color.milestoneLockedText);
+            }
+            tvTitle.setBackgroundTintList(ColorStateList.valueOf(bg));
+            tvTitle.setTextColor(fg);
+
             int total = item.getPhaseTotal();
             int done  = item.getPhaseDone();
             int xp    = item.getPhaseXpRemaining();
