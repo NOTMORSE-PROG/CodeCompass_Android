@@ -223,6 +223,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
                         android:maxLines="4"
+                        android:maxLength="4000"
                         android:textColor="@color/colorTextPrimary"
                         android:textColorHint="@color/colorTextSecondary" />
 

@@ -87,6 +87,7 @@ public class QuizActivity extends AppCompatActivity {
     private String                  selectedAnswer;
     private final Map<String, String> answers     = new HashMap<>();
     private CountDownTimer          countDownTimer;
+    private boolean                 isSubmitting = false;
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -182,11 +183,13 @@ public class QuizActivity extends AppCompatActivity {
 
         viewModel.getQuizResultEvent().observe(this, result -> {
             if (result == null) return;
+            isSubmitting = false;
             onResultReceived(result);
         });
 
         viewModel.getError().observe(this, error -> {
             if (error == null) return;
+            isSubmitting = false;
             tvLoadingLabel.setText(error);
             showLoading(error);
         });
@@ -241,6 +244,7 @@ public class QuizActivity extends AppCompatActivity {
         if (questions == null || index >= questions.size()) return;
 
         AssessmentQuestion q = questions.get(index);
+        if (q == null) return;
         int total = questions.size();
 
         tvQuestionNumber.setText(getString(R.string.quiz_question_of, index + 1, total));
@@ -343,6 +347,7 @@ public class QuizActivity extends AppCompatActivity {
     // ── Navigation ────────────────────────────────────────────────────────────
 
     private void handleNext() {
+        if (isSubmitting) return;
         cancelTimer();
         // Only record if user actually picked an answer
         if (selectedAnswer != null) {
@@ -360,6 +365,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private void autoAdvance() {
         // Timed out — no answer recorded; backend treats missing key as wrong
+        if (isSubmitting) return;
         if (currentIndex == questions.size() - 1) {
             submitAll();
         } else {
@@ -371,6 +377,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void submitAll() {
+        isSubmitting = true;
         showLoading(getString(R.string.quiz_checking));
         if (MODE_FINAL.equals(mode)) {
             viewModel.submitFinalAssessment(sessionId, answers);
@@ -389,6 +396,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void populateResultBanner(QuizResult result) {
+        if (result == null) return;
         if (result.isPassed()) {
             layoutResultBanner.setBackgroundColor(getColor(R.color.quizPassBg));
             tvResultIcon.setText("✓");
@@ -409,6 +417,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void buildBreakdown(QuizResult result) {
+        if (result == null) return;
         containerBreakdown.removeAllViews();
         List<QuizResultItem> items = result.getResults();
         if (items == null || questions == null) return;
@@ -573,6 +582,7 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void retryQuiz() {
+        isSubmitting   = false;
         currentIndex   = 0;
         selectedAnswer = null;
         answers.clear();
