@@ -635,4 +635,19 @@
     <string name="ats_score_initial_value">0</string>
     <string name="add_item_button">+</string>
     <string name="template_selected_label">Selected</string>
+
+    <!-- Final Assessment overview screen -->
+    <string name="final_assessment_phase_label">PHASE 4</string>
+    <string name="final_assessment_title">Final Assessment</string>
+    <string name="final_assessment_overview_questions_label">📋  Questions</string>
+    <string name="final_assessment_overview_questions_value">10 multiple choice</string>
+    <string name="final_assessment_overview_time_label">⏱  Time / question</string>
+    <string name="final_assessment_overview_time_value">15 seconds</string>
+    <string name="final_assessment_overview_pass_label">🏆  Pass threshold</string>
+    <string name="final_assessment_overview_pass_value">~70%  (7 of 10)</string>
+    <string name="final_assessment_overview_reward_label">🔓  On pass</string>
+    <string name="final_assessment_overview_reward_value">Certifications unlock</string>
+    <string name="final_assessment_overview_warning">Questions are analysis and evaluation level — harder than per-video quizzes. Complete all phases before attempting.</string>
+    <string name="final_assessment_btn_begin">Begin Assessment</string>
+    <string name="final_assessment_btn_back">Back to Roadmap</string>
 </resources>
