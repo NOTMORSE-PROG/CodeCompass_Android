@@ -36,6 +36,7 @@ public class VideoLearningActivity extends AppCompatActivity {
     public static final String EXTRA_VIDEO_CHANNEL = "vl_video_channel";
     public static final String RESULT_RESOURCE_ID  = "vl_result_resource_id";
     public static final String EXTRA_WATCH_UNLOCKED = "vl_watch_unlocked";
+    public static final String EXTRA_RESOURCE_COMPLETED = "vl_resource_completed";
 
     private static final String PREFS_WATCH      = "cc_watch_progress";
     private static final int    UNLOCK_THRESHOLD = 300; // 5 min in cumulative seconds
@@ -47,6 +48,7 @@ public class VideoLearningActivity extends AppCompatActivity {
     private TextView     tvVideoTitle;
     private TextView     tvVideoChannel;
     private LinearLayout layoutQuizLocked;
+    private LinearLayout layoutWatchProgress;
     private Button       btnTakeQuiz;
     private FrameLayout  fullscreenContainer;
 
@@ -111,6 +113,7 @@ public class VideoLearningActivity extends AppCompatActivity {
         tvVideoTitle        = findViewById(R.id.tvVideoTitle);
         tvVideoChannel      = findViewById(R.id.tvVideoChannel);
         layoutQuizLocked    = findViewById(R.id.layoutQuizLocked);
+        layoutWatchProgress = findViewById(R.id.layoutWatchProgress);
         btnTakeQuiz         = findViewById(R.id.btnTakeQuiz);
         fullscreenContainer = findViewById(R.id.fullscreenContainer);
 
@@ -134,8 +137,16 @@ public class VideoLearningActivity extends AppCompatActivity {
 
         updateWatchProgressUi(0);
 
-        boolean alreadyUnlocked = getIntent().getBooleanExtra(EXTRA_WATCH_UNLOCKED, false);
-        if (alreadyUnlocked) {
+        boolean alreadyUnlocked  = getIntent().getBooleanExtra(EXTRA_WATCH_UNLOCKED,    false);
+        boolean alreadyCompleted = getIntent().getBooleanExtra(EXTRA_RESOURCE_COMPLETED, false);
+        if (alreadyCompleted) {
+            // Re-watch mode: video is already completed, hide all quiz/progress UI
+            // and prevent onFiveMinutesReached() from re-firing the unlock flow.
+            quizUnlocked = true;
+            layoutWatchProgress.setVisibility(View.GONE);
+            layoutQuizLocked.setVisibility(View.GONE);
+            btnTakeQuiz.setVisibility(View.GONE);
+        } else if (alreadyUnlocked) {
             quizUnlocked = true;
             layoutQuizLocked.setVisibility(View.GONE);
             btnTakeQuiz.setVisibility(View.VISIBLE);

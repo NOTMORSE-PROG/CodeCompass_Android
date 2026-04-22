@@ -50,7 +50,7 @@ public class NodeDetailBottomSheet extends BottomSheetDialogFragment {
 
     /** Called when user taps a YouTube resource — opens VideoLearningActivity. */
     public interface OnOpenVideoResourceListener {
-        void onOpenVideoResource(NodeResource resource, int nodeId);
+        void onOpenVideoResource(NodeResource resource, int nodeId, boolean isCompleted);
     }
 
     private OnNodeCompletedListener    completedListener;
@@ -233,7 +233,7 @@ public class NodeDetailBottomSheet extends BottomSheetDialogFragment {
     // ── Resource fetching ─────────────────────────────────────────────────────
 
     private void fetchResourcesIfNeeded() {
-        if (!node.isAvailable() && !node.isInProgress()) return;
+        if (!node.isAvailable() && !node.isInProgress() && !node.isCompleted()) return;
         if (roadmapId < 0) return;
 
         if (node.areResourcesFetched() && node.getResources() != null) {
@@ -284,7 +284,7 @@ public class NodeDetailBottomSheet extends BottomSheetDialogFragment {
 
         boolean hasYoutube = node.hasYouTubeResources();
         showMarkCompleteButton(!hasYoutube || resourceAdapter.allCompleted());
-        if (hasYoutube && !resourceAdapter.allCompleted()) {
+        if (hasYoutube && !resourceAdapter.allCompleted() && !node.isCompleted()) {
             tvQuizGateInfo.setVisibility(View.VISIBLE);
         }
     }
@@ -329,9 +329,14 @@ public class NodeDetailBottomSheet extends BottomSheetDialogFragment {
         activeResourceId = resource.getId();
 
         if (resource.isYouTube()) {
-            // Open VideoLearningActivity — quiz handled in-app at 60 % watch
+            // Open VideoLearningActivity — quiz handled in-app at 60 % watch.
+            // Re-watch mode: if the resource (or node) is already completed, the activity
+            // hides all quiz/progress UI so the user can just review the video.
             if (openVideoListener != null) {
-                openVideoListener.onOpenVideoResource(resource, node.getId());
+                boolean isResourceCompleted =
+                        resourceAdapter.getCompletedIds().contains(resource.getId())
+                                || node.isCompleted();
+                openVideoListener.onOpenVideoResource(resource, node.getId(), isResourceCompleted);
             }
         } else {
             // Non-YouTube: open URL in browser/custom tabs + mark completed on tap

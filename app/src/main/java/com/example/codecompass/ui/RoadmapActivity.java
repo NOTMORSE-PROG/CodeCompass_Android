@@ -461,7 +461,7 @@ public class RoadmapActivity extends AppCompatActivity {
         sheet.setOnOpenResourceListener(this::openUrl);
 
         // YouTube resources: open VideoLearningActivity (quiz in-app at 60 %)
-        sheet.setOnOpenVideoResourceListener((resource, nodeId) -> {
+        sheet.setOnOpenVideoResourceListener((resource, nodeId, isCompleted) -> {
             String videoId = resource.getYoutubeVideoId() != null
                     ? resource.getYoutubeVideoId()
                     : extractVideoId(resource.getUrl());
@@ -473,6 +473,7 @@ public class RoadmapActivity extends AppCompatActivity {
             intent.putExtra(VideoLearningActivity.EXTRA_VIDEO_TITLE, resource.getTitle());
             intent.putExtra(VideoLearningActivity.EXTRA_VIDEO_CHANNEL, resource.getYoutubeChannel());
             intent.putExtra(VideoLearningActivity.EXTRA_WATCH_UNLOCKED, resource.isWatchUnlocked());
+            intent.putExtra(VideoLearningActivity.EXTRA_RESOURCE_COMPLETED, isCompleted);
             videoResultLauncher.launch(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
