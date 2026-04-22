@@ -145,7 +145,6 @@
     <!-- Roadmap Next Up banner -->
     <string name="roadmap_next_up_prefix">Next up: </string>
     <string name="roadmap_resource_unavailable">Unavailable</string>
-    <string name="roadmap_mark_visited">Mark as Visited ✓</string>
 
     <!-- AI Chat -->
     <string name="ai_chat_title">AI Career Assistant</string>

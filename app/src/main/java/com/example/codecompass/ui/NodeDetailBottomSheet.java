@@ -280,6 +280,20 @@ public class NodeDetailBottomSheet extends BottomSheetDialogFragment {
             resourceAdapter.setActiveIndex(savedActive);
         }
 
+        // Auto-mark unavailable resources done — there's nothing to watch.
+        // Mirrors the web useEffect and handleResourceTap's isUnavailable branch.
+        boolean anyAutoMarked = false;
+        Set<Integer> completed = resourceAdapter.getCompletedIds();
+        for (NodeResource r : resources) {
+            if (r.isUnavailable() && !completed.contains(r.getId())) {
+                resourceAdapter.markCompleted(r.getId());
+                anyAutoMarked = true;
+            }
+        }
+        if (anyAutoMarked) {
+            saveCompletedIdsPref(node.getId(), resourceAdapter.getCompletedIds());
+        }
+
         updateCurriculumProgress();
 
         boolean hasYoutube = node.hasYouTubeResources();

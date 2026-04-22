@@ -92,16 +92,5 @@
         android:gravity="center"
         android:textColor="@color/textSecondaryLight" />
 
-    <!-- Mark as Visited button (shown only for yt:unavailable resources) -->
-    <Button
-        android:id="@+id/btnMarkVisited"
-        style="@style/Widget.MaterialComponents.Button.TextButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/roadmap_mark_visited"
-        android:textColor="@color/colorPrimary"
-        android:textSize="11sp"
-        android:paddingHorizontal="4dp"
-        android:visibility="gone" />
 
 </LinearLayout>

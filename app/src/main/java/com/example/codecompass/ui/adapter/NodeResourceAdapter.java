@@ -5,7 +5,6 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -115,7 +114,6 @@ public class NodeResourceAdapter extends RecyclerView.Adapter<NodeResourceAdapte
         final TextView tvChannel;
         final TextView tvDuration;
         final TextView tvStatus;
-        final Button btnMarkVisited;
 
         ResourceViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -127,7 +125,6 @@ public class NodeResourceAdapter extends RecyclerView.Adapter<NodeResourceAdapte
             tvChannel      = itemView.findViewById(R.id.tvResourceChannel);
             tvDuration     = itemView.findViewById(R.id.tvResourceDuration);
             tvStatus       = itemView.findViewById(R.id.tvResourceStatus);
-            btnMarkVisited = itemView.findViewById(R.id.btnMarkVisited);
         }
 
         void bind(NodeResource r, int pos, boolean isDone, boolean isActive,
@@ -139,26 +136,21 @@ public class NodeResourceAdapter extends RecyclerView.Adapter<NodeResourceAdapte
             tvTypeBadge.setText(r.getTypeBadge());
             applyTypeBadgeStyle(r.getResourceType(), ctx);
 
-            // Unavailable resource: show "Mark as Visited" button instead of normal controls
+            // Unavailable resource defensive styling. The bottom sheet auto-marks
+            // unavailable rows done on display, so this branch is normally skipped
+            // (the isDone branch below fires instead), but keep the styling as a
+            // fallback in case of re-bind races.
             if (r.isUnavailable() && !isDone) {
                 tvDuration.setText(ctx.getString(R.string.roadmap_resource_unavailable));
                 tvDuration.setVisibility(View.VISIBLE);
                 tvStatus.setVisibility(View.GONE);
-                btnMarkVisited.setVisibility(View.VISIBLE);
-                btnMarkVisited.setOnClickListener(v -> {
-                    if (listener != null) listener.onResourceClick(r, pos);
-                });
                 rootRow.setBackgroundColor(ctx.getColor(R.color.colorSurface));
                 viewBorder.setBackgroundColor(ctx.getColor(R.color.colorSurface));
                 tvTitle.setTextColor(ctx.getColor(R.color.colorTextSecondary));
                 tvTitle.setTypeface(null, android.graphics.Typeface.NORMAL);
-
-                // Channel
                 tvChannel.setVisibility(View.GONE);
                 return;
             }
-
-            btnMarkVisited.setVisibility(View.GONE);
 
             // Duration
             String dur = r.getDurationLabel();
