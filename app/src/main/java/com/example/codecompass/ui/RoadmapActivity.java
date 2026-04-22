@@ -438,6 +438,11 @@ public class RoadmapActivity extends AppCompatActivity {
             Intent intent = new Intent(this, QuizActivity.class);
             intent.putExtra(QuizActivity.EXTRA_ROADMAP_ID, viewModel.getRoadmapId());
             intent.putExtra(QuizActivity.EXTRA_MODE, QuizActivity.MODE_FINAL);
+            com.example.codecompass.model.Roadmap rm = viewModel.getRoadmap().getValue();
+            if (rm != null) {
+                intent.putExtra(QuizActivity.EXTRA_ROADMAP_TITLE, rm.getTitle() != null ? rm.getTitle() : "");
+                intent.putExtra(QuizActivity.EXTRA_CAREER_PATH, rm.getCareerPath() != null ? rm.getCareerPath() : "");
+            }
             finalAssessmentResultLauncher.launch(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             return;

@@ -16,6 +16,8 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
+
 import com.example.codecompass.R;
 import com.example.codecompass.model.roadmap.AssessmentQuestion;
 import com.example.codecompass.model.roadmap.AssessmentResponse;
@@ -39,8 +41,10 @@ public class QuizActivity extends AppCompatActivity {
     public static final String EXTRA_MODE         = "mode";
     public static final String MODE_VIDEO         = "video";
     public static final String MODE_FINAL         = "final";
-    public static final String RESULT_RESOURCE_ID = "resourceId";
+    public static final String RESULT_RESOURCE_ID  = "resourceId";
     public static final String RESULT_FINAL_PASSED = "finalAssessmentPassed";
+    public static final String EXTRA_ROADMAP_TITLE = "roadmapTitle";
+    public static final String EXTRA_CAREER_PATH   = "careerPath";
 
     // ── Option key order ──────────────────────────────────────────────────────
     private static final String[] KEYS = {"a", "b", "c", "d"};
@@ -64,6 +68,12 @@ public class QuizActivity extends AppCompatActivity {
 
     private Button btnNextOrSubmit;
 
+    // ── Views — overview ─────────────────────────────────────────────────────
+    private LinearLayout   layoutOverview;
+    private TextView       tvOverviewSubtitle;
+    private MaterialButton btnBeginAssessment;
+    private TextView       tvOverviewBack;
+
     // ── Views — results ───────────────────────────────────────────────────────
     private ScrollView   scrollResults;
     private LinearLayout layoutResultBanner;
@@ -80,7 +90,9 @@ public class QuizActivity extends AppCompatActivity {
     private int                     roadmapId;
     private int                     nodeId;
     private int                     resourceId;
-    private String                  mode = MODE_VIDEO;
+    private String                  mode         = MODE_VIDEO;
+    private String                  roadmapTitle = "";
+    private String                  careerPath   = "";
     private List<AssessmentQuestion> questions    = new ArrayList<>();
     private int                     sessionId;
     private int                     currentIndex;
@@ -102,7 +114,18 @@ public class QuizActivity extends AppCompatActivity {
         String modeExtra = getIntent().getStringExtra(EXTRA_MODE);
         if (MODE_FINAL.equals(modeExtra)) mode = MODE_FINAL;
 
+        String titleExtra = getIntent().getStringExtra(EXTRA_ROADMAP_TITLE);
+        if (titleExtra != null) roadmapTitle = titleExtra;
+        String pathExtra = getIntent().getStringExtra(EXTRA_CAREER_PATH);
+        if (pathExtra != null) careerPath = pathExtra;
+
         bindViews();
+
+        btnBeginAssessment.setOnClickListener(v -> {
+            showLoading(getString(R.string.quiz_generating_full));
+            viewModel.generateFinalAssessment();
+        });
+        tvOverviewBack.setOnClickListener(v -> finish());
 
         viewModel = new ViewModelProvider(this).get(RoadmapViewModel.class);
         viewModel.setRoadmapId(roadmapId);
@@ -123,7 +146,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private void startQuizGeneration() {
         if (MODE_FINAL.equals(mode)) {
-            viewModel.generateFinalAssessment();
+            showOverview();
         } else {
             viewModel.generateQuiz(nodeId, resourceId);
         }
@@ -162,6 +185,12 @@ public class QuizActivity extends AppCompatActivity {
         optionTextViews[3] = findViewById(R.id.tvOptionDText);
 
         btnNextOrSubmit     = findViewById(R.id.btnNextOrSubmit);
+
+        layoutOverview     = findViewById(R.id.layoutOverview);
+        tvOverviewSubtitle = findViewById(R.id.tvOverviewSubtitle);
+        btnBeginAssessment = findViewById(R.id.btnBeginAssessment);
+        tvOverviewBack     = findViewById(R.id.tvOverviewBack);
+
         scrollResults       = findViewById(R.id.scrollResults);
         layoutResultBanner  = findViewById(R.id.layoutResultBanner);
         tvResultIcon        = findViewById(R.id.tvResultIcon);
@@ -197,21 +226,35 @@ public class QuizActivity extends AppCompatActivity {
 
     // ── State transitions ─────────────────────────────────────────────────────
 
+    private void showOverview() {
+        String subtitle = roadmapTitle.isEmpty()
+                ? careerPath
+                : careerPath.isEmpty() ? roadmapTitle : roadmapTitle + " · " + careerPath;
+        tvOverviewSubtitle.setText(subtitle);
+        layoutOverview.setVisibility(View.VISIBLE);
+        layoutLoading.setVisibility(View.GONE);
+        layoutActiveQuiz.setVisibility(View.GONE);
+        scrollResults.setVisibility(View.GONE);
+    }
+
     private void showLoading(String message) {
         tvLoadingLabel.setText(message);
         layoutLoading.setVisibility(View.VISIBLE);
+        layoutOverview.setVisibility(View.GONE);
         layoutActiveQuiz.setVisibility(View.GONE);
         scrollResults.setVisibility(View.GONE);
     }
 
     private void showQuiz() {
         layoutLoading.setVisibility(View.GONE);
+        layoutOverview.setVisibility(View.GONE);
         layoutActiveQuiz.setVisibility(View.VISIBLE);
         scrollResults.setVisibility(View.GONE);
     }
 
     private void showResults() {
         layoutLoading.setVisibility(View.GONE);
+        layoutOverview.setVisibility(View.GONE);
         layoutActiveQuiz.setVisibility(View.GONE);
         scrollResults.setVisibility(View.VISIBLE);
     }
